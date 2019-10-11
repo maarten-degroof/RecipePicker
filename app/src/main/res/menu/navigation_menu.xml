@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/addRecipe"
+            android:title="Add Recipe"
+            android:icon="@drawable/ic_add_circle_outline_black_24dp"
+            />
+
+        <item
+            android:id="@+id/favorites"
+            android:title="Favorites"
+            android:icon="@drawable/ic_favorite_black_24dp"
+            />
+
+        <item
+            android:id="@+id/filters"
+            android:title="Filters"
+            android:icon="@drawable/ic_filter_list_black_24dp"
+            />
+
+        <item
+            android:id="@+id/settings"
+            android:title="Settings"
+            android:icon="@drawable/ic_settings_black_24dp"
+            />
+    </group>
+</menu>
