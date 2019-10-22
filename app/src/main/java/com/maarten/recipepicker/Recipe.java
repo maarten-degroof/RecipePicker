@@ -1,20 +1,11 @@
 package com.maarten.recipepicker;
 
-import android.util.Log;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-enum CookTime {
-    SHORT,
-    MEDIUM,
-    LONG
-}
+
 
 public class Recipe implements Serializable {
     private String description;

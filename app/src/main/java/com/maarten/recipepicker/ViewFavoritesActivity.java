@@ -3,6 +3,7 @@ package com.maarten.recipepicker;
 import android.content.Intent;
 import androidx.annotation.NonNull;
 import com.google.android.material.navigation.NavigationView;
+import com.maarten.recipepicker.Adapters.FavoriteAdapter;
 import com.maarten.recipepicker.Settings.SettingsActivity;
 
 import androidx.drawerlayout.widget.DrawerLayout;

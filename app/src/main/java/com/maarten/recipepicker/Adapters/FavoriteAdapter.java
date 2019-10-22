@@ -1,4 +1,4 @@
-package com.maarten.recipepicker;
+package com.maarten.recipepicker.Adapters;
 
 import android.app.Activity;
 import android.util.Log;
@@ -9,6 +9,9 @@ import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
+
+import com.maarten.recipepicker.R;
+import com.maarten.recipepicker.Recipe;
 
 import java.util.ArrayList;
 import java.util.List;

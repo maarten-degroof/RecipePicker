@@ -1,4 +1,4 @@
-package com.maarten.recipepicker;
+package com.maarten.recipepicker.Adapters;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -7,7 +7,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.maarten.recipepicker.R;
+import com.maarten.recipepicker.Recipe;
+
 import java.util.List;
 
 public class RecipeAdapter extends BaseAdapter {

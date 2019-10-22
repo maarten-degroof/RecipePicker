@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.snackbar.Snackbar;
+import com.maarten.recipepicker.Adapters.IngredientAdapter;
 
 import java.io.File;
 import java.io.FileOutputStream;

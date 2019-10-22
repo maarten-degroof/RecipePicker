@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import com.google.android.material.navigation.NavigationView;
+import com.maarten.recipepicker.Adapters.RecipeAdapter;
 import com.maarten.recipepicker.ListSorters.AmountCookedSorter;
 import com.maarten.recipepicker.ListSorters.DateSorter;
 import com.maarten.recipepicker.Settings.SettingsActivity;
