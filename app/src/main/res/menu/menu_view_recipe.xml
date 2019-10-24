@@ -15,19 +15,26 @@
         android:title="delete"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/action_home"
+        android:orderInCategory="100"
+        android:title="Home"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_home_black_24dp"
+        />
 
     <item
         android:id="@+id/action_favorite_full"
         android:orderInCategory="200"
         android:title="Favorite"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         android:icon="@drawable/ic_favorite_black_24dp"
         />
     <item
         android:id="@+id/action_favorite_empty"
         android:orderInCategory="200"
         android:title="Favorite"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         android:icon="@drawable/ic_favorite_border_black_24dp"
         />
 </menu>

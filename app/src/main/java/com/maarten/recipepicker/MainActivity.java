@@ -214,6 +214,8 @@ public class MainActivity extends AppCompatActivity {
                     viewSettings();
                 } else if (id == R.id.filters) {
                     viewFilters();
+                } else if (id == R.id.search) {
+                    viewSearch();
                 }
                 return true;
             }
@@ -250,6 +252,15 @@ public class MainActivity extends AppCompatActivity {
      */
     private void viewFavorites() {
         Intent intent = new Intent(this, ViewFavoritesActivity.class);
+        startActivity(intent);
+    }
+
+
+    /**
+     * opens ViewFavoritesActivity
+     */
+    private void viewSearch() {
+        Intent intent = new Intent(this, SearchActivity.class);
         startActivity(intent);
     }
 

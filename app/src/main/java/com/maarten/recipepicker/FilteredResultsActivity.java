@@ -5,6 +5,8 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -114,5 +116,41 @@ public class FilteredResultsActivity extends AppCompatActivity {
         super.onResume();
         adapter.notifyDataSetChanged();
         FilteredResultsActivity.this.adapter.getFilter().filter(filterObject.toString());
+    }
+
+    /**
+     * Inflates the menu into the toolbar
+     *
+     * @param menu the menu
+     * @return should return true
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_home, menu);
+        return true;
+    }
+
+    /**
+     * checks if the clicked menu item the home icon is
+     * @param item  the clicked menu item
+     * @return  should return true when item found
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.action_home) {
+            goToMainActivity();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * Opens the main activity and closes the previous activities
+     */
+    private void goToMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }

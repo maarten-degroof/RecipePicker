@@ -2,11 +2,13 @@ package com.maarten.recipepicker;
 
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.maarten.recipepicker.Adapters.IngredientEditAdapter;
 
@@ -15,6 +17,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -82,7 +87,21 @@ public class AddRecipeActivity extends AppCompatActivity {
         });
 
 
+        // This makes it possible to scroll in the description field
+        final TextInputEditText descriptionField = findViewById(R.id.recipeText);
+        descriptionField.setOnTouchListener(new View.OnTouchListener() {
 
+            public boolean onTouch(View v, MotionEvent event) {
+                if (descriptionField.hasFocus()) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_SCROLL){
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
 
     }
 
@@ -248,5 +267,41 @@ public class AddRecipeActivity extends AppCompatActivity {
      */
     public void cancelCreation(View view) {
         finish();
+    }
+
+    /**
+     * Inflates the menu into the toolbar
+     *
+     * @param menu the menu
+     * @return should return true
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_home, menu);
+        return true;
+    }
+
+    /**
+     * checks if the clicked menu item the home icon is
+     * @param item  the clicked menu item
+     * @return  should return true when item found
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.action_home) {
+            goToMainActivity();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * Opens the main activity and closes the previous activities
+     */
+    private void goToMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }

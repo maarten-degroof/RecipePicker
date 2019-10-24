@@ -43,13 +43,20 @@ public class ViewRecipeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_recipe);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Recipe");
         setSupportActionBar(toolbar);
 
         // this takes care of the back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // back button pressed
+                finish();
+            }
+        });
 
         Intent intent = getIntent();
         recipe = (Recipe) intent.getSerializableExtra("Recipe");
@@ -95,7 +102,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
      * Also checks the recipe and changes the favorite value to update it
      *
      * @param menu the menu
-     * @return for some reason should return true
+     * @return should return true
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -150,6 +157,11 @@ public class ViewRecipeActivity extends AppCompatActivity {
             case R.id.action_edit:
                 editRecipe();
                 return true;
+
+            case R.id.action_home:
+                goToMainActivity();
+                return true;
+
 
             default:
                 return super.onOptionsItemSelected(item);
@@ -215,6 +227,15 @@ public class ViewRecipeActivity extends AppCompatActivity {
     private void editRecipe() {
         Intent intent = new Intent(this, EditRecipeActivity.class);
         intent.putExtra("Recipe", recipe);
+        startActivity(intent);
+    }
+
+    /**
+     * Opens the main activity and closes the previous activities
+     */
+    private void goToMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 

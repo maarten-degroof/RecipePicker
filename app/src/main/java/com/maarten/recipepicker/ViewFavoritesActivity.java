@@ -1,16 +1,14 @@
 package com.maarten.recipepicker;
 
 import android.content.Intent;
-import androidx.annotation.NonNull;
-import com.google.android.material.navigation.NavigationView;
 import com.maarten.recipepicker.Adapters.FavoriteAdapter;
 import com.maarten.recipepicker.Settings.SettingsActivity;
 
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
+
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -22,10 +20,6 @@ public class ViewFavoritesActivity extends AppCompatActivity {
     private FavoriteAdapter adapter;
 
     private ListView listViewFavorites;
-
-
-    private DrawerLayout dl;
-    private ActionBarDrawerToggle abdt;
 
 
     @Override
@@ -50,47 +44,11 @@ public class ViewFavoritesActivity extends AppCompatActivity {
         });
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Favorites");
         setSupportActionBar(toolbar);
 
-        // all the navigation drawer stuff
-        dl = findViewById(R.id.dl);
-        abdt = new ActionBarDrawerToggle(this, dl,R.string.Open, R.string.Close);
-        abdt.setDrawerIndicatorEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        dl.addDrawerListener(abdt);
-        abdt.syncState();
-
-        NavigationView nav_view = findViewById(R.id.nav_view);
-        nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                int id = menuItem.getItemId();
-
-                if (id == R.id.addRecipe) {
-                    addRecipe();
-                }
-                else if (id == R.id.favorites) {
-                    viewFavorites();
-                }
-                else if (id == R.id.settings) {
-                    viewSettings();
-                }
-                return true;
-            }
-        });
-    }
-
-    /**
-     *  this connects the hamburger icon to the navigation drawer
-     * @param item prob the hamburger icon i dunno
-     * @return apparently a boolean
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return abdt.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
     /**
@@ -104,30 +62,6 @@ public class ViewFavoritesActivity extends AppCompatActivity {
     }
 
     /**
-     *  opens the AddRecipeActivity
-     */
-    private void addRecipe() {
-        Intent intent = new Intent (this, AddRecipeActivity.class);
-        startActivity(intent);
-    }
-
-    /**
-     * opens ViewFavoritesActivity
-     */
-    private void viewFavorites() {
-        Intent intent = new Intent(this, ViewFavoritesActivity.class);
-        startActivity(intent);
-    }
-
-    /**
-     * opens ViewSettingsActivity
-     */
-    private void viewSettings() {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
-    }
-
-    /**
      * When activity resumes, update the adapter + filter again to get the correct results
      */
     @Override
@@ -135,5 +69,41 @@ public class ViewFavoritesActivity extends AppCompatActivity {
         super.onResume();
         adapter.notifyDataSetChanged();
         ViewFavoritesActivity.this.adapter.getFilter().filter("");
+    }
+
+    /**
+     * Inflates the menu into the toolbar
+     *
+     * @param menu the menu
+     * @return should return true
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_home, menu);
+        return true;
+    }
+
+    /**
+     * checks if the clicked menu item the home icon is
+     * @param item  the clicked menu item
+     * @return  should return true when item found
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.action_home) {
+            goToMainActivity();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * Opens the main activity and closes the previous activities
+     */
+    private void goToMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 }
