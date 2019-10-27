@@ -2,6 +2,9 @@ package com.maarten.recipepicker;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.core.view.ViewCompat;
 import androidx.appcompat.app.AlertDialog;
@@ -11,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +39,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
     private TextView amountCookedField;
     private int amountCookedValue;
+
+    private ImageView recipeImageView;
 
 
 
@@ -70,6 +76,13 @@ public class ViewRecipeActivity extends AppCompatActivity {
         recipeTitle.setText(recipe.getTitle());
         amountCookedValue = recipe.getAmountCooked();
         amountCookedField.setText(String.valueOf(amountCookedValue));
+
+        recipeImageView = findViewById(R.id.recipeImageView);
+        if(recipe.getImagePath() != null) {
+            Bitmap bitmap = BitmapFactory.decodeFile(recipe.getImagePath());
+            recipeImageView.setImageBitmap(bitmap);
+        }
+
 
         switch (recipe.getCookTime()) {
             case SHORT:

@@ -15,9 +15,10 @@ public class Recipe implements Serializable {
     private Integer amountCooked;
     private Date addedDate;
     private CookTime cookTime;
+    private String imagePath;
 
 
-    public Recipe(String description, String title, List<Ingredient> ingredientList, Boolean favorite, Integer amountCooked, CookTime cookTime) {
+    public Recipe(String description, String title, List<Ingredient> ingredientList, Boolean favorite, Integer amountCooked, CookTime cookTime, String imagePath) {
         this.description = description;
         this.title = title;
         this.ingredientList = ingredientList;
@@ -25,6 +26,7 @@ public class Recipe implements Serializable {
         this.amountCooked = amountCooked;
         this.addedDate = Calendar.getInstance().getTime();
         this.cookTime = cookTime;
+        this.imagePath = imagePath;
     }
 
     public String getDescription() {
@@ -86,6 +88,14 @@ public class Recipe implements Serializable {
     public Date getAddedDate() {
         return addedDate;
     };
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 
     /**
      * compares an object to itself. returns true if they're the same

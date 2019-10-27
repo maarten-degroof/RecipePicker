@@ -2,6 +2,7 @@ package com.maarten.recipepicker;
 
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import com.google.android.material.navigation.NavigationView;
@@ -50,7 +51,6 @@ import java.util.List;
  * sort by is not automatically updated, have to 'set' the times cooked value again in order to see the difference
  * -> can possibly be fixed by putting an extra check in onResume()
  ********* THINGS TO MAKE *********
- * search
  * images
  * archiving an item (by swiping the listitem)
  * reordering a list (by dragging)
@@ -59,7 +59,6 @@ import java.util.List;
  * Splitting the ingredients into categories
  * settings
  *    - Dark theme
- * add home button in all screens
  * CHANGE LISTVIEW TO THE NEWER BETTER RECYCLERVIEW!
  ********* WORKING *********
  * adding recipe
@@ -78,6 +77,8 @@ import java.util.List;
  * filtering:
  *      - a slider to choose how many times you have to have cooked it minimum&maximum
  *      - add cooking time with 'chips' so you can filter them
+ * search on title and ingredients
+ * add home button in all screens
  **/
 
 
@@ -134,7 +135,8 @@ public class MainActivity extends AppCompatActivity {
             dummyIngredientList.add(new Ingredient("Tomatoes",3.0,Ingredient.type.items));
             dummyIngredientList.add(new Ingredient("Paprika",3.0,Ingredient.type.items));
             dummyIngredientList.add(new Ingredient("Salt and pepper",null,Ingredient.type.items));
-            recipeList.add(new Recipe("First cook the spaghetti.\n\nSecondly you bake the minced meat.\nCut the tomatoes and the paprika into pieces.\nOnce the minced meat is done, thow the paprika and tomatoes in the same pan and bake them together. Spice it with salt and pepper.\n\nOnce everything is ready, mix it together with the spaghetti and you're done.","Spaghetti Bolognese for people who don't have a lot of time",dummyIngredientList,false, 0, CookTime.MEDIUM));
+
+            recipeList.add(new Recipe("First cook the spaghetti.\n\nSecondly you bake the minced meat.\nCut the tomatoes and the paprika into pieces.\nOnce the minced meat is done, thow the paprika and tomatoes in the same pan and bake them together. Spice it with salt and pepper.\n\nOnce everything is ready, mix it together with the spaghetti and you're done.","Spaghetti Bolognese for people who don't have a lot of time",dummyIngredientList,false, 0, CookTime.MEDIUM, null));
         }
 
         // get the spinner
