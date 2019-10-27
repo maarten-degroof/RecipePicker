@@ -1,5 +1,8 @@
 package com.maarten.recipepicker;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
@@ -9,14 +12,26 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputLayout;
 import com.maarten.recipepicker.Adapters.IngredientEditAdapter;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -42,6 +57,14 @@ public class EditRecipeActivity extends AppCompatActivity {
     private TextInputLayout recipeTitleLayout, recipeDescriptionLayout;
 
     private ChipGroup chipGroup;
+
+    private static final int READ_EXTERNAL_PERMISSIONS = 1;
+    private static final int GALLERY_REQUEST_CODE = 2;
+
+    private ImageView imageView;
+    private String imagePath;
+
+    private Button removeImageButton, differentImageButton, addImageButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +100,30 @@ public class EditRecipeActivity extends AppCompatActivity {
         // hide
         noIngredientTextview = findViewById(R.id.noIngredientsTextView);
         noIngredientTextview.setVisibility(View.INVISIBLE);
+
+        imageView = findViewById(R.id.imageView);
+        imagePath = recipe.getImagePath();
+
+        addImageButton = findViewById(R.id.openGalleryButton);
+        differentImageButton = findViewById(R.id.openGalleryAgainButton);
+        removeImageButton = findViewById(R.id.cancelImageButton);
+
+        // check if there's an image & hide the correct buttons
+        if(imagePath != null) {
+            // generate a bitmap, to put in the imageview
+            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+            imageView.setImageBitmap(bitmap);
+
+            // show & hide appropriate buttons
+            addImageButton.setVisibility(View.GONE);
+            differentImageButton.setVisibility(View.VISIBLE);
+            removeImageButton.setVisibility(View.VISIBLE);
+        } else {
+            // there's no image yet -> hide buttons
+            differentImageButton.setVisibility(View.GONE);
+            removeImageButton.setVisibility(View.GONE);
+        }
+
 
         chipGroup = findViewById(R.id.chipGroup);
 
@@ -134,7 +181,7 @@ public class EditRecipeActivity extends AppCompatActivity {
         } else if (tempRecipeDescription.isEmpty()) {
             recipeDescriptionLayout.setError("You have to fill in a description");
         } else if (ingredientList.isEmpty()) {
-            Toast.makeText(EditRecipeActivity.this, "You have to add at least one ingredient", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "You have to add at least one ingredient", Toast.LENGTH_LONG).show();
         } else {
             boolean resetCookedCounter = ((MaterialCheckBox) findViewById(R.id.resetAmountCookedCheckBox)).isChecked();
 
@@ -147,8 +194,9 @@ public class EditRecipeActivity extends AppCompatActivity {
                 recipeList.get(recipeIndex).resetAmountCooked();
             }
             recipeList.get(recipeIndex).setCookTime(cookTime);
+            recipeList.get(recipeIndex).setImagePath(imagePath);
 
-            Toast.makeText(EditRecipeActivity.this, "Your recipe was updated!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Your recipe was updated!", Toast.LENGTH_LONG).show();
 
             returnToMainActivity();
         }
@@ -284,5 +332,128 @@ public class EditRecipeActivity extends AppCompatActivity {
         } catch (NumberFormatException e) {
             return false;
         }
+    }
+
+    public void showPictureGallery(View view) {
+        if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            pickFromGallery();
+        } else {
+            // permission hasn't been granted.
+
+            if(shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                Toast.makeText(this, "External storage permission is needed to access your images.", Toast.LENGTH_LONG).show();
+            }
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},READ_EXTERNAL_PERMISSIONS);
+        }
+
+    }
+
+    //@Override
+    public void onRequestPermissionResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == READ_EXTERNAL_PERMISSIONS) {
+            // check if the required permission is granted
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                pickFromGallery();
+            } else {
+                Toast.makeText(this, "Permission was not granted.", Toast.LENGTH_SHORT).show();
+            }
+
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    /**
+     * creates intent with the parameters to open an image picker
+     */
+    private void pickFromGallery(){
+        //Create an Intent with action as ACTION_PICK
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        // Sets the type as imagePath/*. This ensures only components of type imagePath are selected
+        intent.setType("image/*");
+        //We pass an extra array with the accepted mime types. This will ensure only components with these MIME types are targeted.
+        String[] mimeTypes = {"imagePath/jpeg", "imagePath/png"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+        // Launching the Intent
+        startActivityForResult(intent, GALLERY_REQUEST_CODE);
+    }
+
+    /**
+     * when image is chosen in an image picker, returns back to the activity and to this method
+     * if image was chosen, extracts the path and puts the image in the imageView
+     *
+     * @param requestCode - the code which you passed on when starting the activity, identifier
+     * @param resultCode - says if the user completed it and chose an image
+     * @param data - contains the Uri
+     */
+    public void onActivityResult(int requestCode,int resultCode,Intent data) {
+        // Result code is RESULT_OK only if the user selects an Image
+        if (resultCode == Activity.RESULT_OK)
+            switch (requestCode) {
+                case GALLERY_REQUEST_CODE:
+                    //data.getData returns the content URI for the selected Image
+                    try {
+                        Uri selectedImage = data.getData();
+                        imagePath = getRealPathFromURI(this, selectedImage);
+
+                        // generate a bitmap, to put in the imageview
+                        Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+                        imageView.setImageBitmap(bitmap);
+
+                        // show & hide appropriate buttons
+                        addImageButton.setVisibility(View.GONE);
+                        differentImageButton.setVisibility(View.VISIBLE);
+                        removeImageButton.setVisibility(View.VISIBLE);
+
+                    } catch (Exception e) {
+                        e.getMessage();
+                    }
+                    break;
+            } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    /**
+     * Gets the absolute path from a URI file
+     * Code written by Kuray Ogun
+     * https://freakycoder.com/android-notes-73-how-to-get-real-path-from-uri-2f78320987f5
+     *
+     * @param context - the current activity
+     * @param contentUri - the Uri to get the path from
+     * @return - returns the path as a string, or the empty string if something went wrong
+     */
+    private String getRealPathFromURI(Context context, Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } catch (Exception e) {
+            Log.e("TAG", "getRealPathFromURI Exception : " + e.toString());
+            return "";
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
+
+    /**
+     * Happens when a user presses the 'remove image' button
+     *
+     * @param view - the pressed button
+     */
+    public void removeImage(View view) {
+        imageView.setImageBitmap(null);
+        imagePath = null;
+
+        // show & hide appropriate buttons
+        addImageButton.setVisibility(View.VISIBLE);
+        differentImageButton.setVisibility(View.GONE);
+        removeImageButton.setVisibility(View.GONE);
     }
 }
