@@ -1,7 +1,9 @@
 package com.maarten.recipepicker;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import com.google.android.material.navigation.NavigationView;
@@ -135,7 +137,9 @@ public class MainActivity extends AppCompatActivity {
             dummyIngredientList.add(new Ingredient("Paprika",3.0,Ingredient.type.items));
             dummyIngredientList.add(new Ingredient("Salt and pepper",null,Ingredient.type.items));
 
-            recipeList.add(new Recipe("First cook the spaghetti.\n\nSecondly you bake the minced meat.\nCut the tomatoes and the paprika into pieces.\nOnce the minced meat is done, thow the paprika and tomatoes in the same pan and bake them together. Spice it with salt and pepper.\n\nOnce everything is ready, mix it together with the spaghetti and you're done.","Spaghetti Bolognese for people who don't have a lot of time",dummyIngredientList,false, 0, CookTime.MEDIUM, null));
+            String dummyImage =  "drawable://" + R.drawable.spaghetti_bolognese;
+            Log.d("dummy", dummyImage);
+            recipeList.add(new Recipe("First cook the spaghetti.\n\nSecondly you bake the minced meat.\nCut the tomatoes and the paprika into pieces.\nOnce the minced meat is done, thow the paprika and tomatoes in the same pan and bake them together. Spice it with salt and pepper.\n\nOnce everything is ready, mix it together with the spaghetti and you're done.","Spaghetti Bolognese for people who don't have a lot of time",dummyIngredientList,false, 0, CookTime.MEDIUM, dummyImage));
         }
 
         // get the spinner
@@ -208,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
                 int id = menuItem.getItemId();
 
                 if (id == R.id.addRecipe) {
-                    addRecipe();
+                    addRecipe(null);
                 } else if (id == R.id.favorites) {
                     viewFavorites();
                 } else if (id == R.id.settings) {
@@ -232,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      *  opens the AddRecipeActivity
      */
-    private void addRecipe() {
+    public void addRecipe(View view) {
         Intent intent = new Intent (this, AddRecipeActivity.class);
         startActivity(intent);
     }

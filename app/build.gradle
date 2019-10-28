@@ -35,7 +35,8 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     implementation 'com.appyvet:materialrangebar:1.4.6'
-    implementation 'com.google.android:flexbox:1.1.1'
+
+    implementation 'com.android.support:recyclerview-v7:28.3.1'
 
 
 }
