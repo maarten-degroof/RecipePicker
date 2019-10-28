@@ -225,7 +225,7 @@ public class EditRecipeActivity extends AppCompatActivity {
      * Creates the recipe dialog to insert an ingredient
      * @param view  needed for the button-linking
      */
-    public void createRecipeDialog(View view) {
+    public void createIngredientDialog(View view) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -233,9 +233,9 @@ public class EditRecipeActivity extends AppCompatActivity {
         View dialog_layout = getLayoutInflater().inflate(R.layout.add_ingredient, null);
 
         // Create the text field in the alert dialog.
-        ingredientNameField = (EditText) dialog_layout.findViewById(R.id.ingredientNameField);
-        ingredientQuantityField = (EditText) dialog_layout.findViewById(R.id.quantityField);
-        ingredientTypeField = (Spinner) dialog_layout.findViewById(R.id.ingredientTypeSpinner);
+        ingredientNameField = dialog_layout.findViewById(R.id.ingredientNameField);
+        ingredientQuantityField = dialog_layout.findViewById(R.id.quantityField);
+        ingredientTypeField = dialog_layout.findViewById(R.id.ingredientTypeSpinner);
 
         // create the spinner adapter with the choices + the standard views of how it should look like
         ArrayAdapter<CharSequence> ingredientTypeAdapter = ArrayAdapter.createFromResource(this, R.array.ingredient_types_array_items, android.R.layout.simple_spinner_item);
@@ -334,6 +334,11 @@ public class EditRecipeActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Checks if the permission has been accepted if so opens the pickfromgallery function
+     * if not tries to request the permission again
+     * @param view - the pressed button to add an image
+     */
     public void showPictureGallery(View view) {
         if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             pickFromGallery();

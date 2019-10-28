@@ -273,11 +273,6 @@
             </com.google.android.material.chip.ChipGroup>
         </HorizontalScrollView>
 
-        <!-- Favorite switch -->
-
-
-        <!-- Cancel button -->
-
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/favouriteSwitch"
             android:layout_width="116dp"

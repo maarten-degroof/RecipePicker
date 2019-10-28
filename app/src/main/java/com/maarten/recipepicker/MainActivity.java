@@ -2,7 +2,6 @@ package com.maarten.recipepicker;
 
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import com.google.android.material.navigation.NavigationView;
@@ -188,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Home");
         setSupportActionBar(toolbar);
         getSupportActionBar().getThemedContext();

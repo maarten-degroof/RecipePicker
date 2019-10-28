@@ -4,12 +4,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.core.view.ViewCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.snackbar.Snackbar;
 import com.maarten.recipepicker.Adapters.IngredientAdapter;
 
@@ -41,8 +47,6 @@ public class ViewRecipeActivity extends AppCompatActivity {
     private int amountCookedValue;
 
     private ImageView recipeImageView;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,10 +74,29 @@ public class ViewRecipeActivity extends AppCompatActivity {
         TextView recipeTitle = findViewById(R.id.textViewTitle);
         TextView recipeDescription = findViewById(R.id.viewRecipeDescription);
         amountCookedField = findViewById(R.id.amountCookedField);
-        Chip durationChip = findViewById(R.id.durationChip);
+
+        ChipDrawable durationChip = ChipDrawable.createFromResource(this, R.xml.chip);
+
+        switch (recipe.getCookTime()) {
+            case SHORT:
+                durationChip.setText("-30 min");
+                break;
+            case MEDIUM:
+                durationChip.setText("30-60 min");
+                break;
+            case LONG:
+                durationChip.setText("60+ min");
+                break;
+        }
+        durationChip.setBounds(0, 0, durationChip.getIntrinsicWidth(), durationChip.getIntrinsicHeight());
+
+        Spannable span = new SpannableString("  " + recipe.getTitle());
+        ImageSpan image = new ImageSpan(durationChip);
+        span.setSpan(image, 0, 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+
+        recipeTitle.setText(span);
 
         recipeDescription.setText(recipe.getDescription());
-        recipeTitle.setText(recipe.getTitle());
         amountCookedValue = recipe.getAmountCooked();
         amountCookedField.setText(String.valueOf(amountCookedValue));
 
@@ -84,17 +107,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
         }
 
 
-        switch (recipe.getCookTime()) {
-            case SHORT:
-                durationChip.setText("Short: -30 min");
-                break;
-            case MEDIUM:
-                durationChip.setText("Medium: 30-60 min");
-                break;
-            case LONG:
-                durationChip.setText("Long: 60+ min");
-                break;
-        }
+
 
         // get the ingredientlist and add it to the listview
         ListView listView = findViewById(R.id.viewRecipeIngredientList);

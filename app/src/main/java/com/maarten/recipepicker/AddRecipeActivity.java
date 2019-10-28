@@ -336,7 +336,11 @@ public class AddRecipeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-
+    /**
+     * Checks if the permission has been accepted if so opens the pickfromgallery function
+     * if not tries to request the permission again
+     * @param view - the pressed button to add an image
+     */
     public void showPictureGallery(View view) {
         if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             pickFromGallery();
