@@ -104,6 +104,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
         if(recipe.getImagePath() != null) {
             Bitmap bitmap = BitmapFactory.decodeFile(recipe.getImagePath());
             recipeImageView.setImageBitmap(bitmap);
+        } else {
+            recipeImageView.setImageResource(R.drawable.no_image_available);
         }
 
 

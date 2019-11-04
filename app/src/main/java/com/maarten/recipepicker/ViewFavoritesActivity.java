@@ -2,24 +2,32 @@ package com.maarten.recipepicker;
 
 import android.content.Intent;
 import com.maarten.recipepicker.Adapters.FavoriteAdapter;
-import com.maarten.recipepicker.Settings.SettingsActivity;
+import com.maarten.recipepicker.ListSorters.AmountCookedSorter;
+import com.maarten.recipepicker.ListSorters.DateSorter;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+
+import java.util.Collections;
 
 import static com.maarten.recipepicker.MainActivity.recipeList;
 
 public class ViewFavoritesActivity extends AppCompatActivity {
+
     private FavoriteAdapter adapter;
 
-    private ListView listViewFavorites;
+    private RecyclerView listViewFavorites;
+    private Spinner sortSpinner;
 
 
     @Override
@@ -27,21 +35,14 @@ public class ViewFavoritesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_favorites);
 
-        listViewFavorites = findViewById(R.id.favoriteList);
+        listViewFavorites = findViewById(R.id.listViewFavorites);
 
         adapter = new FavoriteAdapter(this, recipeList);
+
         listViewFavorites.setAdapter(adapter);
-        ViewFavoritesActivity.this.adapter.getFilter().filter("");
+        listViewFavorites.setLayoutManager(new LinearLayoutManager(this));
 
-        listViewFavorites.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Recipe clickedRecipe = adapter.getItem(position);
-                viewRecipe(clickedRecipe);
-            }
-
-
-        });
+        adapter.getFilter().filter("");
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -49,16 +50,44 @@ public class ViewFavoritesActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-    }
+        // get the spinner
+        sortSpinner = findViewById(R.id.sortSpinner);
 
-    /**
-     * opens the RecipeViewActivity with the given recipe-data
-     **/
-    public void viewRecipe(Recipe recipe) {
-        Intent intent = new Intent(this, ViewRecipeActivity.class);
-        //intent.putExtra("objectName", object);
-        intent.putExtra("Recipe", recipe);
-        startActivity(intent);
+        // create the spinner adapter with the choices + the standard views of how it should look like
+        ArrayAdapter<CharSequence> sortTypeAdapter = ArrayAdapter.createFromResource(this, R.array.sort_types_array_items, android.R.layout.simple_spinner_item);
+        sortTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sortSpinner.setAdapter(sortTypeAdapter);
+
+
+        /**
+         * Takes care of the sort functions. Sorts the list based on the chosen item in the spinner.
+         * order of the spinner:
+         *      - chronological (0)
+         *      - times cooked  (1)
+         */
+        sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                switch ((int) id) {
+                    case 0:
+                        Collections.sort(recipeList, new DateSorter());
+                        adapter.notifyDataSetChanged();
+                        return;
+                    case 1:
+                        Collections.sort(recipeList, new AmountCookedSorter());
+                        adapter.notifyDataSetChanged();
+                        return;
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
     }
 
     /**
@@ -68,7 +97,7 @@ public class ViewFavoritesActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         adapter.notifyDataSetChanged();
-        ViewFavoritesActivity.this.adapter.getFilter().filter("");
+        adapter.getFilter().filter("");
     }
 
     /**

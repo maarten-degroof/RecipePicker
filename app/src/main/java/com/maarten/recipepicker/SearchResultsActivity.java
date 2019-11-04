@@ -2,24 +2,23 @@ package com.maarten.recipepicker;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.maarten.recipepicker.Adapters.FilterAdapter;
 import com.maarten.recipepicker.Adapters.SearchAdapter;
 
 import static com.maarten.recipepicker.MainActivity.recipeList;
 
 public class SearchResultsActivity extends AppCompatActivity {
 
-    private ListView listViewSearched;
+    private RecyclerView recyclerViewSearched;
     private SearchAdapter adapter;
     private String searchString;
 
@@ -27,7 +26,6 @@ public class SearchResultsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
-
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Search Results");
@@ -41,38 +39,19 @@ public class SearchResultsActivity extends AppCompatActivity {
             }
         });
 
-
         Intent intent = getIntent();
         searchString = intent.getExtras().getString("searchString");
 
-        listViewSearched = findViewById(R.id.listViewSearched);
+        recyclerViewSearched = findViewById(R.id.listViewSearched);
 
         adapter = new SearchAdapter(this, recipeList);
-        listViewSearched.setAdapter(adapter);
-        SearchResultsActivity.this.adapter.getFilter().filter(searchString);
+        recyclerViewSearched.setAdapter(adapter);
+        recyclerViewSearched.setLayoutManager(new LinearLayoutManager(this));
 
-        listViewSearched.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Recipe clickedRecipe = adapter.getItem(position);
-                viewRecipe(clickedRecipe);
-            }
-        });
-
+        adapter.getFilter().filter(searchString);
 
         TextView searchedDescriptionTextView = findViewById(R.id.searchedDescriptionTextField);
         searchedDescriptionTextView.setText("Showing all recipes that match your search: " + searchString);
-    }
-
-    /**
-     * gets called when you tap a recipe
-     * @param recipe - the recipe to open
-     */
-    public void viewRecipe(Recipe recipe) {
-        Intent intent = new Intent(this, ViewRecipeActivity.class);
-        //intent.putExtra("objectName", object);
-        intent.putExtra("Recipe", recipe);
-        startActivity(intent);
     }
 
     @Override

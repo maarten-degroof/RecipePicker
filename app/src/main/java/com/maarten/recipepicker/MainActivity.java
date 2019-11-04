@@ -1,28 +1,29 @@
 package com.maarten.recipepicker;
 
-
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.maarten.recipepicker.Adapters.RecipeAdapter;
 import com.maarten.recipepicker.ListSorters.AmountCookedSorter;
 import com.maarten.recipepicker.ListSorters.DateSorter;
 import com.maarten.recipepicker.Settings.SettingsActivity;
 
+import androidx.core.view.ViewCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.Spinner;
 
 import java.io.File;
@@ -39,20 +40,16 @@ import java.util.List;
 
 /**
  ********* BUGS *********
- * After opening a favorite recipe and going back, goes back to main activity instead of favorites
- *
  * when removing all ingredients; doesn't show the text to at least add one ingredient again
- *
- * Nav bar (the icons) behave unexpectedly when a second text color is given!
- *
- * Toolbar text and back arrow is in black instead of in white
- *
- * !!!home page is not scrollable!!!
  *
  * sort by is not automatically updated, have to 'set' the times cooked value again in order to see the difference
  * -> can possibly be fixed by putting an extra check in onResume()
+ *
+ * Can't show image from drawable yet
+ *
+ * when viewing favorites, the sort by feature doesn't work
+ *
  ********* THINGS TO MAKE *********
- * images
  * archiving an item (by swiping the listitem)
  * reordering a list (by dragging)
  * material design everywhere
@@ -60,7 +57,7 @@ import java.util.List;
  * Splitting the ingredients into categories
  * settings
  *    - Dark theme
- * CHANGE LISTVIEW TO THE NEWER BETTER RECYCLERVIEW!
+ * filter on ingredients
  ********* WORKING *********
  * adding recipe
  * saving/loading
@@ -80,6 +77,7 @@ import java.util.List;
  *      - add cooking time with 'chips' so you can filter them
  * search on title and ingredients
  * add home button in all screens
+ * images
  **/
 
 
@@ -88,10 +86,12 @@ public class MainActivity extends AppCompatActivity {
     public static List<Recipe> recipeList;
     private RecipeAdapter adapter;
 
-    private ListView listViewRecipes;
+    private RecyclerView listViewRecipes;
 
     private DrawerLayout dl;
     private ActionBarDrawerToggle abdt;
+
+    private FloatingActionButton fab;
 
     private Spinner sortSpinner;
 
@@ -100,9 +100,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setTheme(R.style.AppTheme);
-
         setContentView(R.layout.main_activity_list);
 
         // get listView object
@@ -133,13 +130,14 @@ public class MainActivity extends AppCompatActivity {
             List<Ingredient> dummyIngredientList = new ArrayList<>();
             dummyIngredientList.add(new Ingredient("Spaghetti",500.0,Ingredient.type.grams));
             dummyIngredientList.add(new Ingredient("Minced meat",350.0,Ingredient.type.grams));
-            dummyIngredientList.add(new Ingredient("Tomatoes",3.0,Ingredient.type.items));
-            dummyIngredientList.add(new Ingredient("Paprika",3.0,Ingredient.type.items));
-            dummyIngredientList.add(new Ingredient("Salt and pepper",null,Ingredient.type.items));
+            dummyIngredientList.add(new Ingredient("Tomatoes",3.0,Ingredient.type.empty));
+            dummyIngredientList.add(new Ingredient("Paprika's",3.0,Ingredient.type.empty));
+            dummyIngredientList.add(new Ingredient("Water",100.0,Ingredient.type.millimetres));
+            dummyIngredientList.add(new Ingredient("A bit of salt and pepper",null,Ingredient.type.empty));
 
             String dummyImage =  "drawable://" + R.drawable.spaghetti_bolognese;
             Log.d("dummy", dummyImage);
-            recipeList.add(new Recipe("First cook the spaghetti.\n\nSecondly you bake the minced meat.\nCut the tomatoes and the paprika into pieces.\nOnce the minced meat is done, thow the paprika and tomatoes in the same pan and bake them together. Spice it with salt and pepper.\n\nOnce everything is ready, mix it together with the spaghetti and you're done.","Spaghetti Bolognese for people who don't have a lot of time",dummyIngredientList,false, 0, CookTime.MEDIUM, dummyImage));
+            recipeList.add(new Recipe("First cook the spaghetti.\n\nSecondly you bake the minced meat.\nCut the tomatoes and the paprika into pieces.\nOnce the minced meat is done, thow the paprika and tomatoes in the same pan and bake them together. Spice it with salt and pepper.\n\nOnce everything is ready, mix it together with the spaghetti and you're done.","Spaghetti Bolognese for people who don't have a lot of time",dummyIngredientList,false, 0, CookTime.MEDIUM, null));
         }
 
         // get the spinner
@@ -183,12 +181,7 @@ public class MainActivity extends AppCompatActivity {
         adapter = new RecipeAdapter(this, recipeList);
 
         listViewRecipes.setAdapter(adapter);
-        listViewRecipes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                viewRecipe(recipeList.get(position));
-            }
-        });
+        listViewRecipes.setLayoutManager(new LinearLayoutManager(this));
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -201,6 +194,10 @@ public class MainActivity extends AppCompatActivity {
         abdt = new ActionBarDrawerToggle(this, dl,R.string.Open, R.string.Close);
         abdt.setDrawerIndicatorEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        // make the listview also scrollable
+        ViewCompat.setNestedScrollingEnabled(listViewRecipes, true);
 
         dl.addDrawerListener(abdt);
         abdt.syncState();
@@ -225,6 +222,26 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        fab = findViewById(R.id.floating_action_button);
+
+        // Listener hides the floatingActionButton when scrolling & shows it again afterwards
+        listViewRecipes.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0 || dy < 0 && fab.isShown())
+                    fab.hide();
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE)
+                    fab.show();
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
+
     }
 
     // this connects the hamburger icon to the navigation drawer
@@ -242,24 +259,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * opens the RecipeViewActivity with the given recipe-data
-     * @param recipe recipe which will be used to show
-     */
-    private void viewRecipe(Recipe recipe) {
-        Intent intent = new Intent(this, ViewRecipeActivity.class);
-         //intent.putExtra("objectName", object);
-        intent.putExtra("Recipe", recipe);
-        startActivity(intent);
-    }
-
-    /**
      * opens ViewFavoritesActivity
      */
     private void viewFavorites() {
         Intent intent = new Intent(this, ViewFavoritesActivity.class);
         startActivity(intent);
     }
-
 
     /**
      * opens ViewFavoritesActivity

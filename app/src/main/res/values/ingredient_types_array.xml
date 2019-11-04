@@ -6,6 +6,6 @@
         <item>millimetres</item>
         <item>centilitres</item>
         <item>litres</item>
-        <item>items</item>
+        <item>empty</item>
     </string-array>
 </resources>

@@ -64,7 +64,8 @@
                 android:ems="10"
                 android:gravity="start|top"
                 android:hint="The Recipe"
-                android:inputType="textMultiLine"
+                android:inputType="textMultiLine|textCapSentences"
+
                 android:overScrollMode="always"
                 android:scrollbarStyle="insideInset"
                 android:scrollbars="vertical" />
@@ -169,7 +170,7 @@
             android:text="Add Recipe"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/favouriteSwitch"
+            app:layout_constraintTop_toBottomOf="@+id/favoriteSwitch"
             app:layout_constraintVertical_bias="1.0" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -274,11 +275,11 @@
         </HorizontalScrollView>
 
         <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/favouriteSwitch"
+            android:id="@+id/favoriteSwitch"
             android:layout_width="116dp"
             android:layout_height="47dp"
             android:layout_marginTop="40dp"
-            android:text="Favourite"
+            android:text="Favorite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.488"
             app:layout_constraintStart_toStartOf="parent"
@@ -297,7 +298,7 @@
             android:text="Cancel"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/favouriteSwitch"
+            app:layout_constraintTop_toBottomOf="@+id/favoriteSwitch"
             app:layout_constraintVertical_bias="0.506" />
 
         <com.google.android.material.button.MaterialButton

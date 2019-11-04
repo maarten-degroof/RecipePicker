@@ -144,9 +144,9 @@ public class AddRecipeActivity extends AppCompatActivity {
         View dialog_layout = getLayoutInflater().inflate(R.layout.add_ingredient, null);
 
         // Create the text field in the alert dialog.
-        ingredientNameField = (EditText) dialog_layout.findViewById(R.id.ingredientNameField);
-        ingredientQuantityField = (EditText) dialog_layout.findViewById(R.id.quantityField);
-        ingredientTypeField = (Spinner) dialog_layout.findViewById(R.id.ingredientTypeSpinner);
+        ingredientNameField = dialog_layout.findViewById(R.id.ingredientNameField);
+        ingredientQuantityField = dialog_layout.findViewById(R.id.quantityField);
+        ingredientTypeField = dialog_layout.findViewById(R.id.ingredientTypeSpinner);
 
         // create the spinner adapter with the choices + the standard views of how it should look like
         ArrayAdapter<CharSequence> ingredientTypeAdapter = ArrayAdapter.createFromResource(this, R.array.ingredient_types_array_items, android.R.layout.simple_spinner_item);
@@ -254,7 +254,7 @@ public class AddRecipeActivity extends AppCompatActivity {
      */
     public void createRecipe(View view) {
 
-        Boolean favouriteSwitch = ((SwitchMaterial) findViewById(R.id.favouriteSwitch)).isChecked();
+        Boolean favouriteSwitch = ((SwitchMaterial) findViewById(R.id.favoriteSwitch)).isChecked();
         String recipeName = ((EditText) findViewById(R.id.nameField)).getText().toString();
         String recipeDescription = ((EditText) findViewById(R.id.recipeText)).getText().toString();
 

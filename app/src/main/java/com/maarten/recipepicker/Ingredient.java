@@ -14,7 +14,7 @@ public class Ingredient implements Serializable {
         millimetres,
         centilitres,
         litres,
-        items
+        empty
     }
 
 
@@ -50,7 +50,7 @@ public class Ingredient implements Serializable {
 
     @Override
     public String toString() {
-        return printQuantity() + " " + ingredientType.name() + " " + name;
+        return (printQuantity() + " " + printType() + " " + name).trim();
     }
 
     /**
@@ -63,6 +63,19 @@ public class Ingredient implements Serializable {
         }
         else {
             return quantity.toString();
+        }
+    }
+
+    /**
+     * Makes it possible for quantity to be 'null'
+     * @return returns "" if null or the quantity if not null
+     */
+    private String printType() {
+        if (ingredientType.equals(type.empty) ) {
+            return "";
+        }
+        else {
+            return ingredientType.name();
         }
     }
 }

@@ -2,6 +2,8 @@ package com.maarten.recipepicker;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,7 +26,7 @@ public class FilteredResultsActivity extends AppCompatActivity {
 
     private FilterAdapter adapter;
 
-    private ListView listViewFiltered;
+    private RecyclerView listViewFiltered;
 
     private int filterMin, filterMax;
     private Boolean durationShort, durationMedium, durationLong;
@@ -53,15 +55,9 @@ public class FilteredResultsActivity extends AppCompatActivity {
 
             adapter = new FilterAdapter(this, recipeList);
             listViewFiltered.setAdapter(adapter);
-            FilteredResultsActivity.this.adapter.getFilter().filter(filterObject.toString());
+            listViewFiltered.setLayoutManager(new LinearLayoutManager(this));
 
-            listViewFiltered.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Recipe clickedRecipe = adapter.getItem(position);
-                    viewRecipe(clickedRecipe);
-                }
-            });
+            FilteredResultsActivity.this.adapter.getFilter().filter(filterObject.toString());
 
         } catch (Exception e) {
             e.getStackTrace();
@@ -95,17 +91,6 @@ public class FilteredResultsActivity extends AppCompatActivity {
             chip.layout(5,5,5,5);
             chipGroup.addView(chip);
         }
-    }
-
-    /**
-     * gets called when you tap a recipe
-     * @param recipe - the recipe to open
-     */
-    public void viewRecipe(Recipe recipe) {
-        Intent intent = new Intent(this, ViewRecipeActivity.class);
-        //intent.putExtra("objectName", object);
-        intent.putExtra("Recipe", recipe);
-        startActivity(intent);
     }
 
     /**
