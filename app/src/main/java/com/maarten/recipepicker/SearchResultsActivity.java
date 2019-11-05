@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.maarten.recipepicker.Adapters.SearchAdapter;
 
+import static androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY;
 import static com.maarten.recipepicker.MainActivity.recipeList;
 
 public class SearchResultsActivity extends AppCompatActivity {
@@ -50,8 +52,10 @@ public class SearchResultsActivity extends AppCompatActivity {
 
         adapter.getFilter().filter(searchString);
 
+        // write the text to say for which times cooked you have filtered. FromHtml is used to make the searched string bold
         TextView searchedDescriptionTextView = findViewById(R.id.searchedDescriptionTextField);
-        searchedDescriptionTextView.setText("Showing all recipes that match your search: " + searchString);
+        String description = getString(R.string.searched_recipe_description, searchString);
+        searchedDescriptionTextView.setText(Html.fromHtml(description, FROM_HTML_MODE_LEGACY));
     }
 
     @Override

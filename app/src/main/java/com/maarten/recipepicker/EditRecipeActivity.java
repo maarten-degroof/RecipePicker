@@ -11,6 +11,7 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputLayout;
 import com.maarten.recipepicker.Adapters.IngredientEditAdapter;
+import com.maarten.recipepicker.Enums.CookTime;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;

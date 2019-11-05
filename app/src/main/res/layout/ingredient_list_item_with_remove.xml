@@ -17,15 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!--<view-->
-        <!--android:id="@+id/removeIngredientButton"-->
-        <!--android:layout_width="91dp"-->
-        <!--android:layout_height="60dp"-->
-        <!--android:layout_marginTop="12dp"-->
-        <!--android:icon="@drawable/ic_baseline_remove_circle_outline_24px"-->
-        <!--android:title="removeIngredient"-->
-         <!--/>-->
-
     <ImageButton
         android:id="@+id/removeIngredientButton"
         android:layout_width="65dp"
@@ -38,16 +29,5 @@
         app:layout_constraintStart_toEndOf="@+id/ingredientListTextView"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_baseline_remove_circle_outline_24px" />
-    <!--<Button-->
-        <!--android:id="@+id/removeIngredientButton"-->
-        <!--android:layout_width="75dp"-->
-        <!--android:layout_height="56dp"-->
-        <!--android:layout_marginStart="8dp"-->
-        <!--android:layout_marginTop="16dp"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--android:text="remove"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintStart_toEndOf="@+id/ingredientListTextView"-->
-        <!--app:layout_constraintTop_toTopOf="parent" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

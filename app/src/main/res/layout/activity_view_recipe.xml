@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-
-
-
 <androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -24,9 +19,6 @@
             android:id="@+id/toolbar"
             layout="@layout/toolbar" />
 
-
-        <!--        </com.google.android.flexbox.FlexboxLayout>-->
-
         <TextView
             android:id="@+id/textViewTitle"
             android:layout_width="0dp"
@@ -34,30 +26,20 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
-            android:text="The title"
-
+            android:text="@string/title"
             android:textColor="@color/primaryDarkColor"
             android:textSize="30sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/recipeImageView">
-
-            <!--            <com.google.android.material.chip.Chip-->
-            <!--                android:id="@+id/durationChip"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_marginStart="20dp"-->
-            <!--                android:layout_marginTop="8dp"-->
-            <!--                android:text="Cooking Time" />-->
-
-        </TextView>
+            app:layout_constraintTop_toBottomOf="@+id/recipeImageView" />
 
         <ImageView
             android:id="@+id/recipeImageView"
             android:layout_width="250dp"
             android:layout_height="250dp"
             android:layout_marginTop="8dp"
+            android:contentDescription="@string/image_description"
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -72,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
-            android:text="The ingredients needed:"
+            android:text="@string/needed_ingredients"
             android:textColor="@color/primaryColor"
             android:textSize="22sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -101,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
-            android:text="The recipe: "
+            android:text="@string/the_recipe"
             android:textColor="@color/primaryColor"
             android:textSize="22sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -114,9 +96,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="24dp"
             android:layout_marginEnd="8dp"
-            android:text="Here comes the recipe"
+            android:text="@string/dummy_value"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -131,11 +113,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="70dp"
-            android:text="Times cooked: "
+            android:text="@string/times_cooked"
             android:textColor="@color/primaryColor"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="22sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/viewRecipeDescription"
             tools:layout_conversion_absoluteHeight="24dp"
@@ -146,10 +126,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="70dp"
-            android:text="0"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@string/null_number"
+            android:textSize="22sp"
             app:layout_constraintStart_toEndOf="@+id/amountCookedTextField"
             app:layout_constraintTop_toBottomOf="@+id/viewRecipeDescription"
             tools:layout_conversion_absoluteHeight="32dp"
@@ -158,11 +136,10 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/amountCookedAddButton"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="30dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="70dp"
+            android:layout_width="25dp"
+            android:layout_height="39dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="12dp"
             android:onClick="addToCookedCounter"
             android:padding="0dp"
             android:paddingStart="0dp"
@@ -171,14 +148,86 @@
             android:paddingEnd="0dp"
             android:paddingRight="0dp"
             android:paddingBottom="0dp"
-            android:text="+"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@string/plus_sign"
+            android:textSize="12sp"
             app:layout_constraintStart_toEndOf="@+id/amountCookedField"
             app:layout_constraintTop_toBottomOf="@+id/viewRecipeDescription"
-            app:layout_constraintVertical_bias="1.0"
             tools:layout_conversion_absoluteHeight="40dp"
             tools:layout_conversion_absoluteWidth="40dp" />
 
+        <TextView
+            android:id="@+id/websiteTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="28dp"
+            android:text="@string/website"
+            android:textColor="@color/primaryColor"
+            android:textSize="22sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/amountCookedTextField" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/BrowseURLButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:onClick="openURL"
+            android:text="@string/browse"
+            app:icon="@drawable/ic_open_in_browser_black_24dp"
+            app:layout_constraintStart_toStartOf="@+id/guidelineMiddleVertical"
+            app:layout_constraintTop_toBottomOf="@+id/websiteTextView" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/copyURLButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:onClick="copyURLToClipboard"
+            android:text="@android:string/copy"
+            app:icon="@drawable/ic_content_copy_black_24dp"
+            app:layout_constraintEnd_toStartOf="@+id/guidelineMiddleVertical"
+            app:layout_constraintTop_toBottomOf="@+id/websiteTextView" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineMiddleVertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintGuide_begin="204dp"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/commentTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="32dp"
+            android:text="additional comments should be printed over here."
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/copyURLButton" />
+
+        <TextView
+            android:id="@+id/noWebsiteTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/no_website_added"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/websiteTextView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

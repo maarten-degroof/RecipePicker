@@ -51,7 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
-        android:text="Filter"
+        android:text="@string/filter"
         android:textColor="@color/primaryDarkColor"
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -65,7 +65,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="Here you can filter all your recipes so you will only get the ones which meet your criteria"
+        android:text="@string/filter_description"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -77,7 +77,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="56dp"
-        android:text="How often have you cooked it?"
+        android:text="@string/filter_times_cooked_description"
         android:textColor="@color/primaryColor"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -85,11 +85,11 @@
 
     <TextView
         android:id="@+id/minAmountCooked"
-        android:layout_width="120px"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="40dp"
-        android:text="0"
+        android:text="@string/null_number"
         android:textColor="@color/primaryColor"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -97,11 +97,11 @@
 
     <TextView
         android:id="@+id/maxAmountCooked"
-        android:layout_width="120px"
+        android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:layout_marginEnd="16dp"
-        android:text="1000"
+        android:text="@string/filter_max_template"
         android:textColor="@color/primaryColor"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -115,7 +115,7 @@
         android:layout_marginEnd="44dp"
         android:layout_marginBottom="32dp"
         android:onClick="viewFilteredResults"
-        android:text="Filter"
+        android:text="@string/filter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -125,7 +125,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="36dp"
-        android:text="How long do you want to cook?"
+        android:text="@string/filter_duration_description"
         android:textColor="@color/primaryColor"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -149,7 +149,7 @@
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Short: -30 min"
+            android:text="@string/duration_short"
             app:checkedIconEnabled="true" />
 
         <com.google.android.material.chip.Chip
@@ -157,7 +157,7 @@
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Medium: 30-60 min"
+            android:text="@string/duration_medium"
             app:checkedIconEnabled="true" />
 
         <com.google.android.material.chip.Chip
@@ -165,7 +165,7 @@
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Long: 60+ min"
+            android:text="@string/duration_long"
             app:checkedIconEnabled="true" />
 
     </com.google.android.material.chip.ChipGroup>

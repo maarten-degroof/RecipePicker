@@ -1,10 +1,12 @@
 package com.maarten.recipepicker;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.core.view.ViewCompat;
@@ -24,7 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.chip.Chip;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.snackbar.Snackbar;
 import com.maarten.recipepicker.Adapters.IngredientAdapter;
@@ -75,17 +77,19 @@ public class ViewRecipeActivity extends AppCompatActivity {
         TextView recipeDescription = findViewById(R.id.viewRecipeDescription);
         amountCookedField = findViewById(R.id.amountCookedField);
 
+        //URLField = findViewById(R.id.URLTextView);
+
         ChipDrawable durationChip = ChipDrawable.createFromResource(this, R.xml.chip);
 
         switch (recipe.getCookTime()) {
             case SHORT:
-                durationChip.setText("-30 min");
+                durationChip.setText(getString(R.string.duration_short));
                 break;
             case MEDIUM:
-                durationChip.setText("30-60 min");
+                durationChip.setText(getString(R.string.duration_medium));
                 break;
             case LONG:
-                durationChip.setText("60+ min");
+                durationChip.setText(getString(R.string.duration_long));
                 break;
         }
         durationChip.setBounds(0, 0, durationChip.getIntrinsicWidth(), durationChip.getIntrinsicHeight());
@@ -108,8 +112,17 @@ public class ViewRecipeActivity extends AppCompatActivity {
             recipeImageView.setImageResource(R.drawable.no_image_available);
         }
 
+        TextView noWebsiteTextView = findViewById(R.id.noWebsiteTextView);
+        MaterialButton copyWebsiteButton = findViewById(R.id.copyURLButton);
+        MaterialButton browseWebsiteButton = findViewById(R.id.BrowseURLButton);
 
-
+        // hide the appropriate elements
+        if(recipe.getURL() != null && !recipe.getURL().equals("")) {
+            noWebsiteTextView.setVisibility(View.INVISIBLE);
+        } else {
+            copyWebsiteButton.setVisibility(View.INVISIBLE);
+            browseWebsiteButton.setVisibility(View.INVISIBLE);
+        }
 
         // get the ingredientlist and add it to the listview
         ListView listView = findViewById(R.id.viewRecipeIngredientList);
@@ -190,7 +203,6 @@ public class ViewRecipeActivity extends AppCompatActivity {
                 goToMainActivity();
                 return true;
 
-
             default:
                 return super.onOptionsItemSelected(item);
 
@@ -233,6 +245,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
     /**
      * Add one to the cooked counter
      * Displays a snackbar with an undo option
+     *
+     * @param view - the add button
      */
     public void addToCookedCounter(View view) {
         MainActivity.recipeList.get(recipeIndex).addOneAmountCooked();
@@ -255,6 +269,36 @@ public class ViewRecipeActivity extends AppCompatActivity {
     private void editRecipe() {
         Intent intent = new Intent(this, EditRecipeActivity.class);
         intent.putExtra("Recipe", recipe);
+        startActivity(intent);
+    }
+
+    /**
+     * Copies the recipe URL to the clipboard
+     *
+     * @param view - the copy button
+     */
+    public void copyURLToClipboard(View view) {
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("Recipe URL", recipe.getURL());
+        clipboard.setPrimaryClip(clip);
+        Toast.makeText(this, "website coppied:\n" + recipe.getURL(), Toast.LENGTH_LONG).show();
+    }
+
+    /**
+     * opens the webpage with the URL in the recipe
+     * Works with and without http(s) in the given URL
+     *
+     * @param view - the open webpage button
+     */
+    public void openURL(View view) {
+        String url;
+        if(recipe.getURL().startsWith("http://") || recipe.getURL().startsWith("https://")) {
+            url = recipe.getURL();
+        } else {
+            url = "https://" + recipe.getURL();
+        }
+        Intent intent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse(url));
         startActivity(intent);
     }
 

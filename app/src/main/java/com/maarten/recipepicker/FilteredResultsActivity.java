@@ -7,11 +7,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.material.chip.Chip;
@@ -20,6 +18,7 @@ import com.maarten.recipepicker.Adapters.FilterAdapter;
 
 import org.json.JSONObject;
 
+import static androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY;
 import static com.maarten.recipepicker.MainActivity.recipeList;
 
 public class FilteredResultsActivity extends AppCompatActivity {
@@ -70,24 +69,25 @@ public class FilteredResultsActivity extends AppCompatActivity {
         // this takes care of the back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // write the text to say for which times cooked you have filtered. FromHtml is used to make the numbers bold
         TextView filteredDescriptionTextView = findViewById(R.id.filteredDescriptionTextField);
-        filteredDescriptionTextView.setText("Showing all recipes which you have cooked between " + filterMin + " and " + filterMax + " times.");
+        String description = getString(R.string.filtered_recipe_description, filterMin, filterMax);
+        filteredDescriptionTextView.setText(Html.fromHtml(description, FROM_HTML_MODE_LEGACY));
 
         ChipGroup chipGroup = findViewById(R.id.chipGroup);
-
         if(durationShort) {
             Chip chip = new Chip(this);
-            chip.setText("Short: -30 min");
+            chip.setText(getString(R.string.duration_short));
             chip.layout(5,5,5,5);
             chipGroup.addView(chip);
         } if(durationMedium) {
             Chip chip = new Chip(this);
-            chip.setText("Medium: 30-60 min");
+            chip.setText(getString(R.string.duration_medium));
             chip.layout(5,5,5,5);
             chipGroup.addView(chip);
         } if(durationLong) {
             Chip chip = new Chip(this);
-            chip.setText("Long: 60+ min");
+            chip.setText(getString(R.string.duration_long));
             chip.layout(5,5,5,5);
             chipGroup.addView(chip);
         }

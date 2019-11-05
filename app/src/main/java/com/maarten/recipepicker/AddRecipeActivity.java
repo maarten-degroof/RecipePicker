@@ -19,6 +19,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.maarten.recipepicker.Adapters.IngredientEditAdapter;
+import com.maarten.recipepicker.Enums.CookTime;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -257,6 +258,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         Boolean favouriteSwitch = ((SwitchMaterial) findViewById(R.id.favoriteSwitch)).isChecked();
         String recipeName = ((EditText) findViewById(R.id.nameField)).getText().toString();
         String recipeDescription = ((EditText) findViewById(R.id.recipeText)).getText().toString();
+        String recipeURL = ((EditText) findViewById(R.id.URLField)).getText().toString();
 
         // get the selected cookingtime
         ChipGroup chipGroup = findViewById(R.id.chipGroup);
@@ -284,7 +286,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         } else if (ingredientList.isEmpty()) {
             Toast.makeText(AddRecipeActivity.this, "You have to add at least one ingredient", Toast.LENGTH_LONG).show();
         } else {
-            Recipe recipe = new Recipe(recipeDescription,recipeName,ingredientList,favouriteSwitch, 0, cookTime, imagePath);
+            Recipe recipe = new Recipe(recipeDescription,recipeName,ingredientList,favouriteSwitch, 0, cookTime, imagePath, recipeURL, null,null);
             recipeList.add(recipe);
             Toast.makeText(AddRecipeActivity.this, "Your recipe was added!", Toast.LENGTH_LONG).show();
             finish();

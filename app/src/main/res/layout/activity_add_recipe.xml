@@ -11,7 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <include layout="@layout/toolbar" />
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
 
         <ListView
             android:id="@+id/addRecipeIngredientList"
@@ -63,7 +65,7 @@
                 android:layout_height="179dp"
                 android:ems="10"
                 android:gravity="start|top"
-                android:hint="The Recipe"
+                android:hint="@string/description_input_field"
                 android:inputType="textMultiLine|textCapSentences"
 
                 android:overScrollMode="always"
@@ -78,7 +80,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="12dp"
-            android:text="Ingredients:"
+            android:text="@string/ingredients"
             android:textAlignment="center"
             android:textColor="@color/primaryColor"
             android:textSize="30sp"
@@ -88,13 +90,27 @@
             app:layout_constraintTop_toBottomOf="@+id/view" />
 
         <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp"
+            android:text="@string/title"
+            android:textAlignment="center"
+            android:textColor="@color/primaryColor"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+        <TextView
             android:id="@+id/noIngredientsTextView"
             android:layout_width="match_parent"
             android:layout_height="121dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="72dp"
             android:layout_marginEnd="16dp"
-            android:text="No ingredients yet. Add an ingredient by pressing the button"
+            android:text="@string/no_ingredients_yet"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
@@ -106,7 +122,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="12dp"
-            android:text="Description"
+            android:text="@string/description"
             android:textAlignment="center"
             android:textColor="@color/primaryColor"
             android:textSize="30sp"
@@ -124,7 +140,7 @@
             android:layout_height="56dp"
             android:layout_marginTop="16dp"
             android:onClick="createIngredientDialog"
-            android:text="Add ingredient"
+            android:text="@string/add_ingredient"
 
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -139,7 +155,7 @@
 
             android:layout_marginTop="16dp"
             android:onClick="showPictureGallery"
-            android:text="Add image"
+            android:text="@string/add_image"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageTextView" />
@@ -153,7 +169,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:onClick="showPictureGallery"
-            android:text="Change"
+            android:text="@string/change"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
@@ -167,7 +183,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="24dp"
             android:onClick="createRecipe"
-            android:text="Add Recipe"
+            android:text="@string/add_recipe"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/favoriteSwitch"
@@ -180,11 +196,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/titleTextView">
 
 
             <com.google.android.material.textfield.TextInputEditText
@@ -192,7 +208,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:ems="10"
-                android:hint="Recipe title"
+                android:hint="@string/title_input_field"
                 android:inputType="textPersonName" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -203,7 +219,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="Duration"
+            android:text="@string/duration"
             android:textAlignment="center"
             android:textColor="@color/primaryColor"
             android:textSize="30sp"
@@ -217,11 +233,26 @@
              thanks to app:singleLine="true" -->
 
         <TextView
+            android:id="@+id/extrasTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/extras"
+            android:textAlignment="center"
+            android:textColor="@color/primaryColor"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view6" />
+
+        <TextView
             android:id="@+id/imageTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="Image"
+            android:text="@string/image"
             android:textAlignment="center"
             android:textColor="@color/primaryColor"
             android:textSize="30sp"
@@ -230,6 +261,30 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view5" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/URLFieldLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/extrasTextView">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/URLField"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:ems="10"
+                android:hint="@string/URL_input_field"
+                android:inputType="textWebEmailAddress" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <HorizontalScrollView
             android:id="@+id/horizontalScrollView"
@@ -254,7 +309,7 @@
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Short: -30 min" />
+                    android:text="@string/duration_short" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/mediumDurationChip"
@@ -262,14 +317,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 
-                    android:text="Medium: 30-60 min" />
+                    android:text="@string/duration_medium" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/longDurationChip"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Long: 60+ min" />
+                    android:text="@string/duration_long" />
 
             </com.google.android.material.chip.ChipGroup>
         </HorizontalScrollView>
@@ -278,12 +333,12 @@
             android:id="@+id/favoriteSwitch"
             android:layout_width="116dp"
             android:layout_height="47dp"
-            android:layout_marginTop="40dp"
-            android:text="Favorite"
+            android:layout_marginTop="32dp"
+            android:text="@string/favorite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.488"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/view6" />
+            app:layout_constraintTop_toBottomOf="@+id/URLFieldLayout" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/cancelButton"
@@ -295,7 +350,7 @@
             android:layout_marginBottom="24dp"
             android:layout_weight="1"
             android:onClick="cancelCreation"
-            android:text="Cancel"
+            android:text="@string/cancel"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/favoriteSwitch"
@@ -310,7 +365,7 @@
             android:layout_marginTop="16dp"
             android:layout_weight="1"
             android:onClick="removeImage"
-            android:text="Remove"
+            android:text="@string/remove"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
@@ -350,6 +405,7 @@
             android:layout_width="250dp"
             android:layout_height="250dp"
             android:layout_marginTop="20dp"
+            android:contentDescription="@string/image_description"
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

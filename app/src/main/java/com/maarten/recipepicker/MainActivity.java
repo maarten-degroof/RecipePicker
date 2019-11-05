@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.maarten.recipepicker.Adapters.RecipeAdapter;
+import com.maarten.recipepicker.Enums.CookTime;
 import com.maarten.recipepicker.ListSorters.AmountCookedSorter;
 import com.maarten.recipepicker.ListSorters.DateSorter;
 import com.maarten.recipepicker.Settings.SettingsActivity;
@@ -137,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
             String dummyImage =  "drawable://" + R.drawable.spaghetti_bolognese;
             Log.d("dummy", dummyImage);
-            recipeList.add(new Recipe("First cook the spaghetti.\n\nSecondly you bake the minced meat.\nCut the tomatoes and the paprika into pieces.\nOnce the minced meat is done, thow the paprika and tomatoes in the same pan and bake them together. Spice it with salt and pepper.\n\nOnce everything is ready, mix it together with the spaghetti and you're done.","Spaghetti Bolognese for people who don't have a lot of time",dummyIngredientList,false, 0, CookTime.MEDIUM, null));
+            recipeList.add(new Recipe("First cook the spaghetti.\n\nSecondly you bake the minced meat.\nCut the tomatoes and the paprika into pieces.\nOnce the minced meat is done, thow the paprika and tomatoes in the same pan and bake them together. Spice it with salt and pepper.\n\nOnce everything is ready, mix it together with the spaghetti and you're done.","Spaghetti Bolognese for people who don't have a lot of time",dummyIngredientList,false, 0, CookTime.MEDIUM, null, null, null, null));
         }
 
         // get the spinner

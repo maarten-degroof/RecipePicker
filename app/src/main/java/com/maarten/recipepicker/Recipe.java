@@ -1,5 +1,8 @@
 package com.maarten.recipepicker;
 
+import com.maarten.recipepicker.Enums.CookTime;
+import com.maarten.recipepicker.Enums.Difficulty;
+
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
@@ -16,9 +19,13 @@ public class Recipe implements Serializable {
     private Date addedDate;
     private CookTime cookTime;
     private String imagePath;
+    private String URL;
+    private Difficulty difficulty;
+    private String comments;
 
 
-    public Recipe(String description, String title, List<Ingredient> ingredientList, Boolean favorite, Integer amountCooked, CookTime cookTime, String imagePath) {
+    public Recipe(String description, String title, List<Ingredient> ingredientList, Boolean favorite,
+                  Integer amountCooked, CookTime cookTime, String imagePath, String URL, Difficulty difficulty, String comments) {
         this.description = description;
         this.title = title;
         this.ingredientList = ingredientList;
@@ -27,6 +34,9 @@ public class Recipe implements Serializable {
         this.addedDate = Calendar.getInstance().getTime();
         this.cookTime = cookTime;
         this.imagePath = imagePath;
+        this.URL = URL;
+        this.difficulty = difficulty;
+        this.comments = comments;
     }
 
     public String getDescription() {
@@ -96,6 +106,33 @@ public class Recipe implements Serializable {
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
     }
+
+    public String getURL() {
+        return URL;
+    }
+
+    public void setURL(String URL) {
+        this.URL = URL;
+    }
+
+    public Difficulty getDifficulty() {
+        return difficulty;
+    }
+
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
+
+
 
     /**
      * compares an object to itself. returns true if they're the same

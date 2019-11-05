@@ -20,7 +20,7 @@
             android:layout_marginTop="16dp"
             android:layout_weight="1"
             android:onClick="removeImage"
-            android:text="Remove"
+            android:text="@string/remove"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
@@ -33,7 +33,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:onClick="showPictureGallery"
-            android:text="Change"
+            android:text="@string/change"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
@@ -45,7 +45,7 @@
 
             android:layout_marginTop="16dp"
             android:onClick="showPictureGallery"
-            android:text="Add image"
+            android:text="@string/add_image"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageTextView" />
@@ -55,6 +55,7 @@
             android:layout_width="250dp"
             android:layout_height="250dp"
             android:layout_marginTop="20dp"
+            android:contentDescription="@string/image_description"
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -63,10 +64,10 @@
 
         <TextView
             android:id="@+id/imageTextView"
-            android:layout_width="474dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="Image"
+            android:text="@string/image"
             android:textAlignment="center"
             android:textColor="@color/primaryColor"
             android:textSize="30sp"
@@ -91,7 +92,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="12dp"
-            android:text="Description"
+            android:text="@string/description"
             android:textAlignment="center"
             android:textColor="@color/primaryColor"
             android:textSize="30sp"
@@ -169,7 +170,7 @@
                 android:layout_height="179dp"
                 android:ems="10"
                 android:gravity="start|top"
-                android:hint="The Recipe"
+                android:hint="@string/description_input_field"
                 android:inputType="textMultiLine" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -179,7 +180,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="12dp"
-            android:text="Duration"
+            android:text="@string/duration"
             android:textAlignment="center"
             android:textColor="@color/primaryColor"
             android:textSize="30sp"
@@ -193,7 +194,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="12dp"
-            android:text="Ingredients"
+            android:text="@string/ingredients"
             android:textAlignment="center"
             android:textColor="@color/primaryColor"
             android:textSize="30sp"
@@ -209,7 +210,7 @@
             android:layout_height="56dp"
             android:layout_marginTop="16dp"
             android:onClick="createIngredientDialog"
-            android:text="Add ingredient"
+            android:text="@string/add_ingredient"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ingredientTextView" />
@@ -232,7 +233,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:ems="10"
-                android:hint="Recipe title"
+                android:hint="@string/title_input_field"
                 android:inputType="textPersonName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0" />
@@ -247,7 +248,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="24dp"
             android:onClick="updateRecipe"
-            android:text="Update"
+            android:text="@string/update"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/resetAmountCookedCheckBox" />
@@ -259,7 +260,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="72dp"
             android:layout_marginEnd="16dp"
-            android:text="No ingredients yet. Add an ingredient by pressing the button"
+            android:text="@string/no_ingredients_yet"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
@@ -275,9 +276,9 @@
             android:id="@+id/horizontalScrollView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="12dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.347"
+            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/durationTextView">
 
@@ -295,7 +296,7 @@
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Short: -30 min" />
+                    android:text="@string/duration_short" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/mediumDurationChip"
@@ -303,14 +304,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 
-                    android:text="Medium: 30-60 min" />
+                    android:text="@string/duration_medium" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/longDurationChip"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Long: 60+ min" />
+                    android:text="@string/duration_long" />
 
             </com.google.android.material.chip.ChipGroup>
         </HorizontalScrollView>
@@ -324,7 +325,7 @@
             android:layout_marginTop="32dp"
             android:layout_marginBottom="24dp"
             android:onClick="cancelEdit"
-            android:text="Cancel"
+            android:text="@string/cancel"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/resetAmountCookedCheckBox" />
@@ -335,7 +336,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="40dp"
-            android:text="Reset amount cooked"
+            android:text="@string/reset_amount_cooked"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.432"
             app:layout_constraintStart_toStartOf="parent"
