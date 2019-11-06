@@ -151,7 +151,7 @@ public class AddRecipeActivity extends AppCompatActivity {
 
         // This makes it possible to scroll in the comment field
         final TextInputEditText commentField = findViewById(R.id.commentsText);
-        descriptionField.setOnTouchListener(new View.OnTouchListener() {
+        commentField.setOnTouchListener(new View.OnTouchListener() {
 
             public boolean onTouch(View v, MotionEvent event) {
                 if (commentField.hasFocus()) {

@@ -9,6 +9,7 @@ import android.content.Intent;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.maarten.recipepicker.Adapters.IngredientEditAdapter;
 import com.maarten.recipepicker.Enums.CookTime;
@@ -26,9 +27,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.view.ViewCompat;
 
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -97,6 +100,9 @@ public class EditRecipeActivity extends AppCompatActivity {
         ingredientAdapter = new IngredientEditAdapter(this,ingredientList);
         ingredientListView = findViewById(R.id.editRecipeIngredientList);
         ingredientListView.setAdapter(ingredientAdapter);
+
+        // make the listview (ingredientList) also scrollable when inserting text
+        ViewCompat.setNestedScrollingEnabled(ingredientListView, true);
 
         recipeTitleLayout = findViewById(R.id.nameFieldLayout);
         recipeDescriptionLayout = findViewById(R.id.descriptionFieldLayout);
@@ -180,6 +186,36 @@ public class EditRecipeActivity extends AppCompatActivity {
                         chip.setClickable(!(chip.getId() == chipGroupDifficulty.getCheckedChipId()));
                     }
                 }
+            }
+        });
+
+        // This makes it possible to scroll in the description field
+        recipeDescription.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event) {
+                if (recipeDescription.hasFocus()) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_SCROLL){
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
+        // This makes it possible to scroll in the comment field
+        recipeComments.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event) {
+                if (recipeComments.hasFocus()) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_SCROLL){
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        return true;
+                    }
+                }
+                return false;
             }
         });
     }
