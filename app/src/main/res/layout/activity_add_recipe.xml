@@ -287,7 +287,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <HorizontalScrollView
-            android:id="@+id/horizontalScrollView"
+            android:id="@+id/horizontalScrollViewDuration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -296,7 +296,7 @@
             app:layout_constraintTop_toBottomOf="@+id/durationTextView">
 
             <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chipGroup"
+                android:id="@+id/chipGroupDuration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -329,16 +329,59 @@
             </com.google.android.material.chip.ChipGroup>
         </HorizontalScrollView>
 
+
+        <HorizontalScrollView
+            android:id="@+id/horizontalScrollViewDifficulty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/horizontalScrollViewDuration">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupDifficulty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:checkedChip="@+id/intermediateDifficultyChip"
+                app:singleLine="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/beginnerDifficultyChip"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/beginner" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/intermediateDifficultyChip"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="@string/intermediate" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/expertDifficultyChip"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/expert" />
+
+            </com.google.android.material.chip.ChipGroup>
+        </HorizontalScrollView>
+
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/favoriteSwitch"
             android:layout_width="116dp"
             android:layout_height="47dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:text="@string/favorite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.488"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/URLFieldLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/commentsFieldLayout" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/cancelButton"
@@ -369,6 +412,34 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/commentsFieldLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/URLFieldLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/commentsText"
+                android:layout_width="match_parent"
+                android:layout_height="179dp"
+                android:ems="10"
+                android:gravity="start|top"
+                android:hint="@string/comment_hint"
+                android:inputType="textMultiLine|textCapSentences"
+
+                android:overScrollMode="always"
+                android:scrollbarStyle="insideInset"
+                android:scrollbars="vertical" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
         <View
             android:id="@+id/view3"
             style="@style/Divider"
@@ -385,10 +456,11 @@
             style="@style/Divider"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView" />
+            app:layout_constraintTop_toBottomOf="@+id/horizontalScrollViewDifficulty" />
 
         <View
             android:id="@+id/view6"

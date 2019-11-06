@@ -123,7 +123,7 @@
     <string name="duration_medium">30\u201360 min</string>
     <string name="duration_long">\u003E60 min</string>
     <string name="no_ingredients_yet">No ingredients yet. Add an ingredient by pressing the button.</string>
-    <string name="duration">Duration</string>
+    <string name="duration">Duration &amp; Difficulty</string>
     <string name="image">image</string>
     <string name="add_image">Add image</string>
     <string name="extras">Extras</string>
@@ -161,4 +161,10 @@
     <string name="browse">Browse</string>
     <string name="plus_sign">+</string>
     <string name="no_website_added">You haven\'t added a website yet!</string>
+    <string name="beginner">Beginner</string>
+    <string name="intermediate">Intermediate</string>
+    <string name="expert">Expert</string>
+    <string name="no_comments">There are no comments to show.</string>
+    <string name="comments">Comments:</string>
+    <string name="comment_hint">Do you have any comments about the recipe?</string>
 </resources>

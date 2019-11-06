@@ -20,6 +20,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.maarten.recipepicker.Adapters.IngredientEditAdapter;
 import com.maarten.recipepicker.Enums.CookTime;
+import com.maarten.recipepicker.Enums.Difficulty;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -105,14 +106,27 @@ public class AddRecipeActivity extends AppCompatActivity {
         removeImageButton.setVisibility(View.GONE);
 
         // this makes sure that there's always one chip selected
-        final ChipGroup mChipGroup = findViewById(R.id.chipGroup);
-        mChipGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+        final ChipGroup chipGroupDuration = findViewById(R.id.chipGroupDuration);
+        chipGroupDuration.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(ChipGroup group, int checkedId) {
-                for (int i = 0; i < mChipGroup.getChildCount(); i++) {
-                    Chip chip = (Chip) mChipGroup.getChildAt(i);
+                for (int i = 0; i < chipGroupDuration.getChildCount(); i++) {
+                    Chip chip = (Chip) chipGroupDuration.getChildAt(i);
                     if (chip != null) {
-                        chip.setClickable(!(chip.getId() == mChipGroup.getCheckedChipId()));
+                        chip.setClickable(!(chip.getId() == chipGroupDuration.getCheckedChipId()));
+                    }
+                }
+            }
+        });
+
+        final ChipGroup chipGroupDifficulty = findViewById(R.id.chipGroupDifficulty);
+        chipGroupDifficulty.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(ChipGroup group, int checkedId) {
+                for (int i = 0; i < chipGroupDifficulty.getChildCount(); i++) {
+                    Chip chip = (Chip) chipGroupDifficulty.getChildAt(i);
+                    if (chip != null) {
+                        chip.setClickable(!(chip.getId() == chipGroupDifficulty.getCheckedChipId()));
                     }
                 }
             }
@@ -125,6 +139,22 @@ public class AddRecipeActivity extends AppCompatActivity {
 
             public boolean onTouch(View v, MotionEvent event) {
                 if (descriptionField.hasFocus()) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_SCROLL){
+                        v.getParent().requestDisallowInterceptTouchEvent(false);
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
+        // This makes it possible to scroll in the comment field
+        final TextInputEditText commentField = findViewById(R.id.commentsText);
+        descriptionField.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event) {
+                if (commentField.hasFocus()) {
                     v.getParent().requestDisallowInterceptTouchEvent(true);
                     if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_SCROLL){
                         v.getParent().requestDisallowInterceptTouchEvent(false);
@@ -259,25 +289,38 @@ public class AddRecipeActivity extends AppCompatActivity {
         String recipeName = ((EditText) findViewById(R.id.nameField)).getText().toString();
         String recipeDescription = ((EditText) findViewById(R.id.recipeText)).getText().toString();
         String recipeURL = ((EditText) findViewById(R.id.URLField)).getText().toString();
+        String comments = ((EditText) findViewById(R.id.commentsText)).getText().toString();
 
         // get the selected cookingtime
-        ChipGroup chipGroup = findViewById(R.id.chipGroup);
+        ChipGroup chipGroupDuration = findViewById(R.id.chipGroupDuration);
         CookTime cookTime;
 
-        switch (chipGroup.getCheckedChipId()) {
+        switch (chipGroupDuration.getCheckedChipId()) {
             case R.id.shortDurationChip:
                 cookTime = CookTime.SHORT;
-                break;
-            case R.id.mediumDurationChip:
-                cookTime = CookTime.MEDIUM;
                 break;
             case R.id.longDurationChip:
                 cookTime = CookTime.LONG;
                 break;
             default:
                 cookTime = CookTime.MEDIUM;
-
         }
+
+        // get the selected difficulty
+        ChipGroup chipGroupDifficulty = findViewById(R.id.chipGroupDifficulty);
+        Difficulty difficulty;
+
+        switch (chipGroupDifficulty.getCheckedChipId()) {
+            case R.id.beginnerDifficultyChip:
+                difficulty = Difficulty.EASY;
+                break;
+            case R.id.expertDifficultyChip:
+                difficulty = Difficulty.EXPERT;
+                break;
+            default:
+                difficulty = Difficulty.INTERMEDIATE;
+        }
+
 
         if(recipeName.isEmpty()) {
             recipeTitleLayout.setError("Please fill in a title");
@@ -286,7 +329,8 @@ public class AddRecipeActivity extends AppCompatActivity {
         } else if (ingredientList.isEmpty()) {
             Toast.makeText(AddRecipeActivity.this, "You have to add at least one ingredient", Toast.LENGTH_LONG).show();
         } else {
-            Recipe recipe = new Recipe(recipeDescription,recipeName,ingredientList,favouriteSwitch, 0, cookTime, imagePath, recipeURL, null,null);
+            Recipe recipe = new Recipe(recipeDescription, recipeName, ingredientList, favouriteSwitch,
+                    cookTime, imagePath, recipeURL, difficulty, comments);
             recipeList.add(recipe);
             Toast.makeText(AddRecipeActivity.this, "Your recipe was added!", Toast.LENGTH_LONG).show();
             finish();

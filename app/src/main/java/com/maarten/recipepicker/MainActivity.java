@@ -136,9 +136,14 @@ public class MainActivity extends AppCompatActivity {
             dummyIngredientList.add(new Ingredient("Water",100.0,Ingredient.type.millimetres));
             dummyIngredientList.add(new Ingredient("A bit of salt and pepper",null,Ingredient.type.empty));
 
+            String dummyDescription = "First cook the spaghetti.\n\nSecondly you bake the minced meat.\nCut the tomatoes " +
+                    "and the paprika into pieces.\nOnce the minced meat is done, thow the paprika and tomatoes in the same pan " +
+                    "and bake them together. Spice it with salt and pepper.\n\nOnce everything is ready, mix it together " +
+                    "with the spaghetti and you're done.";
             String dummyImage =  "drawable://" + R.drawable.spaghetti_bolognese;
-            Log.d("dummy", dummyImage);
-            recipeList.add(new Recipe("First cook the spaghetti.\n\nSecondly you bake the minced meat.\nCut the tomatoes and the paprika into pieces.\nOnce the minced meat is done, thow the paprika and tomatoes in the same pan and bake them together. Spice it with salt and pepper.\n\nOnce everything is ready, mix it together with the spaghetti and you're done.","Spaghetti Bolognese for people who don't have a lot of time",dummyIngredientList,false, 0, CookTime.MEDIUM, null, null, null, null));
+            //Log.d("dummy", dummyImage);
+            recipeList.add(new Recipe(dummyDescription,"Spaghetti Bolognese for people who don't have a lot of time",dummyIngredientList,
+                    false, CookTime.MEDIUM, null, null, null, null));
         }
 
         // get the spinner
@@ -183,6 +188,9 @@ public class MainActivity extends AppCompatActivity {
 
         listViewRecipes.setAdapter(adapter);
         listViewRecipes.setLayoutManager(new LinearLayoutManager(this));
+
+
+        //listViewRecipes.setHasFixedSize(true);
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);

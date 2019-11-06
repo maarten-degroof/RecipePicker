@@ -8,8 +8,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-
-
 public class Recipe implements Serializable {
     private String description;
     private String title;
@@ -25,12 +23,12 @@ public class Recipe implements Serializable {
 
 
     public Recipe(String description, String title, List<Ingredient> ingredientList, Boolean favorite,
-                  Integer amountCooked, CookTime cookTime, String imagePath, String URL, Difficulty difficulty, String comments) {
+                  CookTime cookTime, String imagePath, String URL, Difficulty difficulty, String comments) {
         this.description = description;
         this.title = title;
         this.ingredientList = ingredientList;
         this.favorite = favorite;
-        this.amountCooked = amountCooked;
+        this.amountCooked = 0;
         this.addedDate = Calendar.getInstance().getTime();
         this.cookTime = cookTime;
         this.imagePath = imagePath;
@@ -130,7 +128,6 @@ public class Recipe implements Serializable {
     public void setComments(String comments) {
         this.comments = comments;
     }
-
 
 
 

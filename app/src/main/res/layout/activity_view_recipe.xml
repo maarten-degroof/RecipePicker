@@ -12,8 +12,19 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:padding="0dp">
+
+        <TextView
+            android:id="@+id/commentsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/comments"
+            android:textColor="@color/primaryColor"
+            android:textSize="22sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/copyURLButton" />
 
         <include
             android:id="@+id/toolbar"
@@ -36,14 +47,17 @@
 
         <ImageView
             android:id="@+id/recipeImageView"
-            android:layout_width="250dp"
+            android:layout_width="0dp"
             android:layout_height="250dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:contentDescription="@string/image_description"
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.503"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintTop_toBottomOf="@+id/difficultyChipConstraintLayout"
             tools:layout_conversion_absoluteHeight="250dp"
             tools:layout_conversion_absoluteWidth="250dp"
             tools:srcCompat="@tools:sample/avatars" />
@@ -199,7 +213,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintGuide_begin="204dp"
+            app:layout_constraintGuide_percent="0.5"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
@@ -210,11 +224,12 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="32dp"
-            android:text="additional comments should be printed over here."
+            android:text="@string/dummy_value"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/copyURLButton" />
+            app:layout_constraintTop_toBottomOf="@+id/commentsTextView" />
 
         <TextView
             android:id="@+id/noWebsiteTextView"
@@ -228,6 +243,38 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/websiteTextView" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/difficultyChipConstraintLayout"
+            android:layout_width="0dp"
+            android:layout_height="54dp"
+            android:background="#F0F0F0"
+            android:padding="0dp"
+            android:paddingStart="0dp"
+            android:paddingLeft="0dp"
+            android:paddingTop="0dp"
+            android:paddingEnd="0dp"
+            android:paddingRight="0dp"
+            android:paddingBottom="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/difficultyChip"
+                style="@style/BiggerChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/beginner"
+                android:textStyle="bold"
+                app:chipIcon="@drawable/ic_difficulty_gauge_easy"
+                app:chipMinTouchTargetSize="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

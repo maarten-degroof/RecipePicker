@@ -7,8 +7,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,9 +30,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.snackbar.Snackbar;
 import com.maarten.recipepicker.Adapters.IngredientAdapter;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -48,12 +54,11 @@ public class ViewRecipeActivity extends AppCompatActivity {
     private TextView amountCookedField;
     private int amountCookedValue;
 
-    private ImageView recipeImageView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_recipe);
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Recipe");
@@ -76,8 +81,6 @@ public class ViewRecipeActivity extends AppCompatActivity {
         TextView recipeTitle = findViewById(R.id.textViewTitle);
         TextView recipeDescription = findViewById(R.id.viewRecipeDescription);
         amountCookedField = findViewById(R.id.amountCookedField);
-
-        //URLField = findViewById(R.id.URLTextView);
 
         ChipDrawable durationChip = ChipDrawable.createFromResource(this, R.xml.chip);
 
@@ -104,7 +107,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
         amountCookedValue = recipe.getAmountCooked();
         amountCookedField.setText(String.valueOf(amountCookedValue));
 
-        recipeImageView = findViewById(R.id.recipeImageView);
+        ImageView recipeImageView = findViewById(R.id.recipeImageView);
         if(recipe.getImagePath() != null) {
             Bitmap bitmap = BitmapFactory.decodeFile(recipe.getImagePath());
             recipeImageView.setImageBitmap(bitmap);
@@ -112,11 +115,11 @@ public class ViewRecipeActivity extends AppCompatActivity {
             recipeImageView.setImageResource(R.drawable.no_image_available);
         }
 
+        // hide the appropriate elements
         TextView noWebsiteTextView = findViewById(R.id.noWebsiteTextView);
         MaterialButton copyWebsiteButton = findViewById(R.id.copyURLButton);
         MaterialButton browseWebsiteButton = findViewById(R.id.BrowseURLButton);
 
-        // hide the appropriate elements
         if(recipe.getURL() != null && !recipe.getURL().equals("")) {
             noWebsiteTextView.setVisibility(View.INVISIBLE);
         } else {
@@ -135,6 +138,28 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         // the index is used to update the favorite status
         recipeIndex = MainActivity.recipeList.indexOf(recipe);
+
+
+        Chip difficultyChip = findViewById(R.id.difficultyChip);
+
+        switch (recipe.getDifficulty()) {
+            case EASY:
+                difficultyChip.setText(getString(R.string.beginner));
+                break;
+            case INTERMEDIATE:
+                difficultyChip.setText(getString(R.string.intermediate));
+                break;
+            case EXPERT:
+                difficultyChip.setText(getString(R.string.expert));
+                break;
+        }
+
+        TextView commentTextView = findViewById(R.id.commentTextView);
+        if(recipe.getComments() != null && !recipe.getComments().equals("")) {
+            commentTextView.setText(recipe.getComments());
+        } else {
+            commentTextView.setText(getString(R.string.no_comments));
+        }
 
     }
 
