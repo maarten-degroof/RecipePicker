@@ -141,10 +141,11 @@ public class MainActivity extends AppCompatActivity {
                     "and the paprika into pieces.\nOnce the minced meat is done, thow the paprika and tomatoes in the same pan " +
                     "and bake them together. Spice it with salt and pepper.\n\nOnce everything is ready, mix it together " +
                     "with the spaghetti and you're done.";
-            String dummyImage =  "drawable://" + R.drawable.spaghetti_bolognese;
-            //Log.d("dummy", dummyImage);
+            String dummyImage =  String.valueOf(R.drawable.spaghetti_bolognese);
+            String dummyURL = "https://www.jamieoliver.com/recipes/beef-recipes/spaghetti-bolognese/";
+            String dummyComments = "Really easy to make!\n\nOnly be sure not to cook the spaghetti too long.";
             recipeList.add(new Recipe(dummyDescription,"Spaghetti Bolognese for people who don't have a lot of time",dummyIngredientList,
-                    false, CookTime.MEDIUM, null, null, Difficulty.BEGINNER, null));
+                    false, CookTime.MEDIUM, dummyImage, dummyURL, Difficulty.BEGINNER, dummyComments));
         }
 
         // get the spinner

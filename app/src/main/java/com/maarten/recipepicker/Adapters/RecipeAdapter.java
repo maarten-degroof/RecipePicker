@@ -40,13 +40,21 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.CustomView
                         .inflate(R.layout.list_item, parent, false)
         );
     }
+
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
         final Recipe recipe = recipeList.get(position);
         holder.recipeTitleTextView.setText(recipe.getTitle());
 
         if(recipe.getImagePath() != null) {
-            Bitmap bitmap = BitmapFactory.decodeFile(recipe.getImagePath());
+            Bitmap bitmap;
+            // if first character == digit => imagepath is drawableID; else it's image path
+            if(Character.isDigit(recipe.getImagePath().charAt(0))) {
+                bitmap = BitmapFactory.decodeResource(context.getResources(), Integer.decode(recipe.getImagePath()));
+            } else {
+                bitmap = BitmapFactory.decodeFile(recipe.getImagePath());
+            }
+
             holder.recipeImageView.setImageBitmap(bitmap);
         } else {
             holder.recipeImageView.setImageResource(R.drawable.no_image_available);
