@@ -7,11 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,8 +32,6 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.snackbar.Snackbar;
 import com.maarten.recipepicker.Adapters.IngredientAdapter;
-
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -364,6 +360,21 @@ public class ViewRecipeActivity extends AppCompatActivity {
             Log.d("WRITE", "object recipelist is NOT written: " + MainActivity.recipeList);
         }
 
+    }
+
+    /**
+     * When the difficulty button is pressed, open DifficultyFilteredActivity
+     *
+     * @param view - the pressed chip
+     */
+    public void startDifficultyFilteredActivity(View view) {
+        try{
+            Intent intent = new Intent(this, DifficultyFilteredActivity.class);
+            intent.putExtra("difficulty", recipe.getDifficulty());
+            startActivity(intent);
+        } catch (Exception e) {
+            Log.d("ERROR", e.getLocalizedMessage());
+        }
     }
 
 }

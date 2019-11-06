@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.maarten.recipepicker">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/recipe_picker_logo_no_text"
@@ -11,8 +11,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SearchResultsActivity"></activity>
-        <activity android:name=".SearchActivity" />
+        <activity
+            android:name=".DifficultyFilteredActivity"
+            android:parentActivityName=".ViewRecipeActivity" />
+        <activity
+            android:name=".SearchResultsActivity"
+            android:parentActivityName=".SearchActivity" />
+        <activity
+            android:name=".SearchActivity"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".FilteredResultsActivity"
             android:parentActivityName=".FilterActivity" />

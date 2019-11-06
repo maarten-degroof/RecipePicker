@@ -14,23 +14,28 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.maarten.recipepicker.Enums.CookTime;
+import com.maarten.recipepicker.Enums.Difficulty;
 import com.maarten.recipepicker.R;
 import com.maarten.recipepicker.Recipe;
 import com.maarten.recipepicker.ViewRecipeActivity;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.CustomViewHolder> {
+public class DifficultyFilteredAdapter extends RecyclerView.Adapter<DifficultyFilteredAdapter.CustomViewHolder> {
 
     private Activity context;
     private List<Recipe> recipeList;
     private static LayoutInflater inflater = null;
 
-    public FavoriteAdapter(Activity context, List<Recipe> recipeList){
+    public DifficultyFilteredAdapter(Activity context, List<Recipe> recipeList){
         this.context = context;
         this.recipeList = recipeList;
         inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+
     }
 
     @NonNull
@@ -73,16 +78,15 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Custom
     }
 
     @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
     public int getItemCount() {
         return recipeList.size();
     }
 
 
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
@@ -102,7 +106,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Custom
 
     public Filter getFilter() {
 
-        Filter filter = new Filter() {
+        return new Filter() {
 
             @SuppressWarnings("unchecked")
             @Override
@@ -110,6 +114,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Custom
 
                 recipeList  = (List<Recipe>) results.values;
                 notifyDataSetChanged();
+
             }
 
             @Override
@@ -118,20 +123,34 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Custom
                 FilterResults results = new FilterResults();
                 ArrayList<Recipe> filteredArray = new ArrayList<>();
 
+                Difficulty difficulty;
+
+
+                switch(constraint.toString()) {
+                    case "BEGINNER":
+                        difficulty = Difficulty.BEGINNER;
+                        break;
+                    case "EXPERT":
+                        difficulty = Difficulty.EXPERT;
+                        break;
+                    default:
+                        difficulty = Difficulty.INTERMEDIATE;
+                }
+
                 for (int i = 0; i < recipeList.size(); i++) {
                     Recipe tempRecipe = recipeList.get(i);
-                    if(tempRecipe.getFavorite()) {
+
+                    if(tempRecipe.getDifficulty() == difficulty){
                         filteredArray.add(tempRecipe);
                     }
                 }
+
                 results.count = filteredArray.size();
                 results.values = filteredArray;
+
 
                 return results;
             }
         };
-
-        return filter;
     }
-
 }
