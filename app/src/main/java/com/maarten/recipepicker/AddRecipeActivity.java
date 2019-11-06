@@ -312,7 +312,7 @@ public class AddRecipeActivity extends AppCompatActivity {
 
         switch (chipGroupDifficulty.getCheckedChipId()) {
             case R.id.beginnerDifficultyChip:
-                difficulty = Difficulty.EASY;
+                difficulty = Difficulty.BEGINNER;
                 break;
             case R.id.expertDifficultyChip:
                 difficulty = Difficulty.EXPERT;

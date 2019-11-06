@@ -143,7 +143,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
         Chip difficultyChip = findViewById(R.id.difficultyChip);
 
         switch (recipe.getDifficulty()) {
-            case EASY:
+            case BEGINNER:
                 difficultyChip.setText(getString(R.string.beginner));
                 break;
             case INTERMEDIATE:

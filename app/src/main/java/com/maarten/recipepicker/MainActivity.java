@@ -8,6 +8,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.maarten.recipepicker.Adapters.RecipeAdapter;
 import com.maarten.recipepicker.Enums.CookTime;
+import com.maarten.recipepicker.Enums.Difficulty;
 import com.maarten.recipepicker.ListSorters.AmountCookedSorter;
 import com.maarten.recipepicker.ListSorters.DateSorter;
 import com.maarten.recipepicker.Settings.SettingsActivity;
@@ -143,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
             String dummyImage =  "drawable://" + R.drawable.spaghetti_bolognese;
             //Log.d("dummy", dummyImage);
             recipeList.add(new Recipe(dummyDescription,"Spaghetti Bolognese for people who don't have a lot of time",dummyIngredientList,
-                    false, CookTime.MEDIUM, null, null, null, null));
+                    false, CookTime.MEDIUM, null, null, Difficulty.BEGINNER, null));
         }
 
         // get the spinner

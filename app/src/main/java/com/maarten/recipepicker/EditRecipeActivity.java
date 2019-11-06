@@ -12,6 +12,7 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputLayout;
 import com.maarten.recipepicker.Adapters.IngredientEditAdapter;
 import com.maarten.recipepicker.Enums.CookTime;
+import com.maarten.recipepicker.Enums.Difficulty;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -46,9 +47,9 @@ public class EditRecipeActivity extends AppCompatActivity {
 
     private Recipe recipe;
     private int recipeIndex;
-    private IngredientEditAdapter adapter;
+    private IngredientEditAdapter ingredientAdapter;
 
-    private TextView recipeTitle, recipeDescription, noIngredientTextview;
+    private TextView recipeTitle, recipeDescription, noIngredientTextview, recipeComments, recipeURL;
     private ListView ingredientListView;
     private List<Ingredient> ingredientList;
 
@@ -57,7 +58,7 @@ public class EditRecipeActivity extends AppCompatActivity {
 
     private TextInputLayout recipeTitleLayout, recipeDescriptionLayout;
 
-    private ChipGroup chipGroup;
+    private ChipGroup chipGroupDuration, chipGroupDifficulty;
 
     private static final int READ_EXTERNAL_PERMISSIONS = 1;
     private static final int GALLERY_REQUEST_CODE = 2;
@@ -66,6 +67,8 @@ public class EditRecipeActivity extends AppCompatActivity {
     private String imagePath;
 
     private Button removeImageButton, differentImageButton, addImageButton;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,9 +94,9 @@ public class EditRecipeActivity extends AppCompatActivity {
 
         ingredientList = recipe.getIngredientList();
 
-        adapter = new IngredientEditAdapter(this,ingredientList);
+        ingredientAdapter = new IngredientEditAdapter(this,ingredientList);
         ingredientListView = findViewById(R.id.editRecipeIngredientList);
-        ingredientListView.setAdapter(adapter);
+        ingredientListView.setAdapter(ingredientAdapter);
 
         recipeTitleLayout = findViewById(R.id.nameFieldLayout);
         recipeDescriptionLayout = findViewById(R.id.descriptionFieldLayout);
@@ -125,29 +128,56 @@ public class EditRecipeActivity extends AppCompatActivity {
             removeImageButton.setVisibility(View.GONE);
         }
 
+        recipeURL = findViewById(R.id.URLField);
+        recipeURL.setText(recipe.getURL());
 
-        chipGroup = findViewById(R.id.chipGroup);
+        recipeComments = findViewById(R.id.commentsText);
+        recipeComments.setText(recipe.getComments());
 
-        // check the current selected chip
+        // check the current selected chips
+        chipGroupDuration = findViewById(R.id.chipGroupDuration);
         switch (recipe.getCookTime()) {
             case SHORT:
-                chipGroup.check(R.id.shortDurationChip);
+                chipGroupDuration.check(R.id.shortDurationChip);
                 break;
             case LONG:
-                chipGroup.check(R.id.longDurationChip);
+                chipGroupDuration.check(R.id.longDurationChip);
                 break;
             default:
-                chipGroup.check(R.id.mediumDurationChip);
+                chipGroupDuration.check(R.id.mediumDurationChip);
+        }
+
+        chipGroupDifficulty = findViewById(R.id.chipGroupDifficulty);
+        switch (recipe.getDifficulty()) {
+            case BEGINNER:
+                chipGroupDifficulty.check(R.id.beginnerDifficultyChip);
+                break;
+            case EXPERT:
+                chipGroupDifficulty.check(R.id.expertDifficultyChip);
+                break;
+            default:
+                chipGroupDifficulty.check(R.id.intermediateDifficultyChip);
         }
 
         // this makes sure that there's always one chip selected
-        chipGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+        chipGroupDuration.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(ChipGroup group, int checkedId) {
-                for (int i = 0; i < chipGroup.getChildCount(); i++) {
-                    Chip chip = (Chip) chipGroup.getChildAt(i);
+                for (int i = 0; i < chipGroupDuration.getChildCount(); i++) {
+                    Chip chip = (Chip) chipGroupDuration.getChildAt(i);
                     if (chip != null) {
-                        chip.setClickable(!(chip.getId() == chipGroup.getCheckedChipId()));
+                        chip.setClickable(!(chip.getId() == chipGroupDuration.getCheckedChipId()));
+                    }
+                }
+            }
+        });
+        chipGroupDifficulty.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(ChipGroup group, int checkedId) {
+                for (int i = 0; i < chipGroupDifficulty.getChildCount(); i++) {
+                    Chip chip = (Chip) chipGroupDifficulty.getChildAt(i);
+                    if (chip != null) {
+                        chip.setClickable(!(chip.getId() == chipGroupDifficulty.getCheckedChipId()));
                     }
                 }
             }
@@ -166,7 +196,7 @@ public class EditRecipeActivity extends AppCompatActivity {
 
         // get the current selected chip
         CookTime cookTime;
-        switch (chipGroup.getCheckedChipId()) {
+        switch (chipGroupDuration.getCheckedChipId()) {
             case R.id.shortDurationChip:
                 cookTime = CookTime.SHORT;
                 break;
@@ -176,6 +206,18 @@ public class EditRecipeActivity extends AppCompatActivity {
             default:
                 cookTime = CookTime.MEDIUM;
         }
+        Difficulty difficulty;
+        switch (chipGroupDifficulty.getCheckedChipId()) {
+            case R.id.beginnerDifficultyChip:
+                difficulty = Difficulty.BEGINNER;
+                break;
+            case  R.id.expertDifficultyChip:
+                difficulty = Difficulty.EXPERT;
+                break;
+            default:
+                difficulty = Difficulty.INTERMEDIATE;
+        }
+
 
         if(tempRecipeName.isEmpty()) {
             recipeTitleLayout.setError("Please fill in a title");
@@ -195,7 +237,12 @@ public class EditRecipeActivity extends AppCompatActivity {
                 recipeList.get(recipeIndex).resetAmountCooked();
             }
             recipeList.get(recipeIndex).setCookTime(cookTime);
+            recipeList.get(recipeIndex).setDifficulty(difficulty);
+
             recipeList.get(recipeIndex).setImagePath(imagePath);
+
+            recipeList.get(recipeIndex).setURL(recipeURL.getText().toString());
+            recipeList.get(recipeIndex).setComments(recipeComments.getText().toString());
 
             Toast.makeText(this, "Your recipe was updated!", Toast.LENGTH_LONG).show();
 
@@ -238,7 +285,7 @@ public class EditRecipeActivity extends AppCompatActivity {
         ingredientQuantityField = dialog_layout.findViewById(R.id.quantityField);
         ingredientTypeField = dialog_layout.findViewById(R.id.ingredientTypeSpinner);
 
-        // create the spinner adapter with the choices + the standard views of how it should look like
+        // create the spinner ingredientAdapter with the choices + the standard views of how it should look like
         ArrayAdapter<CharSequence> ingredientTypeAdapter = ArrayAdapter.createFromResource(this, R.array.ingredient_types_array_items, android.R.layout.simple_spinner_item);
         ingredientTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ingredientTypeField.setAdapter(ingredientTypeAdapter);
@@ -287,8 +334,8 @@ public class EditRecipeActivity extends AppCompatActivity {
             }
 
             ingredientList.add(ingredient);
-            // notify the adapter to update the list
-            adapter.notifyDataSetChanged();
+            // notify the ingredientAdapter to update the list
+            ingredientAdapter.notifyDataSetChanged();
 
             // hide the 'no ingredients yet' text view
             TextView noIngredientTextView = (TextView) findViewById(R.id.noIngredientsTextView);

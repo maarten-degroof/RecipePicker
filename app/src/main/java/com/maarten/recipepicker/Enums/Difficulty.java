@@ -1,7 +1,7 @@
 package com.maarten.recipepicker.Enums;
 
 public enum Difficulty {
-    EASY,
+    BEGINNER,
     INTERMEDIATE,
     EXPERT
 }
