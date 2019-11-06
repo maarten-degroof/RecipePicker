@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.maarten.recipepicker.Enums.CookTime;
+import com.maarten.recipepicker.Enums.Difficulty;
 import com.maarten.recipepicker.R;
 import com.maarten.recipepicker.Recipe;
 import com.maarten.recipepicker.ViewRecipeActivity;
@@ -23,6 +24,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.datatype.Duration;
 
 public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.CustomViewHolder> {
 
@@ -118,6 +121,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.CustomView
 
                 int filterMin, filterMax;
                 Boolean durationShort, durationMedium, durationLong;
+                Boolean difficultyBeginner, difficultyIntermediate, difficultyExpert;
 
                 try {
                     JSONObject jsonObject = new JSONObject(constraint.toString());
@@ -126,27 +130,72 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.CustomView
                     durationShort = (Boolean) jsonObject.get("durationShort");
                     durationMedium = (Boolean) jsonObject.get("durationMedium");
                     durationLong = (Boolean) jsonObject.get("durationLong");
+                    difficultyBeginner = (Boolean) jsonObject.get("difficultyBeginner");
+                    difficultyIntermediate = (Boolean) jsonObject.get("difficultyIntermediate");
+                    difficultyExpert = (Boolean) jsonObject.get("difficultyExpert");
 
-                    // perform your search here using the searchConstraint String.
+
+                    /**
+                     * Steps to filter:
+                     *  -   Create arraylists which contain the objects on which is filtered: Cooktime and Difficulty
+                     *      These can contain 0 to all three items
+                     *  -   First check if the amount cooked is between requested values
+                     *  -   Then check if both arrays are empty (which means no filter was selected)
+                     *  -   Then check if one of the arrays is empty (only one type of filter was selected)
+                     *  -   If it wasn't any of the previous, both arrays are set
+                     */
+                    ArrayList<CookTime> durationFilterList = new ArrayList<>();
+                    if(durationShort) {
+                        durationFilterList.add(CookTime.SHORT);
+                    }
+                    if(durationMedium) {
+                        durationFilterList.add(CookTime.MEDIUM);
+                    }
+                    if(durationLong) {
+                        durationFilterList.add(CookTime.LONG);
+                    }
+
+                    ArrayList<Difficulty> difficultyFilterList = new ArrayList<>();
+                    if(difficultyBeginner) {
+                        difficultyFilterList.add(Difficulty.BEGINNER);
+                    }
+                    if(difficultyIntermediate) {
+                        difficultyFilterList.add(Difficulty.INTERMEDIATE);
+                    }
+                    if(difficultyExpert) {
+                        difficultyFilterList.add(Difficulty.EXPERT);
+                    }
+
+
 
                     for (int i = 0; i < recipeList.size(); i++) {
                         Recipe tempRecipe = recipeList.get(i);
-                        if(tempRecipe.getAmountCooked() >= filterMin && tempRecipe.getAmountCooked() <= filterMax) {
-                            // you didn't give a duration filter
-                            if(!durationShort && !durationMedium && !durationLong) {
-                                filteredArray.add(tempRecipe);
-                            }
-                            // You gave the filter && the recipe has the filter
-                            else if (durationShort && tempRecipe.getCookTime() == CookTime.SHORT) {
-                                filteredArray.add(tempRecipe);
-                            }
-                            else if (durationMedium && tempRecipe.getCookTime() == CookTime.MEDIUM) {
-                                filteredArray.add(tempRecipe);
-                            }
-                            else if (durationLong && tempRecipe.getCookTime() == CookTime.LONG) {
-                                filteredArray.add(tempRecipe);
-                            }
 
+                        // check if the times cooked is between the given range
+                        if(tempRecipe.getAmountCooked() >= filterMin && tempRecipe.getAmountCooked() <= filterMax) {
+
+                            // no filters checked -> add recipe
+                            if(durationFilterList.isEmpty() && difficultyFilterList.isEmpty()) {
+                                filteredArray.add(tempRecipe);
+                            }
+                            // no duration; only difficulty
+                            else if (durationFilterList.isEmpty()) {
+                                if(difficultyFilterList.contains(tempRecipe.getDifficulty())) {
+                                    filteredArray.add(tempRecipe);
+                                }
+                            }
+                            // no difficulty; only duration
+                            else if (difficultyFilterList.isEmpty()) {
+                                if(durationFilterList.contains(tempRecipe.getCookTime())) {
+                                    filteredArray.add(tempRecipe);
+                                }
+                            }
+                            // both filters are set
+                            else {
+                                if(durationFilterList.contains(tempRecipe.getCookTime()) && difficultyFilterList.contains(tempRecipe.getDifficulty())) {
+                                    filteredArray.add(tempRecipe);
+                                }
+                            }
                         }
                     }
 

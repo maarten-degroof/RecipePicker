@@ -167,4 +167,6 @@
     <string name="no_comments">There are no comments to show.</string>
     <string name="comments">Comments:</string>
     <string name="comment_hint">Do you have any comments about the recipe?</string>
+    <string name="filter_difficulty_description">How difficult should it be?</string>
+    <string name="filter_button">Filter your cookbook</string>
 </resources>

@@ -23,12 +23,13 @@ import static com.maarten.recipepicker.MainActivity.recipeList;
 
 public class FilteredResultsActivity extends AppCompatActivity {
 
-    private FilterAdapter adapter;
+    private FilterAdapter filterAdapter;
 
     private RecyclerView listViewFiltered;
 
     private int filterMin, filterMax;
     private Boolean durationShort, durationMedium, durationLong;
+    private Boolean difficultyBeginner, difficultyIntermediate, difficultyExpert;
 
     private JSONObject filterObject;
 
@@ -41,22 +42,23 @@ public class FilteredResultsActivity extends AppCompatActivity {
             Intent intent = getIntent();
             filterObject = new JSONObject(intent.getStringExtra("JSONObject"));
 
-            //Log.d("JSON", filterObject.toString());
-
             // get the values for which you filtered
             filterMin = (int) filterObject.get("filterMin");
             filterMax = (int) filterObject.get("filterMax");
             durationShort = (Boolean) filterObject.get("durationShort");
             durationMedium = (Boolean) filterObject.get("durationMedium");
             durationLong = (Boolean) filterObject.get("durationLong");
+            difficultyBeginner = (Boolean) filterObject.get("difficultyBeginner");
+            difficultyIntermediate = (Boolean) filterObject.get("difficultyIntermediate");
+            difficultyExpert = (Boolean) filterObject.get("difficultyExpert");
 
             listViewFiltered = findViewById(R.id.listViewFiltered);
 
-            adapter = new FilterAdapter(this, recipeList);
-            listViewFiltered.setAdapter(adapter);
+            filterAdapter = new FilterAdapter(this, recipeList);
+            listViewFiltered.setAdapter(filterAdapter);
             listViewFiltered.setLayoutManager(new LinearLayoutManager(this));
 
-            FilteredResultsActivity.this.adapter.getFilter().filter(filterObject.toString());
+            filterAdapter.getFilter().filter(filterObject.toString());
 
         } catch (Exception e) {
             e.getStackTrace();
@@ -75,20 +77,35 @@ public class FilteredResultsActivity extends AppCompatActivity {
         filteredDescriptionTextView.setText(Html.fromHtml(description, FROM_HTML_MODE_LEGACY));
 
         ChipGroup chipGroup = findViewById(R.id.chipGroup);
-        if(durationShort) {
+        if (durationShort) {
             Chip chip = new Chip(this);
             chip.setText(getString(R.string.duration_short));
-            chip.layout(5,5,5,5);
+            chip.layout(5, 5, 5, 5);
             chipGroup.addView(chip);
-        } if(durationMedium) {
+        } if (durationMedium) {
             Chip chip = new Chip(this);
             chip.setText(getString(R.string.duration_medium));
-            chip.layout(5,5,5,5);
+            chip.layout(5, 5, 5, 5);
             chipGroup.addView(chip);
-        } if(durationLong) {
+        } if (durationLong) {
             Chip chip = new Chip(this);
             chip.setText(getString(R.string.duration_long));
-            chip.layout(5,5,5,5);
+            chip.layout(5, 5, 5, 5);
+            chipGroup.addView(chip);
+        } if (difficultyBeginner) {
+            Chip chip = new Chip(this);
+            chip.setText(getString(R.string.beginner));
+            chip.layout(5, 5, 5, 5);
+            chipGroup.addView(chip);
+        } if (difficultyIntermediate) {
+            Chip chip = new Chip(this);
+            chip.setText(getString(R.string.intermediate));
+            chip.layout(5, 5, 5, 5);
+            chipGroup.addView(chip);
+        } if(difficultyExpert) {
+            Chip chip = new Chip(this);
+            chip.setText(getString(R.string.expert));
+            chip.layout(5, 5, 5, 5);
             chipGroup.addView(chip);
         }
     }
@@ -99,8 +116,8 @@ public class FilteredResultsActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        adapter.notifyDataSetChanged();
-        FilteredResultsActivity.this.adapter.getFilter().filter(filterObject.toString());
+        filterAdapter.notifyDataSetChanged();
+        filterAdapter.getFilter().filter(filterObject.toString());
     }
 
     /**

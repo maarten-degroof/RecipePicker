@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.appyvet.materialrangebar.RangeBar;
 import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
 
 import java.util.Collections;
 
@@ -35,8 +34,10 @@ public class FilterActivity extends AppCompatActivity {
     int minCookedValue = 0;
     int maxCookedValue = 2;
 
-    // keeps track of which chips are ticked: [short, medium = default ticked, long]
+    // keeps track of which chips are ticked. Duration: [short, medium = default, long]
+    //  Difficulty: [beginner, intermediate = default, expert]
     Boolean[] durationArray = {false, true, false};
+    Boolean[] difficultyArray = {false, true, false};
 
 
     @Override
@@ -103,7 +104,6 @@ public class FilterActivity extends AppCompatActivity {
                 durationArray[0] = isChecked;
             }
         });
-
         Chip mediumDurationChip = findViewById(R.id.mediumDurationChip);
         mediumDurationChip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -111,12 +111,33 @@ public class FilterActivity extends AppCompatActivity {
                 durationArray[1] = isChecked;
             }
         });
-
         Chip longDurationChip = findViewById(R.id.longDurationChip);
         longDurationChip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 durationArray[2] = isChecked;
+            }
+        });
+
+        Chip beginnerDifficultyChip = findViewById(R.id.beginnerDifficultyChip);
+        beginnerDifficultyChip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                difficultyArray[0] = isChecked;
+            }
+        });
+        Chip intermediateDifficultyChip = findViewById(R.id.intermediateDifficultyChip);
+        intermediateDifficultyChip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                difficultyArray[1] = isChecked;
+            }
+        });
+        Chip expertDifficultyChip = findViewById(R.id.expertDifficultyChip);
+        expertDifficultyChip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                difficultyArray[2] = isChecked;
             }
         });
     }
@@ -134,6 +155,9 @@ public class FilterActivity extends AppCompatActivity {
             filter.put("durationShort", durationArray[0]);
             filter.put("durationMedium", durationArray[1]);
             filter.put("durationLong", durationArray[2]);
+            filter.put("difficultyBeginner", difficultyArray[0]);
+            filter.put("difficultyIntermediate", difficultyArray[1]);
+            filter.put("difficultyExpert", difficultyArray[2]);
 
             Intent intent = new Intent(this, FilteredResultsActivity.class);
             intent.putExtra("JSONObject", filter.toString());
@@ -141,7 +165,6 @@ public class FilterActivity extends AppCompatActivity {
         } catch(Exception e) {
             Log.d("ERROR", e.getLocalizedMessage());
         }
-
     }
 
     /**

@@ -1,174 +1,235 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".FilterActivity">
+    android:id="@+id/nestedScrollView"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".FilterActivity">
 
 
-    <com.appyvet.materialrangebar.RangeBar
-        android:id="@+id/amountCookedRangeBar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/maxAmountCooked"
-        app:layout_constraintStart_toEndOf="@+id/minAmountCooked"
-        app:layout_constraintTop_toBottomOf="@+id/amountCookedQuestion"
-        app:mrb_barWeight="2dp"
-        app:mrb_connectingLineColor="@color/primaryColor"
-        app:mrb_connectingLineWeight="4dp"
-        app:mrb_leftSelectorColor="@color/primaryColor"
-        app:mrb_pinColor="@color/primaryColor"
-        app:mrb_pinMaxFont="15sp"
-        app:mrb_pinMinFont="12sp"
-
-        app:mrb_pinRadius="14dp"
-        app:mrb_pinTextColor="@android:color/white"
-        app:mrb_rangeBar="true"
-        app:mrb_rangeBarColor="@color/primaryDarkColor"
-        app:mrb_rangeBarPaddingBottom="30dp"
-        app:mrb_rangeBar_rounded="true"
-        app:mrb_rightSelectorColor="@color/primaryColor"
-        app:mrb_selectorBoundaryColor="@color/primaryColor"
-        app:mrb_selectorBoundarySize="2dp"
-        app:mrb_selectorColor="@color/primaryColor"
-        app:mrb_selectorSize="10dp"
-        app:mrb_temporaryPins="true"
-        app:mrb_tickDefaultColor="@color/primaryDarkColor"
-        app:mrb_tickEnd="10"
-        app:mrb_tickStart="0" />
-
-    <TextView
-        android:id="@+id/filterTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:text="@string/filter"
-        android:textColor="@color/primaryDarkColor"
-        android:textSize="36sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
-    <TextView
-        android:id="@+id/filterDescriptionTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/filter_description"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filterTextView" />
-
-    <TextView
-        android:id="@+id/amountCookedQuestion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="56dp"
-        android:text="@string/filter_times_cooked_description"
-        android:textColor="@color/primaryColor"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filterDescriptionTextView" />
-
-    <TextView
-        android:id="@+id/minAmountCooked"
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="40dp"
-        android:text="@string/null_number"
-        android:textColor="@color/primaryColor"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/amountCookedQuestion" />
-
-    <TextView
-        android:id="@+id/maxAmountCooked"
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/filter_max_template"
-        android:textColor="@color/primaryColor"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/amountCookedQuestion" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button2"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="44dp"
-        android:layout_marginBottom="32dp"
-        android:onClick="viewFilteredResults"
-        android:text="@string/filter"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <TextView
-        android:id="@+id/filterDurationTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="36dp"
-        android:text="@string/filter_duration_description"
-        android:textColor="@color/primaryColor"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/amountCookedRangeBar" />
-
-
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/chipGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        app:checkedChip="@+id/mediumDurationChip"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filterDurationTextView"
-        app:singleSelection="false"
-        >
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/shortDurationChip"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupDifficulty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/duration_short"
-            app:checkedIconEnabled="true" />
+            android:layout_marginTop="12dp"
+            app:checkedChip="@+id/intermediateDifficultyChip"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.496"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/filterDifficultyTextView"
+            app:singleSelection="false">
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/mediumDurationChip"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
+            <com.google.android.material.chip.Chip
+                android:id="@+id/beginnerDifficultyChip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/beginner"
+                app:checkedIconEnabled="true" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/intermediateDifficultyChip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/intermediate"
+                app:checkedIconEnabled="true" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/expertDifficultyChip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/expert"
+                app:checkedIconEnabled="true" />
+
+        </com.google.android.material.chip.ChipGroup>
+
+        <TextView
+            android:id="@+id/filterDifficultyTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/duration_medium"
-            app:checkedIconEnabled="true" />
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/filter_difficulty_description"
+            android:textColor="@color/primaryColor"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chipGroupDuration" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/longDurationChip"
-            style="@style/Widget.MaterialComponents.Chip.Choice"
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
+
+
+        <com.appyvet.materialrangebar.RangeBar
+            android:id="@+id/amountCookedRangeBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/maxAmountCooked"
+            app:layout_constraintStart_toEndOf="@+id/minAmountCooked"
+            app:layout_constraintTop_toBottomOf="@+id/amountCookedQuestion"
+            app:mrb_barWeight="2dp"
+            app:mrb_connectingLineColor="@color/primaryColor"
+            app:mrb_connectingLineWeight="4dp"
+            app:mrb_leftSelectorColor="@color/primaryColor"
+            app:mrb_pinColor="@color/primaryColor"
+            app:mrb_pinMaxFont="15sp"
+            app:mrb_pinMinFont="12sp"
+
+            app:mrb_pinRadius="14dp"
+            app:mrb_pinTextColor="@android:color/white"
+            app:mrb_rangeBar="true"
+            app:mrb_rangeBarColor="@color/primaryDarkColor"
+            app:mrb_rangeBarPaddingBottom="30dp"
+            app:mrb_rangeBar_rounded="true"
+            app:mrb_rightSelectorColor="@color/primaryColor"
+            app:mrb_selectorBoundaryColor="@color/primaryColor"
+            app:mrb_selectorBoundarySize="2dp"
+            app:mrb_selectorColor="@color/primaryColor"
+            app:mrb_selectorSize="10dp"
+            app:mrb_temporaryPins="true"
+            app:mrb_tickDefaultColor="@color/primaryDarkColor"
+            app:mrb_tickEnd="10"
+            app:mrb_tickStart="0" />
+
+        <TextView
+            android:id="@+id/filterTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/duration_long"
-            app:checkedIconEnabled="true" />
+            android:layout_marginTop="16dp"
+            android:text="@string/filter"
+            android:textColor="@color/primaryDarkColor"
+            android:textSize="36sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
-    </com.google.android.material.chip.ChipGroup>
+        <TextView
+            android:id="@+id/filterDescriptionTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/filter_description"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/filterTextView" />
+
+        <TextView
+            android:id="@+id/amountCookedQuestion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/filter_times_cooked_description"
+            android:textColor="@color/primaryColor"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/filterDescriptionTextView" />
+
+        <TextView
+            android:id="@+id/minAmountCooked"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/null_number"
+            android:textColor="@color/primaryColor"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/amountCookedQuestion" />
+
+        <TextView
+            android:id="@+id/maxAmountCooked"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/filter_max_template"
+            android:textColor="@color/primaryColor"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/amountCookedQuestion" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/filterButton"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="24dp"
+            android:onClick="viewFilteredResults"
+            android:text="@string/filter_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chipGroupDifficulty"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/filterDurationTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/filter_duration_description"
+            android:textColor="@color/primaryColor"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/amountCookedRangeBar" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            app:checkedChip="@+id/mediumDurationChip"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/filterDurationTextView"
+            app:singleSelection="false">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/shortDurationChip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/duration_short"
+                app:checkedIconEnabled="true" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/mediumDurationChip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/duration_medium"
+                app:checkedIconEnabled="true" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/longDurationChip"
+                style="@style/Widget.MaterialComponents.Chip.Choice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/duration_long"
+                app:checkedIconEnabled="true" />
+
+        </com.google.android.material.chip.ChipGroup>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
