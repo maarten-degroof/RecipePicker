@@ -3,6 +3,7 @@
     package="com.maarten.recipepicker">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -12,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".CookNowActivity"
+            android:parentActivityName=".ViewRecipeActivity" />
+        <activity
             android:name=".DifficultyFilteredActivity"
             android:parentActivityName=".ViewRecipeActivity" />
         <activity
@@ -19,7 +23,7 @@
             android:parentActivityName=".SearchActivity" />
         <activity
             android:name=".SearchActivity"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".FilteredResultsActivity"
             android:parentActivityName=".FilterActivity" />

@@ -322,6 +322,12 @@ public class AddRecipeActivity extends AppCompatActivity {
         }
 
 
+        ArrayList<Instruction> tempInstructionList = new ArrayList<>();
+        tempInstructionList.add(new Instruction("snijdt de groenten",10000));
+        tempInstructionList.add(new Instruction("kook de groenten", 11000000));
+        tempInstructionList.add(new Instruction("serveer alles", 1000));
+
+
         if(recipeName.isEmpty()) {
             recipeTitleLayout.setError("Please fill in a title");
         } else if (recipeDescription.isEmpty()) {
@@ -330,7 +336,7 @@ public class AddRecipeActivity extends AppCompatActivity {
             Toast.makeText(AddRecipeActivity.this, "You have to add at least one ingredient", Toast.LENGTH_LONG).show();
         } else {
             Recipe recipe = new Recipe(recipeDescription, recipeName, ingredientList, favouriteSwitch,
-                    cookTime, imagePath, recipeURL, difficulty, comments);
+                    cookTime, imagePath, recipeURL, difficulty, comments, tempInstructionList);
             recipeList.add(recipe);
             Toast.makeText(AddRecipeActivity.this, "Your recipe was added!", Toast.LENGTH_LONG).show();
             finish();

@@ -377,4 +377,10 @@ public class ViewRecipeActivity extends AppCompatActivity {
         }
     }
 
+    public void startCookNow(View view) {
+        Intent intent = new Intent(this, CookNowActivity.class);
+        intent.putExtra("Recipe", recipe);
+        startActivity(intent);
+    }
+
 }

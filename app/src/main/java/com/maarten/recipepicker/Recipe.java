@@ -4,6 +4,7 @@ import com.maarten.recipepicker.Enums.CookTime;
 import com.maarten.recipepicker.Enums.Difficulty;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -20,10 +21,11 @@ public class Recipe implements Serializable {
     private String URL;
     private Difficulty difficulty;
     private String comments;
+    private List<Instruction> instructionList;
 
 
     public Recipe(String description, String title, List<Ingredient> ingredientList, Boolean favorite,
-                  CookTime cookTime, String imagePath, String URL, Difficulty difficulty, String comments) {
+                  CookTime cookTime, String imagePath, String URL, Difficulty difficulty, String comments, List<Instruction> instructionList) {
         this.description = description;
         this.title = title;
         this.ingredientList = ingredientList;
@@ -35,6 +37,15 @@ public class Recipe implements Serializable {
         this.URL = URL;
         this.difficulty = difficulty;
         this.comments = comments;
+        this.instructionList = instructionList;
+    }
+
+    public List<Instruction> getInstructionList() {
+        return instructionList;
+    }
+
+    public void setInstructionList(List<Instruction> instructionList) {
+        this.instructionList = instructionList;
     }
 
     public String getDescription() {

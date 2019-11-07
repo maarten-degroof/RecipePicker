@@ -141,7 +141,6 @@
             android:layout_marginTop="16dp"
             android:onClick="createIngredientDialog"
             android:text="@string/add_ingredient"
-
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ingredientTextView" />

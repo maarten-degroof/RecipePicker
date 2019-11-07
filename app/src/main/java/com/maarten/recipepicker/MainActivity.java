@@ -60,6 +60,9 @@ import java.util.List;
  * settings
  *    - Dark theme
  * filter on ingredients
+ *
+ * Add each step + a timer to give you a notification when you should do the next step
+ *
  ********* WORKING *********
  * adding recipe
  * saving/loading
@@ -145,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
             String dummyURL = "https://www.jamieoliver.com/recipes/beef-recipes/spaghetti-bolognese/";
             String dummyComments = "Really easy to make!\n\nOnly be sure not to cook the spaghetti too long.";
             recipeList.add(new Recipe(dummyDescription,"Spaghetti Bolognese for people who don't have a lot of time",dummyIngredientList,
-                    false, CookTime.MEDIUM, dummyImage, dummyURL, Difficulty.BEGINNER, dummyComments));
+                    false, CookTime.MEDIUM, dummyImage, dummyURL, Difficulty.BEGINNER, dummyComments, null));
         }
 
         // get the spinner
