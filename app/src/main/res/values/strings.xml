@@ -124,7 +124,7 @@
     <string name="duration_long">\u003E60 min</string>
     <string name="no_ingredients_yet">No ingredients yet. Add an ingredient by pressing the button.</string>
     <string name="duration">Duration &amp; Difficulty</string>
-    <string name="image">image</string>
+    <string name="image">Image</string>
     <string name="add_image">Add image</string>
     <string name="extras">Extras</string>
     <string name="favorite">Favorite</string>

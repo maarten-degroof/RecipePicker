@@ -167,6 +167,11 @@ public class AddRecipeActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Creates the AlertDialog where the user adds ingredients
+     *
+     * @param view - the 'add ingredient' button which was pressed
+     */
     public void createIngredientDialog(View view) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

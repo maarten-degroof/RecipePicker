@@ -5,13 +5,15 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
-    <application
+    <application android:name="com.maarten.recipepicker.RecipePickerApplication"
         android:allowBackup="true"
         android:icon="@drawable/recipe_picker_logo_no_text"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".CancelNotification" />
         <activity
             android:name=".CookNowActivity"
             android:parentActivityName=".ViewRecipeActivity" />
@@ -61,6 +63,15 @@
             android:name=".AddRecipeActivity"
             android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="adjustResize" />
+
+        <receiver
+            android:name=".MyBroadcastReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.INPUT_METHOD_CHANGED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
