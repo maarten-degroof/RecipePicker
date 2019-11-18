@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 public class Instruction implements Serializable {
     private String description;
-    private long milliseconds;
+    private Long milliseconds;
 
-    public Instruction(String description, long milliseconds) {
+    public Instruction(String description, Long milliseconds) {
         this.description = description;
         this.milliseconds = milliseconds;
     }
@@ -19,11 +19,11 @@ public class Instruction implements Serializable {
         this.description = description;
     }
 
-    public long getMilliseconds() {
+    public Long getMilliseconds() {
         return milliseconds;
     }
 
-    public void setMilliseconds(long milliseconds) {
+    public void setMilliseconds(Long milliseconds) {
         this.milliseconds = milliseconds;
     }
 }

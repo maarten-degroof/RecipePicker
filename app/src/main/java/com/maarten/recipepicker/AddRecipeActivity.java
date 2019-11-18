@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -19,15 +20,19 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.maarten.recipepicker.Adapters.IngredientEditAdapter;
+import com.maarten.recipepicker.Adapters.InstructionAdapter;
 import com.maarten.recipepicker.Enums.CookTime;
 import com.maarten.recipepicker.Enums.Difficulty;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
 import android.util.Log;
@@ -37,9 +42,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,7 +59,7 @@ import static com.maarten.recipepicker.MainActivity.recipeList;
 public class AddRecipeActivity extends AppCompatActivity {
 
     private List<Ingredient> ingredientList = new ArrayList<>();
-    private IngredientEditAdapter adapter;
+    private IngredientEditAdapter ingredientAdapter;
 
     private EditText ingredientNameField, ingredientQuantityField;
     private Spinner ingredientTypeField;
@@ -68,15 +75,22 @@ public class AddRecipeActivity extends AppCompatActivity {
 
     private Button removeImageButton, differentImageButton, addImageButton;
 
+    private InstructionAdapter instructionAdapter;
+    private RecyclerView instructionRecyclerView;
+    private NumberPicker minuteNumberPicker, secondNumberPicker;
+    private TextView minuteTextView, secondTextView;
+    private List<Instruction> instructionList = new ArrayList<>();
+    private EditText instructionDescription;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_add_recipe);
 
-        adapter = new IngredientEditAdapter(this, ingredientList);
+        ingredientAdapter = new IngredientEditAdapter(this, ingredientList);
         ingredientListView = findViewById(R.id.addRecipeIngredientList);
-        ingredientListView.setAdapter(adapter);
+        ingredientListView.setAdapter(ingredientAdapter);
 
         // hide the list since it is empty
         ingredientListView.setVisibility(TextView.INVISIBLE);
@@ -104,6 +118,14 @@ public class AddRecipeActivity extends AppCompatActivity {
         // there's no image yet -> hide buttons
         differentImageButton.setVisibility(View.GONE);
         removeImageButton.setVisibility(View.GONE);
+
+        // the instruction recyclerview stuff
+        instructionAdapter = new InstructionAdapter(this, instructionList);
+        instructionRecyclerView = findViewById(R.id.instructionRecyclerView);
+
+        instructionRecyclerView.setAdapter(instructionAdapter);
+        instructionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
 
         // this makes sure that there's always one chip selected
         final ChipGroup chipGroupDuration = findViewById(R.id.chipGroupDuration);
@@ -234,8 +256,8 @@ public class AddRecipeActivity extends AppCompatActivity {
             }
 
             ingredientList.add(ingredient);
-            // notify the adapter to update the list
-            adapter.notifyDataSetChanged();
+            // notify the ingredientAdapter to update the list
+            ingredientAdapter.notifyDataSetChanged();
 
             // hide the 'no ingredients yet' text view
             TextView noIngredientTextView = (TextView) findViewById(R.id.noIngredientsTextView);
@@ -282,6 +304,125 @@ public class AddRecipeActivity extends AppCompatActivity {
         }
     }
 
+    public void createInstructionDialog(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // get the layout
+        View dialog_layout = getLayoutInflater().inflate(R.layout.add_instruction, null);
+
+        // get all the fields and initialise + disable them
+        minuteTextView = dialog_layout.findViewById(R.id.minutesTextView);
+        secondTextView = dialog_layout.findViewById(R.id.secondsTextView);
+
+        minuteNumberPicker = dialog_layout.findViewById(R.id.minuteNumberPicker);
+        secondNumberPicker = dialog_layout.findViewById(R.id.secondNumberPicker);
+
+        minuteNumberPicker.setMinValue(0);
+        secondNumberPicker.setMinValue(0);
+
+        minuteNumberPicker.setMaxValue(60);
+        secondNumberPicker.setMaxValue(59);
+
+        minuteNumberPicker.setValue(6);
+        secondNumberPicker.setValue(30);
+
+        minuteNumberPicker.setEnabled(false);
+        secondNumberPicker.setEnabled(false);
+        minuteTextView.setTextColor(Color.parseColor("#333333"));
+        secondTextView.setTextColor(Color.parseColor("#333333"));
+
+        final int enabledColor = ContextCompat.getColor(this, R.color.primaryColor);
+
+        // add eventListener to enable and disable the number pickers
+        final SwitchMaterial timerEnabledSwitch = dialog_layout.findViewById(R.id.timerEnabledSwitch);
+        timerEnabledSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    minuteNumberPicker.setEnabled(true);
+                    secondNumberPicker.setEnabled(true);
+                    minuteTextView.setEnabled(true);
+                    secondTextView.setEnabled(true);
+                    minuteTextView.setTextColor(enabledColor);
+                    secondTextView.setTextColor(enabledColor);
+                }
+                else {
+                    minuteNumberPicker.setEnabled(false);
+                    secondNumberPicker.setEnabled(false);
+                    minuteTextView.setTextColor(Color.parseColor("#333333"));
+                    secondTextView.setTextColor(Color.parseColor("#333333"));
+                }
+            }
+        });
+
+        instructionDescription = dialog_layout.findViewById(R.id.instructionInputField);
+
+        builder.setTitle("Add instruction");
+        builder.setMessage("Add an instruction, and optionally a timer by selecting the minutes and seconds.");
+
+        builder.setPositiveButton("Add Instruction", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if(timerEnabledSwitch.isChecked()) {
+                    long totalMilliSeconds = calcMilliSeconds(minuteNumberPicker.getValue(), secondNumberPicker.getValue());
+                    createInstruction(instructionDescription.getText().toString(), totalMilliSeconds);
+                }
+                else {
+                    createInstruction(instructionDescription.getText().toString(), null);
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+        // create and show the dialog
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.setView(dialog_layout);
+        alertDialog.show();
+    }
+
+    /**
+     * calculates the total amount of milliseconds
+     *
+     * @param minutes - the minutes given
+     * @param seconds - the seconds given
+     * @return - returns long, the total amount of seconds
+     */
+    private long calcMilliSeconds(int minutes, int seconds) {
+        return ((minutes * 60) + seconds) * 1000;
+    }
+
+
+    private void createInstruction(String instructionDescription, Long timerDuration) {
+        try {
+            Instruction instruction;
+
+            if(instructionDescription.isEmpty()) {
+                throw new IllegalArgumentException();
+            }
+
+            instruction = new Instruction(instructionDescription, timerDuration);
+
+            instructionList.add(instruction);
+            // notify the adapter to update the list
+            instructionAdapter.notifyDataSetChanged();
+
+            // hide the 'no ingredients yet' text view
+//            TextView noIngredientTextView = (TextView) findViewById(R.id.noIngredientsTextView);
+//            noIngredientTextView.setVisibility(TextView.INVISIBLE);
+
+            // unhide the list
+//            ingredientListView.setVisibility(TextView.VISIBLE);
+
+        } catch (IllegalArgumentException e) {
+            Toast.makeText(AddRecipeActivity.this, "Oops, something went wrong with that instruction. Try again", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+
+
+
     /**
      * gets called when the create recipe button is pressed
      * will check input and create recipe
@@ -327,21 +468,17 @@ public class AddRecipeActivity extends AppCompatActivity {
         }
 
 
-        ArrayList<Instruction> tempInstructionList = new ArrayList<>();
-        tempInstructionList.add(new Instruction("snijdt de groenten",10000));
-        tempInstructionList.add(new Instruction("kook de groenten", 11000000));
-        tempInstructionList.add(new Instruction("serveer alles", 1000));
-
-
         if(recipeName.isEmpty()) {
             recipeTitleLayout.setError("Please fill in a title");
         } else if (recipeDescription.isEmpty()) {
             recipeDescriptionLayout.setError("You have to fill in a description");
         } else if (ingredientList.isEmpty()) {
             Toast.makeText(AddRecipeActivity.this, "You have to add at least one ingredient", Toast.LENGTH_LONG).show();
+        } else if (instructionList.isEmpty()) {
+            Toast.makeText(AddRecipeActivity.this, "You have to add at least one instruction", Toast.LENGTH_LONG).show();
         } else {
             Recipe recipe = new Recipe(recipeDescription, recipeName, ingredientList, favouriteSwitch,
-                    cookTime, imagePath, recipeURL, difficulty, comments, tempInstructionList);
+                    cookTime, imagePath, recipeURL, difficulty, comments, instructionList);
             recipeList.add(recipe);
             Toast.makeText(AddRecipeActivity.this, "Your recipe was added!", Toast.LENGTH_LONG).show();
             finish();
@@ -371,6 +508,7 @@ public class AddRecipeActivity extends AppCompatActivity {
 
     /**
      * checks if the clicked menu item the home icon is
+     *
      * @param item  the clicked menu item
      * @return  should return true when item found
      */

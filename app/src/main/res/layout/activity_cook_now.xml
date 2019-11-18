@@ -85,7 +85,7 @@
             android:onClick="previousInstruction"
             android:text="Previous"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nextInstructionButton2" />
+            app:layout_constraintTop_toBottomOf="@+id/startTimerButton" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/nextInstructionButton"
@@ -98,10 +98,10 @@
             android:onClick="nextInstruction"
             android:text="next"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nextInstructionButton2" />
+            app:layout_constraintTop_toBottomOf="@+id/startTimerButton" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/nextInstructionButton2"
+            android:id="@+id/startTimerButton"
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -111,10 +111,10 @@
             android:text="Start timer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintTop_toBottomOf="@+id/timerDescriptionTextView" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/timerDescriptionTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"

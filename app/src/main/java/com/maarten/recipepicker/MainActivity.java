@@ -47,7 +47,8 @@ import java.util.List;
  * sort by is not automatically updated, have to 'set' the times cooked value again in order to see the difference
  * -> can possibly be fixed by putting an extra check in onResume()
  *
- * Can't show image from drawable yet
+ * Performance issue when having a longer list with picutres
+ * -> can possibly be solved by having transparent field in recipe which holds the bitmap -> load this when starting the app
  *
  * when viewing favorites, the sort by feature doesn't work
  *
@@ -147,8 +148,16 @@ public class MainActivity extends AppCompatActivity {
             String dummyImage =  String.valueOf(R.drawable.spaghetti_bolognese);
             String dummyURL = "https://www.jamieoliver.com/recipes/beef-recipes/spaghetti-bolognese/";
             String dummyComments = "Really easy to make!\n\nOnly be sure not to cook the spaghetti too long.";
+
+            ArrayList<Instruction> tempInstructionList = new ArrayList<>();
+            tempInstructionList.add(new Instruction("Cook the spaghetti.",(long) 600000));
+            tempInstructionList.add(new Instruction("Bake the minced meat.", null));
+            tempInstructionList.add(new Instruction("Cut the tomatoes and the paprika into pieces.", null));
+            tempInstructionList.add(new Instruction("Once the minced meat is done, throw the paprika and tomatoes in the same pan and bake them together. Spice with salt and pepper.", (long) 300000));
+            tempInstructionList.add(new Instruction("Mix the sauce with the spaghetti.", (long) 10000));
+
             recipeList.add(new Recipe(dummyDescription,"Spaghetti Bolognese for people who don't have a lot of time",dummyIngredientList,
-                    false, CookTime.MEDIUM, dummyImage, dummyURL, Difficulty.BEGINNER, dummyComments, null));
+                    false, CookTime.MEDIUM, dummyImage, dummyURL, Difficulty.BEGINNER, dummyComments, tempInstructionList));
         }
 
         // get the spinner

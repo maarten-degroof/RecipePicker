@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.app.Notification.EXTRA_NOTIFICATION_ID;
+import static android.app.Notification.PRIORITY_LOW;
 
 public class CookNowActivity extends AppCompatActivity {
 
@@ -35,8 +36,8 @@ public class CookNowActivity extends AppCompatActivity {
 
     private int currentInstructionNumber;
 
-    private MaterialButton previousButton, nextButton;
-    private TextView currentInstructionTextView, currentInstructionNumberTextView;
+    private MaterialButton previousButton, nextButton, startTimerButton;
+    private TextView currentInstructionTextView, currentInstructionNumberTextView, timerDescriptionTextView;
 
     private Instruction currentInstruction;
 
@@ -108,6 +109,19 @@ public class CookNowActivity extends AppCompatActivity {
 
         notificationManager = NotificationManagerCompat.from(this);
 
+        startTimerButton = findViewById(R.id.startTimerButton);
+        timerDescriptionTextView = findViewById(R.id.timerDescriptionTextView);
+        if(currentInstruction.getMilliseconds() == null) {
+            startTimerButton.setVisibility(View.INVISIBLE);
+            timerDescriptionTextView.setVisibility(View.INVISIBLE);
+        } else {
+            int totalSeconds = (int) (currentInstruction.getMilliseconds() / 1000);
+            int calcMinutes = totalSeconds / 60;
+            int calcSeconds = totalSeconds % 60;
+
+            timerDescriptionTextView.setText("This step takes " + calcMinutes + " minutes and " + calcSeconds + " seconds.\nYou can start a timer if you want. We'll notify you when it's time.");
+        }
+
     }
 
     public void nextInstruction(View view) {
@@ -118,6 +132,20 @@ public class CookNowActivity extends AppCompatActivity {
 
             currentInstructionTextView.setText(currentInstruction.getDescription());
             currentInstructionNumberTextView.setText(String.valueOf(currentInstructionNumber));
+
+            if(currentInstruction.getMilliseconds() == null) {
+                startTimerButton.setVisibility(View.GONE);
+                timerDescriptionTextView.setVisibility(View.GONE);
+            } else {
+                startTimerButton.setVisibility(View.VISIBLE);
+                timerDescriptionTextView.setVisibility(View.VISIBLE);
+                int totalSeconds = (int) (currentInstruction.getMilliseconds() / 1000);
+                int calcMinutes = totalSeconds / 60;
+                int calcSeconds = totalSeconds % 60;
+
+                timerDescriptionTextView.setText("This step takes " + calcMinutes + " minutes and " + calcSeconds + " seconds.\nYou can start a timer if you want. We'll notify you when it's time.");
+
+            }
 
         }
         // else we're at the last instruction
@@ -136,6 +164,20 @@ public class CookNowActivity extends AppCompatActivity {
         currentInstruction =  recipe.getInstructionList().get(currentInstructionNumber - 1);
         currentInstructionTextView.setText(currentInstruction.getDescription());
         currentInstructionNumberTextView.setText(String.valueOf(currentInstructionNumber));
+
+        if(currentInstruction.getMilliseconds() == null) {
+            startTimerButton.setVisibility(View.GONE);
+            timerDescriptionTextView.setVisibility(View.GONE);
+        } else {
+            startTimerButton.setVisibility(View.VISIBLE);
+            timerDescriptionTextView.setVisibility(View.VISIBLE);
+            int totalSeconds = (int) (currentInstruction.getMilliseconds() / 1000);
+            int calcMinutes = totalSeconds / 60;
+            int calcSeconds = totalSeconds % 60;
+
+            timerDescriptionTextView.setText("This step takes " + calcMinutes + " minutes and " + calcSeconds + " seconds.\nYou can start a timer if you want. We'll notify you when it's time.");
+
+        }
 
         // we're at the first step
         if(currentInstructionNumber <= 1) {
@@ -180,7 +222,7 @@ public class CookNowActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "CookingInstructionNotification";
             String description = "Notification about the current instruction when cooking";
-            int importance = NotificationManager.IMPORTANCE_HIGH;
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel("1", name, importance);
             channel.setDescription(description);
             // Register the channel with the system; you can't change the importance
@@ -245,8 +287,9 @@ public class CookNowActivity extends AppCompatActivity {
                 .setSmallIcon(R.drawable.ic_favorite_black_24dp)
                 .setContentTitle("Timer started")
                 .setContentText("Instruction " + instructionNumber + " will take " + calcMinutes + " minutes and " + calcSeconds + " seconds.")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setPriority(NotificationCompat.PRIORITY_MIN)
                 .setOngoing(true)
+                .setOnlyAlertOnce(true)
                 .addAction(R.drawable.ic_home_black_24dp, "Cancel", cancelPendingIntent);
 
         // notificationId is a unique int for each notification that you must define
@@ -265,6 +308,7 @@ public class CookNowActivity extends AppCompatActivity {
                         .setContentText("Your instruction (" + instructionNumber + ") is done!")
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setDefaults(Notification.DEFAULT_ALL)
+                        .setOnlyAlertOnce(false)
                         .setOngoing(false);
                 notificationManager.notify(instructionNumber, builder.build());
             }

@@ -11,6 +11,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/instructionButton"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="208dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="24dp"
+            android:onClick="createInstructionDialog"
+            android:text="Add instruction"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/descriptionFieldLayout" />
+
         <include
             android:id="@+id/toolbar"
             layout="@layout/toolbar" />
@@ -427,7 +440,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/commentsText"
                 android:layout_width="match_parent"
-                android:layout_height="179dp"
+                android:layout_height="100dp"
                 android:ems="10"
                 android:gravity="start|top"
                 android:hint="@string/comment_hint"
@@ -444,11 +457,11 @@
             style="@style/Divider"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/descriptionFieldLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/instructionRecyclerView" />
 
         <View
             android:id="@+id/view5"
@@ -482,6 +495,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageTextView"
             tools:srcCompat="@tools:sample/avatars" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/instructionRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="170dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/instructionButton" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
