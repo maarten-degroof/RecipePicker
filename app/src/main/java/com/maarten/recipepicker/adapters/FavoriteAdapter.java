@@ -1,4 +1,4 @@
-package com.maarten.recipepicker.Adapters;
+package com.maarten.recipepicker.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,28 +14,23 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.maarten.recipepicker.Enums.CookTime;
-import com.maarten.recipepicker.Enums.Difficulty;
 import com.maarten.recipepicker.R;
 import com.maarten.recipepicker.Recipe;
 import com.maarten.recipepicker.ViewRecipeActivity;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class DifficultyFilteredAdapter extends RecyclerView.Adapter<DifficultyFilteredAdapter.CustomViewHolder> {
+public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.CustomViewHolder> {
 
     private Activity context;
     private List<Recipe> recipeList;
     private static LayoutInflater inflater = null;
 
-    public DifficultyFilteredAdapter(Activity context, List<Recipe> recipeList){
+    public FavoriteAdapter(Activity context, List<Recipe> recipeList){
         this.context = context;
         this.recipeList = recipeList;
         inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
-
     }
 
     @NonNull
@@ -78,15 +73,16 @@ public class DifficultyFilteredAdapter extends RecyclerView.Adapter<DifficultyFi
     }
 
     @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
     public int getItemCount() {
         return recipeList.size();
     }
 
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
 
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
@@ -106,7 +102,7 @@ public class DifficultyFilteredAdapter extends RecyclerView.Adapter<DifficultyFi
 
     public Filter getFilter() {
 
-        return new Filter() {
+        Filter filter = new Filter() {
 
             @SuppressWarnings("unchecked")
             @Override
@@ -114,7 +110,6 @@ public class DifficultyFilteredAdapter extends RecyclerView.Adapter<DifficultyFi
 
                 recipeList  = (List<Recipe>) results.values;
                 notifyDataSetChanged();
-
             }
 
             @Override
@@ -123,34 +118,20 @@ public class DifficultyFilteredAdapter extends RecyclerView.Adapter<DifficultyFi
                 FilterResults results = new FilterResults();
                 ArrayList<Recipe> filteredArray = new ArrayList<>();
 
-                Difficulty difficulty;
-
-
-                switch(constraint.toString()) {
-                    case "BEGINNER":
-                        difficulty = Difficulty.BEGINNER;
-                        break;
-                    case "EXPERT":
-                        difficulty = Difficulty.EXPERT;
-                        break;
-                    default:
-                        difficulty = Difficulty.INTERMEDIATE;
-                }
-
                 for (int i = 0; i < recipeList.size(); i++) {
                     Recipe tempRecipe = recipeList.get(i);
-
-                    if(tempRecipe.getDifficulty() == difficulty){
+                    if(tempRecipe.getFavorite()) {
                         filteredArray.add(tempRecipe);
                     }
                 }
-
                 results.count = filteredArray.size();
                 results.values = filteredArray;
-
 
                 return results;
             }
         };
+
+        return filter;
     }
+
 }

@@ -41,7 +41,7 @@ public class CookNowActivity extends AppCompatActivity {
 
     private Instruction currentInstruction;
 
-    public static List<TimerListItem> timer;
+    private static List<TimerListItem> timer;
 
     private static NotificationManagerCompat notificationManager;
 
@@ -189,7 +189,7 @@ public class CookNowActivity extends AppCompatActivity {
      * Shows the AlertDialog when you have reached the last step.
      * User can choose to finish this activity or go back and view a previous step
      */
-    public void createFinishCookingDialog() {
+    private void createFinishCookingDialog() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 

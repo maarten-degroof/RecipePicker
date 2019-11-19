@@ -6,12 +6,12 @@ import androidx.annotation.NonNull;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.maarten.recipepicker.Adapters.RecipeAdapter;
-import com.maarten.recipepicker.Enums.CookTime;
-import com.maarten.recipepicker.Enums.Difficulty;
-import com.maarten.recipepicker.ListSorters.AmountCookedSorter;
-import com.maarten.recipepicker.ListSorters.DateSorter;
-import com.maarten.recipepicker.Settings.SettingsActivity;
+import com.maarten.recipepicker.adapters.RecipeAdapter;
+import com.maarten.recipepicker.enums.CookTime;
+import com.maarten.recipepicker.enums.Difficulty;
+import com.maarten.recipepicker.listSorters.AmountCookedSorter;
+import com.maarten.recipepicker.listSorters.DateSorter;
+import com.maarten.recipepicker.settings.SettingsActivity;
 
 import androidx.core.view.ViewCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -141,10 +141,6 @@ public class MainActivity extends AppCompatActivity {
             dummyIngredientList.add(new Ingredient("Water",100.0,Ingredient.type.millimetres));
             dummyIngredientList.add(new Ingredient("A bit of salt and pepper",null,Ingredient.type.empty));
 
-            String dummyDescription = "First cook the spaghetti.\n\nSecondly you bake the minced meat.\nCut the tomatoes " +
-                    "and the paprika into pieces.\nOnce the minced meat is done, thow the paprika and tomatoes in the same pan " +
-                    "and bake them together. Spice it with salt and pepper.\n\nOnce everything is ready, mix it together " +
-                    "with the spaghetti and you're done.";
             String dummyImage =  String.valueOf(R.drawable.spaghetti_bolognese);
             String dummyURL = "https://www.jamieoliver.com/recipes/beef-recipes/spaghetti-bolognese/";
             String dummyComments = "Really easy to make!\n\nOnly be sure not to cook the spaghetti too long.";
@@ -156,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
             tempInstructionList.add(new Instruction("Once the minced meat is done, throw the paprika and tomatoes in the same pan and bake them together. Spice with salt and pepper.", (long) 300000));
             tempInstructionList.add(new Instruction("Mix the sauce with the spaghetti.", (long) 10000));
 
-            recipeList.add(new Recipe(dummyDescription,"Spaghetti Bolognese for people who don't have a lot of time",dummyIngredientList,
+            recipeList.add(new Recipe("Spaghetti Bolognese for people who don't have a lot of time",dummyIngredientList,
                     false, CookTime.MEDIUM, dummyImage, dummyURL, Difficulty.BEGINNER, dummyComments, tempInstructionList));
         }
 
@@ -187,7 +183,6 @@ public class MainActivity extends AppCompatActivity {
                     case 1:
                         Collections.sort(recipeList, new AmountCookedSorter());
                         adapter.notifyDataSetChanged();
-                        return;
 
                 }
             }

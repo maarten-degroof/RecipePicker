@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.maarten.recipepicker.Adapters.SearchAdapter;
+import com.maarten.recipepicker.adapters.SearchAdapter;
 
 import static androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY;
 import static com.maarten.recipepicker.MainActivity.recipeList;

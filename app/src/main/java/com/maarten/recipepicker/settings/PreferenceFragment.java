@@ -1,4 +1,4 @@
-package com.maarten.recipepicker.Settings;
+package com.maarten.recipepicker.settings;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -7,11 +7,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
-import android.util.Log;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.maarten.recipepicker.MainActivity;

@@ -2,6 +2,7 @@ package com.maarten.recipepicker;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,10 +20,10 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.maarten.recipepicker.Adapters.IngredientEditAdapter;
-import com.maarten.recipepicker.Adapters.InstructionAdapter;
-import com.maarten.recipepicker.Enums.CookTime;
-import com.maarten.recipepicker.Enums.Difficulty;
+import com.maarten.recipepicker.adapters.IngredientEditAdapter;
+import com.maarten.recipepicker.adapters.InstructionEditAdapter;
+import com.maarten.recipepicker.enums.CookTime;
+import com.maarten.recipepicker.enums.Difficulty;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -65,7 +66,7 @@ public class AddRecipeActivity extends AppCompatActivity {
     private Spinner ingredientTypeField;
     private ListView ingredientListView;
 
-    private TextInputLayout recipeTitleLayout, recipeDescriptionLayout;
+    private TextInputLayout recipeTitleLayout;
 
     private static final int READ_EXTERNAL_PERMISSIONS = 1;
     private static final int GALLERY_REQUEST_CODE = 2;
@@ -75,13 +76,14 @@ public class AddRecipeActivity extends AppCompatActivity {
 
     private Button removeImageButton, differentImageButton, addImageButton;
 
-    private InstructionAdapter instructionAdapter;
+    private InstructionEditAdapter instructionAdapter;
     private RecyclerView instructionRecyclerView;
     private NumberPicker minuteNumberPicker, secondNumberPicker;
     private TextView minuteTextView, secondTextView;
     private List<Instruction> instructionList = new ArrayList<>();
     private EditText instructionDescription;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,9 +105,8 @@ public class AddRecipeActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         recipeTitleLayout = findViewById(R.id.nameFieldLayout);
-        recipeDescriptionLayout = findViewById(R.id.descriptionFieldLayout);
 
-        // make the listview (ingredientList) also scrollable when inserting text
+        // make the listView (ingredientList) also scrollable when inserting text
         ViewCompat.setNestedScrollingEnabled(ingredientListView, true);
 
         imageView = findViewById(R.id.imageView);
@@ -119,13 +120,12 @@ public class AddRecipeActivity extends AppCompatActivity {
         differentImageButton.setVisibility(View.GONE);
         removeImageButton.setVisibility(View.GONE);
 
-        // the instruction recyclerview stuff
-        instructionAdapter = new InstructionAdapter(this, instructionList);
+        // the instruction recyclerView stuff
+        instructionAdapter = new InstructionEditAdapter(this, instructionList);
         instructionRecyclerView = findViewById(R.id.instructionRecyclerView);
 
         instructionRecyclerView.setAdapter(instructionAdapter);
         instructionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
 
         // this makes sure that there's always one chip selected
         final ChipGroup chipGroupDuration = findViewById(R.id.chipGroupDuration);
@@ -140,7 +140,6 @@ public class AddRecipeActivity extends AppCompatActivity {
                 }
             }
         });
-
         final ChipGroup chipGroupDifficulty = findViewById(R.id.chipGroupDifficulty);
         chipGroupDifficulty.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
             @Override
@@ -151,23 +150,6 @@ public class AddRecipeActivity extends AppCompatActivity {
                         chip.setClickable(!(chip.getId() == chipGroupDifficulty.getCheckedChipId()));
                     }
                 }
-            }
-        });
-
-
-        // This makes it possible to scroll in the description field
-        final TextInputEditText descriptionField = findViewById(R.id.recipeText);
-        descriptionField.setOnTouchListener(new View.OnTouchListener() {
-
-            public boolean onTouch(View v, MotionEvent event) {
-                if (descriptionField.hasFocus()) {
-                    v.getParent().requestDisallowInterceptTouchEvent(true);
-                    if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_SCROLL){
-                        v.getParent().requestDisallowInterceptTouchEvent(false);
-                        return true;
-                    }
-                }
-                return false;
             }
         });
 
@@ -260,7 +242,7 @@ public class AddRecipeActivity extends AppCompatActivity {
             ingredientAdapter.notifyDataSetChanged();
 
             // hide the 'no ingredients yet' text view
-            TextView noIngredientTextView = (TextView) findViewById(R.id.noIngredientsTextView);
+            TextView noIngredientTextView = findViewById(R.id.noIngredientsTextView);
             noIngredientTextView.setVisibility(TextView.INVISIBLE);
 
             // unhide the list
@@ -272,7 +254,7 @@ public class AddRecipeActivity extends AppCompatActivity {
     }
 
     /**
-     * Validates parameters for ingredient.
+     * Validates parameters for ingredient
      *
      * @param name      value should not be empty
      * @param quantity  value should be a [Double] number (and not be empty)
@@ -304,6 +286,11 @@ public class AddRecipeActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Creates the alertdialog where the user can add an instruction
+     *
+     * @param view - the 'add instruction' button
+     */
     public void createInstructionDialog(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -392,7 +379,12 @@ public class AddRecipeActivity extends AppCompatActivity {
         return ((minutes * 60) + seconds) * 1000;
     }
 
-
+    /**
+     * Creates an instruction, or shows an error toast if something goes wrong
+     *
+     * @param instructionDescription - the description of the instruction
+     * @param timerDuration - the time in milliseconds, or null if no timer
+     */
     private void createInstruction(String instructionDescription, Long timerDuration) {
         try {
             Instruction instruction;
@@ -407,21 +399,10 @@ public class AddRecipeActivity extends AppCompatActivity {
             // notify the adapter to update the list
             instructionAdapter.notifyDataSetChanged();
 
-            // hide the 'no ingredients yet' text view
-//            TextView noIngredientTextView = (TextView) findViewById(R.id.noIngredientsTextView);
-//            noIngredientTextView.setVisibility(TextView.INVISIBLE);
-
-            // unhide the list
-//            ingredientListView.setVisibility(TextView.VISIBLE);
-
         } catch (IllegalArgumentException e) {
             Toast.makeText(AddRecipeActivity.this, "Oops, something went wrong with that instruction. Try again", Toast.LENGTH_LONG).show();
         }
     }
-
-
-
-
 
     /**
      * gets called when the create recipe button is pressed
@@ -433,11 +414,10 @@ public class AddRecipeActivity extends AppCompatActivity {
 
         Boolean favouriteSwitch = ((SwitchMaterial) findViewById(R.id.favoriteSwitch)).isChecked();
         String recipeName = ((EditText) findViewById(R.id.nameField)).getText().toString();
-        String recipeDescription = ((EditText) findViewById(R.id.recipeText)).getText().toString();
         String recipeURL = ((EditText) findViewById(R.id.URLField)).getText().toString();
         String comments = ((EditText) findViewById(R.id.commentsText)).getText().toString();
 
-        // get the selected cookingtime
+        // get the selected cookingTime
         ChipGroup chipGroupDuration = findViewById(R.id.chipGroupDuration);
         CookTime cookTime;
 
@@ -470,14 +450,12 @@ public class AddRecipeActivity extends AppCompatActivity {
 
         if(recipeName.isEmpty()) {
             recipeTitleLayout.setError("Please fill in a title");
-        } else if (recipeDescription.isEmpty()) {
-            recipeDescriptionLayout.setError("You have to fill in a description");
         } else if (ingredientList.isEmpty()) {
             Toast.makeText(AddRecipeActivity.this, "You have to add at least one ingredient", Toast.LENGTH_LONG).show();
         } else if (instructionList.isEmpty()) {
             Toast.makeText(AddRecipeActivity.this, "You have to add at least one instruction", Toast.LENGTH_LONG).show();
         } else {
-            Recipe recipe = new Recipe(recipeDescription, recipeName, ingredientList, favouriteSwitch,
+            Recipe recipe = new Recipe(recipeName, ingredientList, favouriteSwitch,
                     cookTime, imagePath, recipeURL, difficulty, comments, instructionList);
             recipeList.add(recipe);
             Toast.makeText(AddRecipeActivity.this, "Your recipe was added!", Toast.LENGTH_LONG).show();
@@ -599,7 +577,7 @@ public class AddRecipeActivity extends AppCompatActivity {
                         Uri selectedImage = data.getData();
                         imagePath = getRealPathFromURI(this, selectedImage);
 
-                        // generate a bitmap, to put in the imageview
+                        // generate a bitmap, to put in the imageView
                         Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
                         imageView.setImageBitmap(bitmap);
 

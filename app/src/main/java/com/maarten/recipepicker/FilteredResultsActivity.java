@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.maarten.recipepicker.Adapters.FilterAdapter;
+import com.maarten.recipepicker.adapters.FilterAdapter;
 
 import org.json.JSONObject;
 

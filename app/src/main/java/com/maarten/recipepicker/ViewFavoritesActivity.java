@@ -1,9 +1,9 @@
 package com.maarten.recipepicker;
 
 import android.content.Intent;
-import com.maarten.recipepicker.Adapters.FavoriteAdapter;
-import com.maarten.recipepicker.ListSorters.AmountCookedSorter;
-import com.maarten.recipepicker.ListSorters.DateSorter;
+import com.maarten.recipepicker.adapters.FavoriteAdapter;
+import com.maarten.recipepicker.listSorters.AmountCookedSorter;
+import com.maarten.recipepicker.listSorters.DateSorter;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -77,7 +77,6 @@ public class ViewFavoritesActivity extends AppCompatActivity {
                     case 1:
                         Collections.sort(recipeList, new AmountCookedSorter());
                         adapter.notifyDataSetChanged();
-                        return;
 
                 }
             }

@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:cardview="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -20,6 +17,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_toStartOf="@+id/removeInstructionButton"
             android:layout_toEndOf="@+id/instructionNumberTextView"
             android:ellipsize="end"
             android:maxLines="3"
@@ -50,10 +49,27 @@
             android:layout_below="@+id/instructionDescriptionTextView"
             android:layout_marginStart="12dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="12dp"
+            android:layout_toStartOf="@+id/removeInstructionButton"
             android:layout_toEndOf="@+id/instructionNumberTextView"
-            android:drawableLeft="@drawable/ic_alarm_black_24dp"
+            android:drawableStart="@drawable/ic_alarm_black_24dp"
             android:text="Timer"
             android:textSize="18sp" />
+
+        <ImageButton
+            android:id="@+id/removeInstructionButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="5dp"
+            android:background="@null"
+            android:contentDescription="Button to remove the current ingredient"
+            cardview:layout_constraintEnd_toEndOf="parent"
+            cardview:layout_constraintHorizontal_bias="0.365"
+            cardview:layout_constraintTop_toTopOf="parent"
+            cardview:srcCompat="@drawable/ic_baseline_remove_circle_outline_24px" />
 
     </RelativeLayout>
 

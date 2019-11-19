@@ -1,4 +1,4 @@
-package com.maarten.recipepicker.Enums;
+package com.maarten.recipepicker.enums;
 
 public enum CookTime {
     SHORT,

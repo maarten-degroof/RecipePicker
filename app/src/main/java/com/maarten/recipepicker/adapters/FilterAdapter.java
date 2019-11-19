@@ -1,4 +1,4 @@
-package com.maarten.recipepicker.Adapters;
+package com.maarten.recipepicker.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,8 +14,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.maarten.recipepicker.Enums.CookTime;
-import com.maarten.recipepicker.Enums.Difficulty;
+import com.maarten.recipepicker.enums.CookTime;
+import com.maarten.recipepicker.enums.Difficulty;
 import com.maarten.recipepicker.R;
 import com.maarten.recipepicker.Recipe;
 import com.maarten.recipepicker.ViewRecipeActivity;

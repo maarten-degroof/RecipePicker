@@ -1,16 +1,14 @@
 package com.maarten.recipepicker;
 
-import com.maarten.recipepicker.Enums.CookTime;
-import com.maarten.recipepicker.Enums.Difficulty;
+import com.maarten.recipepicker.enums.CookTime;
+import com.maarten.recipepicker.enums.Difficulty;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 public class Recipe implements Serializable {
-    private String description;
     private String title;
     private List<Ingredient> ingredientList;
     private Boolean favorite;
@@ -24,9 +22,8 @@ public class Recipe implements Serializable {
     private List<Instruction> instructionList;
 
 
-    public Recipe(String description, String title, List<Ingredient> ingredientList, Boolean favorite,
+    public Recipe(String title, List<Ingredient> ingredientList, Boolean favorite,
                   CookTime cookTime, String imagePath, String URL, Difficulty difficulty, String comments, List<Instruction> instructionList) {
-        this.description = description;
         this.title = title;
         this.ingredientList = ingredientList;
         this.favorite = favorite;
@@ -46,14 +43,6 @@ public class Recipe implements Serializable {
 
     public void setInstructionList(List<Instruction> instructionList) {
         this.instructionList = instructionList;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getTitle() {
@@ -106,7 +95,7 @@ public class Recipe implements Serializable {
 
     public Date getAddedDate() {
         return addedDate;
-    };
+    }
 
     public String getImagePath() {
         return imagePath;
@@ -154,7 +143,7 @@ public class Recipe implements Serializable {
         if (obj == this) return true;
         if (!(obj instanceof Recipe)) return false;
         Recipe o = (Recipe) obj;
-        return o.getTitle().equals(this.getTitle()) && o.getDescription().equals(this.getDescription());
+        return o.getTitle().equals(this.getTitle());
         // check ingredientlist!!
     }
 }

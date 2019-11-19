@@ -1,4 +1,4 @@
-package com.maarten.recipepicker.Adapters;
+package com.maarten.recipepicker.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,16 +17,15 @@ import com.maarten.recipepicker.R;
 import com.maarten.recipepicker.Recipe;
 import com.maarten.recipepicker.ViewRecipeActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.CustomViewHolder> {
+public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.CustomViewHolder> {
 
     private Activity context;
     private List<Recipe> recipeList;
     private static LayoutInflater inflater = null;
 
-    public FavoriteAdapter(Activity context, List<Recipe> recipeList){
+    public RecipeAdapter(Activity context, List<Recipe> recipeList){
         this.context = context;
         this.recipeList = recipeList;
         inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
@@ -98,40 +96,6 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Custom
             this.recipeImageView = itemView.findViewById(R.id.recipeImageView);
 
         }
-    }
-
-    public Filter getFilter() {
-
-        Filter filter = new Filter() {
-
-            @SuppressWarnings("unchecked")
-            @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-
-                recipeList  = (List<Recipe>) results.values;
-                notifyDataSetChanged();
-            }
-
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-
-                FilterResults results = new FilterResults();
-                ArrayList<Recipe> filteredArray = new ArrayList<>();
-
-                for (int i = 0; i < recipeList.size(); i++) {
-                    Recipe tempRecipe = recipeList.get(i);
-                    if(tempRecipe.getFavorite()) {
-                        filteredArray.add(tempRecipe);
-                    }
-                }
-                results.count = filteredArray.size();
-                results.values = filteredArray;
-
-                return results;
-            }
-        };
-
-        return filter;
     }
 
 }

@@ -11,11 +11,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.maarten.recipepicker.Adapters.DifficultyFilteredAdapter;
-import com.maarten.recipepicker.Enums.Difficulty;
+import com.maarten.recipepicker.adapters.DifficultyFilteredAdapter;
+import com.maarten.recipepicker.enums.Difficulty;
 
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import static com.maarten.recipepicker.MainActivity.recipeList;
 

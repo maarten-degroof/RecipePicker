@@ -1,13 +1,10 @@
-package com.maarten.recipepicker.Adapters;
+package com.maarten.recipepicker.adapters;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,18 +12,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.maarten.recipepicker.Instruction;
 import com.maarten.recipepicker.R;
-import com.maarten.recipepicker.Recipe;
-import com.maarten.recipepicker.ViewRecipeActivity;
 
 import java.util.List;
 
-public class InstructionAdapter extends RecyclerView.Adapter<InstructionAdapter.CustomViewHolder> {
+public class InstructionEditAdapter extends RecyclerView.Adapter<InstructionEditAdapter.CustomViewHolder> {
 
     private Activity context;
     private List<Instruction> instructionList;
     private static LayoutInflater inflater = null;
 
-    public InstructionAdapter(Activity context, List<Instruction> instructionList){
+    public InstructionEditAdapter(Activity context, List<Instruction> instructionList){
         this.context = context;
         this.instructionList = instructionList;
         inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
@@ -38,15 +33,23 @@ public class InstructionAdapter extends RecyclerView.Adapter<InstructionAdapter.
         return new CustomViewHolder(
                 LayoutInflater
                         .from(context)
-                        .inflate(R.layout.instruction_list_item, parent, false)
+                        .inflate(R.layout.instruction_list_item_with_remove, parent, false)
         );
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CustomViewHolder holder, final int position) {
         final Instruction instruction = instructionList.get(position);
         holder.instructionNumberTextView.setText(String.valueOf(position+1));
         holder.instructionDescriptionTextView.setText(instruction.getDescription());
+
+        holder.removeInstructionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                instructionList.remove(position);
+                notifyDataSetChanged();
+            }
+        });
 
         if(instruction.getMilliseconds() != null) {
             int totalSeconds = (int) (instruction.getMilliseconds() / 1000);
@@ -75,6 +78,7 @@ public class InstructionAdapter extends RecyclerView.Adapter<InstructionAdapter.
         private TextView instructionNumberTextView;
         private TextView instructionDescriptionTextView;
         private TextView instructionTimerTextView;
+        private ImageButton removeInstructionButton;
         private View parentView;
 
         public CustomViewHolder(@NonNull View itemView) {
@@ -83,6 +87,7 @@ public class InstructionAdapter extends RecyclerView.Adapter<InstructionAdapter.
             this.instructionNumberTextView = itemView.findViewById(R.id.instructionNumberTextView);
             this.instructionDescriptionTextView = itemView.findViewById(R.id.instructionDescriptionTextView);
             this.instructionTimerTextView = itemView.findViewById(R.id.instructionTimerTextView);
+            this.removeInstructionButton = itemView.findViewById(R.id.removeInstructionButton);
 
         }
     }

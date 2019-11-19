@@ -1,4 +1,4 @@
-package com.maarten.recipepicker.ListSorters;
+package com.maarten.recipepicker.listSorters;
 
 import android.util.Log;
 

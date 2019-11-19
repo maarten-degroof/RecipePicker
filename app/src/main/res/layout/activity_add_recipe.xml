@@ -22,7 +22,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/descriptionFieldLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/instructionsTextView" />
 
         <include
             android:id="@+id/toolbar"
@@ -57,35 +57,6 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/addRecipeIngredientList" />
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/descriptionFieldLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/descriptionTextView">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/recipeText"
-                android:layout_width="match_parent"
-                android:layout_height="179dp"
-                android:ems="10"
-                android:gravity="start|top"
-                android:hint="@string/description_input_field"
-                android:inputType="textMultiLine|textCapSentences"
-
-                android:overScrollMode="always"
-                android:scrollbarStyle="insideInset"
-                android:scrollbars="vertical" />
-
-        </com.google.android.material.textfield.TextInputLayout>
 
 
         <TextView
@@ -131,11 +102,11 @@
             app:layout_constraintTop_toBottomOf="@+id/ingredientButton" />
 
         <TextView
-            android:id="@+id/descriptionTextView"
+            android:id="@+id/instructionsTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="12dp"
-            android:text="@string/description"
+            android:text="Instructions"
             android:textAlignment="center"
             android:textColor="@color/primaryColor"
             android:textSize="30sp"
@@ -499,7 +470,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/instructionRecyclerView"
             android:layout_width="0dp"
-            android:layout_height="170dp"
+            android:layout_height="240dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"

@@ -105,21 +105,6 @@
             tools:layout_conversion_absoluteHeight="27dp"
             tools:layout_conversion_absoluteWidth="225dp" />
 
-        <TextView
-            android:id="@+id/viewRecipeDescription"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:text="@string/dummy_value"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/RecipedescriptionTitle"
-            tools:layout_conversion_absoluteHeight="24dp"
-            tools:layout_conversion_absoluteWidth="179dp" />
-
 
         <TextView
             android:id="@+id/amountCookedTextField"
@@ -131,7 +116,7 @@
             android:textColor="@color/primaryColor"
             android:textSize="22sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/viewRecipeDescription"
+            app:layout_constraintTop_toBottomOf="@+id/RecipedescriptionTitle"
             tools:layout_conversion_absoluteHeight="24dp"
             tools:layout_conversion_absoluteWidth="120dp" />
 
@@ -143,7 +128,7 @@
             android:text="@string/null_number"
             android:textSize="22sp"
             app:layout_constraintStart_toEndOf="@+id/amountCookedTextField"
-            app:layout_constraintTop_toBottomOf="@+id/viewRecipeDescription"
+            app:layout_constraintTop_toBottomOf="@+id/RecipedescriptionTitle"
             tools:layout_conversion_absoluteHeight="32dp"
             tools:layout_conversion_absoluteWidth="10dp" />
 
@@ -165,7 +150,7 @@
             android:text="@string/plus_sign"
             android:textSize="12sp"
             app:layout_constraintStart_toEndOf="@+id/amountCookedField"
-            app:layout_constraintTop_toBottomOf="@+id/viewRecipeDescription"
+            app:layout_constraintTop_toBottomOf="@+id/RecipedescriptionTitle"
             tools:layout_conversion_absoluteHeight="40dp"
             tools:layout_conversion_absoluteWidth="40dp" />
 

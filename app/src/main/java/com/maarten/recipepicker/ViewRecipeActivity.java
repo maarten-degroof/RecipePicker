@@ -31,7 +31,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.snackbar.Snackbar;
-import com.maarten.recipepicker.Adapters.IngredientAdapter;
+import com.maarten.recipepicker.adapters.IngredientAdapter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -75,7 +75,6 @@ public class ViewRecipeActivity extends AppCompatActivity {
         recipe = (Recipe) intent.getSerializableExtra("Recipe");
 
         TextView recipeTitle = findViewById(R.id.textViewTitle);
-        TextView recipeDescription = findViewById(R.id.viewRecipeDescription);
         amountCookedField = findViewById(R.id.amountCookedField);
 
         ChipDrawable durationChip = ChipDrawable.createFromResource(this, R.xml.chip);
@@ -99,7 +98,6 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         recipeTitle.setText(span);
 
-        recipeDescription.setText(recipe.getDescription());
         amountCookedValue = recipe.getAmountCooked();
         amountCookedField.setText(String.valueOf(amountCookedValue));
 
@@ -377,6 +375,11 @@ public class ViewRecipeActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * open the Cook now activity
+     *
+     * @param view - the cook now button
+     */
     public void startCookNow(View view) {
         Intent intent = new Intent(this, CookNowActivity.class);
         intent.putExtra("Recipe", recipe);

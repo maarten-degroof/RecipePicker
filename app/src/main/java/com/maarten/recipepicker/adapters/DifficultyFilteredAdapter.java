@@ -1,4 +1,4 @@
-package com.maarten.recipepicker.Adapters;
+package com.maarten.recipepicker.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,7 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.maarten.recipepicker.Ingredient;
+import com.maarten.recipepicker.enums.Difficulty;
 import com.maarten.recipepicker.R;
 import com.maarten.recipepicker.Recipe;
 import com.maarten.recipepicker.ViewRecipeActivity;
@@ -22,16 +22,17 @@ import com.maarten.recipepicker.ViewRecipeActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.CustomViewHolder> {
+public class DifficultyFilteredAdapter extends RecyclerView.Adapter<DifficultyFilteredAdapter.CustomViewHolder> {
 
     private Activity context;
     private List<Recipe> recipeList;
     private static LayoutInflater inflater = null;
 
-    public SearchAdapter(Activity context, List<Recipe> recipeList){
+    public DifficultyFilteredAdapter(Activity context, List<Recipe> recipeList){
         this.context = context;
         this.recipeList = recipeList;
         inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+
     }
 
     @NonNull
@@ -74,14 +75,16 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.CustomView
     }
 
     @Override
+    public int getItemCount() {
+        return recipeList.size();
+    }
+
+
+    @Override
     public long getItemId(int position) {
         return position;
     }
 
-    @Override
-    public int getItemCount() {
-        return recipeList.size();
-    }
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
 
@@ -94,12 +97,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.CustomView
             this.parentView = itemView;
             this.recipeTitleTextView = itemView.findViewById(R.id.recipeTitleTextView);
             this.recipeImageView = itemView.findViewById(R.id.recipeImageView);
+
         }
     }
 
     public Filter getFilter() {
 
-        final Filter filter = new Filter() {
+        return new Filter() {
 
             @SuppressWarnings("unchecked")
             @Override
@@ -116,37 +120,34 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.CustomView
                 FilterResults results = new FilterResults();
                 ArrayList<Recipe> filteredArray = new ArrayList<>();
 
-                try {
-                    String searchString = constraint.toString().toLowerCase();
+                Difficulty difficulty;
 
-                    // checks if part of the title is the same as the searchstring
-                    // if that fails checks each ingredient
 
-                    for (int i = 0; i < recipeList.size(); i++) {
-                        Recipe tempRecipe = recipeList.get(i);
-
-                        if(tempRecipe.getTitle().toLowerCase().contains(searchString)) {
-                            filteredArray.add(tempRecipe);
-                        } else {
-                            // if the title didn't match -> check each ingredient
-                            for (Ingredient ingredient : tempRecipe.getIngredientList()) {
-                                if(ingredient.getName().toLowerCase().contains(searchString)) {
-                                    filteredArray.add(tempRecipe);
-                                }
-                            }
-                        }
-                    }
-
-                    results.count = filteredArray.size();
-                    results.values = filteredArray;
-                } catch (Exception e) {
-                    e.printStackTrace();
+                switch(constraint.toString()) {
+                    case "BEGINNER":
+                        difficulty = Difficulty.BEGINNER;
+                        break;
+                    case "EXPERT":
+                        difficulty = Difficulty.EXPERT;
+                        break;
+                    default:
+                        difficulty = Difficulty.INTERMEDIATE;
                 }
+
+                for (int i = 0; i < recipeList.size(); i++) {
+                    Recipe tempRecipe = recipeList.get(i);
+
+                    if(tempRecipe.getDifficulty() == difficulty){
+                        filteredArray.add(tempRecipe);
+                    }
+                }
+
+                results.count = filteredArray.size();
+                results.values = filteredArray;
+
 
                 return results;
             }
         };
-
-        return filter;
     }
 }
