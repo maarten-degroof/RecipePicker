@@ -11,6 +11,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <TextView
+            android:id="@+id/noInstructionsTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:text="No instructions yet. Add an instruction by pressing the button."
+            android:textSize="18sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/instructionButton" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/instructionButton"
             style="@style/Widget.MaterialComponents.Button"
@@ -90,9 +105,9 @@
         <TextView
             android:id="@+id/noIngredientsTextView"
             android:layout_width="match_parent"
-            android:layout_height="121dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="72dp"
+            android:layout_marginTop="32dp"
             android:layout_marginEnd="16dp"
             android:text="@string/no_ingredients_yet"
             android:textSize="18sp"
@@ -428,7 +443,7 @@
             style="@style/Divider"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -453,7 +468,7 @@
             android:layout_marginTop="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/openGalleryAgainButton" />
+            app:layout_constraintTop_toBottomOf="@id/imageBarrier" />
 
         <ImageView
             android:id="@+id/imageView"
@@ -470,13 +485,32 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/instructionRecyclerView"
             android:layout_width="0dp"
-            android:layout_height="240dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
+            app:layout_constrainedHeight="true"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_default="wrap"
+            app:layout_constraintHeight_max="270dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/instructionButton" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/imageBarrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="openGalleryAgainButton,cancelImageButton,imageView,openGalleryButton"
+            tools:layout_editor_absoluteY="2011dp" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/instructionBarrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="instructionRecyclerView,noInstructionsTextView"
+            tools:layout_editor_absoluteY="2011dp" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

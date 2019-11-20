@@ -50,7 +50,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.maarten.recipepicker.MainActivity.recipeList;
@@ -61,7 +60,7 @@ public class EditRecipeActivity extends AppCompatActivity {
     private int recipeIndex;
     private IngredientEditAdapter ingredientAdapter;
 
-    private TextView recipeTitle, noIngredientTextview, recipeComments, recipeURL;
+    private TextView recipeTitle, noIngredientTextView, recipeComments, recipeURL;
     private ListView ingredientListView;
     private List<Ingredient> ingredientList;
 
@@ -119,8 +118,8 @@ public class EditRecipeActivity extends AppCompatActivity {
         recipeTitleLayout = findViewById(R.id.nameFieldLayout);
 
         // hide
-        noIngredientTextview = findViewById(R.id.noIngredientsTextView);
-        noIngredientTextview.setVisibility(View.INVISIBLE);
+        noIngredientTextView = findViewById(R.id.noIngredientsTextView);
+        noIngredientTextView.setVisibility(View.INVISIBLE);
 
         imageView = findViewById(R.id.imageView);
         imagePath = recipe.getImagePath();

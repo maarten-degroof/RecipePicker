@@ -92,12 +92,12 @@
             tools:layout_conversion_absoluteWidth="410dp" />
 
         <TextView
-            android:id="@+id/RecipedescriptionTitle"
+            android:id="@+id/recipeInstructionTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
-            android:text="@string/the_recipe"
+            android:text="The instructions:"
             android:textColor="@color/primaryColor"
             android:textSize="22sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -111,12 +111,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="24dp"
             android:text="@string/times_cooked"
             android:textColor="@color/primaryColor"
             android:textSize="22sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/RecipedescriptionTitle"
+            app:layout_constraintTop_toBottomOf="@+id/viewInstructionRecyclerView"
             tools:layout_conversion_absoluteHeight="24dp"
             tools:layout_conversion_absoluteWidth="120dp" />
 
@@ -128,7 +128,7 @@
             android:text="@string/null_number"
             android:textSize="22sp"
             app:layout_constraintStart_toEndOf="@+id/amountCookedTextField"
-            app:layout_constraintTop_toBottomOf="@+id/RecipedescriptionTitle"
+            app:layout_constraintTop_toBottomOf="@+id/viewInstructionRecyclerView"
             tools:layout_conversion_absoluteHeight="32dp"
             tools:layout_conversion_absoluteWidth="10dp" />
 
@@ -150,7 +150,7 @@
             android:text="@string/plus_sign"
             android:textSize="12sp"
             app:layout_constraintStart_toEndOf="@+id/amountCookedField"
-            app:layout_constraintTop_toBottomOf="@+id/RecipedescriptionTitle"
+            app:layout_constraintTop_toBottomOf="@+id/viewInstructionRecyclerView"
             tools:layout_conversion_absoluteHeight="40dp"
             tools:layout_conversion_absoluteWidth="40dp" />
 
@@ -276,5 +276,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/commentTextView" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/viewInstructionRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recipeInstructionTextView" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
+
+

@@ -47,10 +47,12 @@ import java.util.List;
  * sort by is not automatically updated, have to 'set' the times cooked value again in order to see the difference
  * -> can possibly be fixed by putting an extra check in onResume()
  *
- * Performance issue when having a longer list with picutres
+ * Performance issue when having a longer list with pictures
  * -> can possibly be solved by having transparent field in recipe which holds the bitmap -> load this when starting the app
  *
  * when viewing favorites, the sort by feature doesn't work
+ *
+ * 
  *
  ********* THINGS TO MAKE *********
  * archiving an item (by swiping the listitem)
@@ -127,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("WRITE", "object recipeList is written: " + recipeList);
 
             } catch (IOException | ClassNotFoundException e) {
-                Log.d("WRITE", "Coundn't read file");
+                Log.d("WRITE", "Couldn't read file");
                 e.printStackTrace();
             }
         }

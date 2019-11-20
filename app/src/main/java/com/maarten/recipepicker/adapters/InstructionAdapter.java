@@ -16,13 +16,13 @@ import com.maarten.recipepicker.R;
 
 import java.util.List;
 
-public class InstructionEditAdapter extends RecyclerView.Adapter<InstructionEditAdapter.CustomViewHolder> {
+public class InstructionAdapter extends RecyclerView.Adapter<InstructionAdapter.CustomViewHolder> {
 
     private Activity context;
     private List<Instruction> instructionList;
     private static LayoutInflater inflater = null;
 
-    public InstructionEditAdapter(Activity context, List<Instruction> instructionList){
+    public InstructionAdapter(Activity context, List<Instruction> instructionList){
         this.context = context;
         this.instructionList = instructionList;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -34,7 +34,7 @@ public class InstructionEditAdapter extends RecyclerView.Adapter<InstructionEdit
         return new CustomViewHolder(
                 LayoutInflater
                         .from(context)
-                        .inflate(R.layout.instruction_list_item_with_remove, parent, false)
+                        .inflate(R.layout.instruction_list_item_without_remove, parent, false)
         );
     }
 
@@ -43,15 +43,6 @@ public class InstructionEditAdapter extends RecyclerView.Adapter<InstructionEdit
         final Instruction instruction = instructionList.get(position);
         holder.instructionNumberTextView.setText(String.valueOf(position+1));
         holder.instructionDescriptionTextView.setText(instruction.getDescription());
-
-        holder.removeInstructionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                instructionList.remove(position);
-                notifyItemRemoved(position);
-                notifyDataSetChanged();
-            }
-        });
 
         if(instruction.getMilliseconds() != null) {
             int totalSeconds = (int) (instruction.getMilliseconds() / 1000);
@@ -80,7 +71,6 @@ public class InstructionEditAdapter extends RecyclerView.Adapter<InstructionEdit
         private TextView instructionNumberTextView;
         private TextView instructionDescriptionTextView;
         private TextView instructionTimerTextView;
-        private ImageButton removeInstructionButton;
         private View parentView;
 
         public CustomViewHolder(@NonNull View itemView) {
@@ -89,7 +79,6 @@ public class InstructionEditAdapter extends RecyclerView.Adapter<InstructionEdit
             this.instructionNumberTextView = itemView.findViewById(R.id.instructionNumberTextView);
             this.instructionDescriptionTextView = itemView.findViewById(R.id.instructionDescriptionTextView);
             this.instructionTimerTextView = itemView.findViewById(R.id.instructionTimerTextView);
-            this.removeInstructionButton = itemView.findViewById(R.id.removeInstructionButton);
 
         }
     }

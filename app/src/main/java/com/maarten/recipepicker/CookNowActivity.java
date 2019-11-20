@@ -15,10 +15,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,9 +24,6 @@ import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.app.Notification.EXTRA_NOTIFICATION_ID;
-import static android.app.Notification.PRIORITY_LOW;
 
 public class CookNowActivity extends AppCompatActivity {
 

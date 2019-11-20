@@ -14,6 +14,8 @@ import androidx.core.view.ViewCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -32,12 +34,15 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.snackbar.Snackbar;
 import com.maarten.recipepicker.adapters.IngredientAdapter;
+import com.maarten.recipepicker.adapters.InstructionAdapter;
+import com.maarten.recipepicker.adapters.InstructionEditAdapter;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.util.List;
 
 public class ViewRecipeActivity extends AppCompatActivity {
 
@@ -161,6 +166,15 @@ public class ViewRecipeActivity extends AppCompatActivity {
         } else {
             commentTextView.setText(getString(R.string.no_comments));
         }
+
+        // Instructions
+        List<Instruction> instructionList = recipe.getInstructionList();
+
+        InstructionAdapter instructionAdapter = new InstructionAdapter(this, instructionList);
+        RecyclerView instructionRecyclerView = findViewById(R.id.viewInstructionRecyclerView);
+
+        instructionRecyclerView.setAdapter(instructionAdapter);
+        instructionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
     }
 
@@ -307,7 +321,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("Recipe URL", recipe.getURL());
         clipboard.setPrimaryClip(clip);
-        Toast.makeText(this, "website coppied:\n" + recipe.getURL(), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "website copied:\n" + recipe.getURL(), Toast.LENGTH_LONG).show();
     }
 
     /**

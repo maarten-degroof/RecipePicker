@@ -52,6 +52,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,6 +113,7 @@ public class AddRecipeActivity extends AppCompatActivity {
 
         imageView = findViewById(R.id.imageView);
         imagePath = null;
+        imageView.setVisibility(View.GONE);
 
         addImageButton = findViewById(R.id.openGalleryButton);
         differentImageButton = findViewById(R.id.openGalleryAgainButton);
@@ -243,7 +246,7 @@ public class AddRecipeActivity extends AppCompatActivity {
 
             // hide the 'no ingredients yet' text view
             TextView noIngredientTextView = findViewById(R.id.noIngredientsTextView);
-            noIngredientTextView.setVisibility(TextView.INVISIBLE);
+            noIngredientTextView.setVisibility(TextView.GONE);
 
             // unhide the list
             ingredientListView.setVisibility(TextView.VISIBLE);
@@ -398,6 +401,9 @@ public class AddRecipeActivity extends AppCompatActivity {
             instructionList.add(instruction);
             // notify the adapter to update the list
             instructionAdapter.notifyDataSetChanged();
+
+            TextView noInstructionTextView = findViewById(R.id.noInstructionsTextView);
+            noInstructionTextView.setVisibility(View.GONE);
 
         } catch (IllegalArgumentException e) {
             Toast.makeText(AddRecipeActivity.this, "Oops, something went wrong with that instruction. Try again", Toast.LENGTH_LONG).show();
@@ -581,6 +587,8 @@ public class AddRecipeActivity extends AppCompatActivity {
                         Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
                         imageView.setImageBitmap(bitmap);
 
+                        imageView.setVisibility(View.VISIBLE);
+
                         // show & hide appropriate buttons
                         addImageButton.setVisibility(View.GONE);
                         differentImageButton.setVisibility(View.VISIBLE);
@@ -630,6 +638,8 @@ public class AddRecipeActivity extends AppCompatActivity {
     public void removeImage(View view) {
         imageView.setImageBitmap(null);
         imagePath = null;
+
+        imageView.setVisibility(View.GONE);
 
         // show & hide appropriate buttons
         addImageButton.setVisibility(View.VISIBLE);
