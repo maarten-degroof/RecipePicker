@@ -131,9 +131,16 @@ public class EditRecipeActivity extends AppCompatActivity {
         // check if there's an image & hide the correct buttons
         if(imagePath != null) {
             // generate a bitmap, to put in the imageview
-            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-            imageView.setImageBitmap(bitmap);
+            Bitmap bitmap;
 
+            if(Character.isDigit(imagePath.charAt(0))) {
+                bitmap = BitmapFactory.decodeResource(this.getResources(), Integer.decode(imagePath));
+            } else {
+                bitmap = BitmapFactory.decodeFile(imagePath);
+            }
+
+            imageView.setImageBitmap(bitmap);
+            imageView.setVisibility(View.VISIBLE);
             // show & hide appropriate buttons
             addImageButton.setVisibility(View.GONE);
             differentImageButton.setVisibility(View.VISIBLE);
@@ -142,6 +149,7 @@ public class EditRecipeActivity extends AppCompatActivity {
             // there's no image yet -> hide buttons
             differentImageButton.setVisibility(View.GONE);
             removeImageButton.setVisibility(View.GONE);
+            imageView.setVisibility(View.GONE);
         }
 
         recipeURL = findViewById(R.id.URLField);
@@ -493,7 +501,7 @@ public class EditRecipeActivity extends AppCompatActivity {
                         // generate a bitmap, to put in the imageview
                         Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
                         imageView.setImageBitmap(bitmap);
-
+                        imageView.setVisibility(View.VISIBLE);
                         // show & hide appropriate buttons
                         addImageButton.setVisibility(View.GONE);
                         differentImageButton.setVisibility(View.VISIBLE);
@@ -543,6 +551,7 @@ public class EditRecipeActivity extends AppCompatActivity {
     public void removeImage(View view) {
         imageView.setImageBitmap(null);
         imagePath = null;
+        imageView.setVisibility(View.GONE);
 
         // show & hide appropriate buttons
         addImageButton.setVisibility(View.VISIBLE);
