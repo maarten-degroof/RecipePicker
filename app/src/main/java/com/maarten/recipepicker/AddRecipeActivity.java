@@ -310,7 +310,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         minuteNumberPicker.setMinValue(0);
         secondNumberPicker.setMinValue(0);
 
-        minuteNumberPicker.setMaxValue(60);
+        minuteNumberPicker.setMaxValue(59);
         secondNumberPicker.setMaxValue(59);
 
         minuteNumberPicker.setValue(6);

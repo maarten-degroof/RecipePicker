@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -21,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
+import com.maarten.recipepicker.adapters.TimerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,32 +34,20 @@ public class CookNowActivity extends AppCompatActivity {
 
     private int currentInstructionNumber;
 
-    private MaterialButton previousButton, nextButton, startTimerButton;
+    private MaterialButton previousButton, nextButton, startTimerButton, finishCookingButton;
     private TextView currentInstructionTextView, currentInstructionNumberTextView, timerDescriptionTextView;
 
     private Instruction currentInstruction;
 
-    private static List<TimerListItem> timer;
+    private static List<TimerListItem> timerList;
+    private static List<TimerListItemWithCountdown> timerListCountdown;
 
-    private static NotificationManagerCompat notificationManager;
+    public static NotificationManagerCompat notificationManager;
 
-    // class is used in the timer array ; otherwise we have no way to give the instruction-index to the notification ender.
-    private class TimerListItem {
-        private CountDownTimer timer;
-        private int instruction;
-        public TimerListItem(int instruction, CountDownTimer timer)  {
-            this.instruction = instruction;
-            this.timer = timer;
-        }
+    private RecyclerView timerRecyclerView;
+    private static TimerAdapter timerAdapter;
 
-        public CountDownTimer getTimer() {
-            return timer;
-        }
 
-        public int getInstruction() {
-            return instruction;
-        }
-    }
 
 
     @Override
@@ -95,30 +86,45 @@ public class CookNowActivity extends AppCompatActivity {
 
         currentInstruction = recipe.getInstructionList().get(0);
 
-        currentInstructionNumberTextView.setText(String.valueOf(currentInstructionNumber));
+        currentInstructionNumberTextView.setText("Step " + currentInstructionNumber);
         currentInstructionTextView.setText(currentInstruction.getDescription());
 
         createNotificationChannel();
 
-        timer = new ArrayList<>();
+        timerList = new ArrayList<>();
 
         notificationManager = NotificationManagerCompat.from(this);
 
         startTimerButton = findViewById(R.id.startTimerButton);
         timerDescriptionTextView = findViewById(R.id.timerDescriptionTextView);
         if(currentInstruction.getMilliseconds() == null) {
-            startTimerButton.setVisibility(View.INVISIBLE);
+            startTimerButton.setEnabled(false);
             timerDescriptionTextView.setVisibility(View.INVISIBLE);
         } else {
             int totalSeconds = (int) (currentInstruction.getMilliseconds() / 1000);
             int calcMinutes = totalSeconds / 60;
             int calcSeconds = totalSeconds % 60;
 
-            timerDescriptionTextView.setText("This step takes " + calcMinutes + " minutes and " + calcSeconds + " seconds.\nYou can start a timer if you want. We'll notify you when it's time.");
+            timerDescriptionTextView.setText("This step takes " + calcMinutes + " minutes and " + calcSeconds + " seconds.\n" +
+                    "You can start a timer if you want. We'll notify you when it's time.");
         }
+
+        timerListCountdown = new ArrayList<>();
+        timerRecyclerView = findViewById(R.id.timerRecyclerView);
+        timerAdapter = new TimerAdapter(this, timerListCountdown);
+
+        timerRecyclerView.setAdapter(timerAdapter);
+        timerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
 
     }
 
+    /**
+     * Shows the next button
+     *
+     * @param view - the 'next' button
+     */
     public void nextInstruction(View view) {
         previousButton.setEnabled(true);
         if(currentInstructionNumber < recipe.getInstructionList().size()) {
@@ -126,51 +132,58 @@ public class CookNowActivity extends AppCompatActivity {
             currentInstruction =  recipe.getInstructionList().get(currentInstructionNumber - 1);
 
             currentInstructionTextView.setText(currentInstruction.getDescription());
-            currentInstructionNumberTextView.setText(String.valueOf(currentInstructionNumber));
+            currentInstructionNumberTextView.setText("Step " + currentInstructionNumber);
 
             if(currentInstruction.getMilliseconds() == null) {
-                startTimerButton.setVisibility(View.GONE);
+                startTimerButton.setEnabled(false);
                 timerDescriptionTextView.setVisibility(View.GONE);
             } else {
-                startTimerButton.setVisibility(View.VISIBLE);
+                startTimerButton.setEnabled(true);
                 timerDescriptionTextView.setVisibility(View.VISIBLE);
                 int totalSeconds = (int) (currentInstruction.getMilliseconds() / 1000);
                 int calcMinutes = totalSeconds / 60;
                 int calcSeconds = totalSeconds % 60;
 
-                timerDescriptionTextView.setText("This step takes " + calcMinutes + " minutes and " + calcSeconds + " seconds.\nYou can start a timer if you want. We'll notify you when it's time.");
+                timerDescriptionTextView.setText("This step takes " + calcMinutes + " minutes and " + calcSeconds + " seconds.\n" +
+                        "You can start a timer if you want. We'll notify you when it's time.");
 
             }
 
         }
         // else we're at the last instruction
         else {
-            //nextButton.setEnabled(false);
-            createFinishCookingDialog();
+            nextButton.setEnabled(false);
+            //createFinishCookingDialog(null);
         }
 
 
     }
 
+    /**
+     * Shows the previous instruction
+     *
+     * @param view - the 'previous' button
+     */
     public void previousInstruction(View view) {
         nextButton.setEnabled(true);
         currentInstructionNumber--;
 
         currentInstruction =  recipe.getInstructionList().get(currentInstructionNumber - 1);
         currentInstructionTextView.setText(currentInstruction.getDescription());
-        currentInstructionNumberTextView.setText(String.valueOf(currentInstructionNumber));
+        currentInstructionNumberTextView.setText("Step " + currentInstructionNumber);
 
         if(currentInstruction.getMilliseconds() == null) {
-            startTimerButton.setVisibility(View.GONE);
+            startTimerButton.setEnabled(false);
             timerDescriptionTextView.setVisibility(View.GONE);
         } else {
-            startTimerButton.setVisibility(View.VISIBLE);
+            startTimerButton.setEnabled(true);
             timerDescriptionTextView.setVisibility(View.VISIBLE);
             int totalSeconds = (int) (currentInstruction.getMilliseconds() / 1000);
             int calcMinutes = totalSeconds / 60;
             int calcSeconds = totalSeconds % 60;
 
-            timerDescriptionTextView.setText("This step takes " + calcMinutes + " minutes and " + calcSeconds + " seconds.\nYou can start a timer if you want. We'll notify you when it's time.");
+            timerDescriptionTextView.setText("This step takes " + calcMinutes + " minutes and " + calcSeconds + " seconds.\n" +
+                    "You can start a timer if you want. We'll notify you when it's time.");
 
         }
 
@@ -181,10 +194,10 @@ public class CookNowActivity extends AppCompatActivity {
     }
 
     /**
-     * Shows the AlertDialog when you have reached the last step.
+     * Shows the AlertDialog when you pressed the finish button
      * User can choose to finish this activity or go back and view a previous step
      */
-    private void createFinishCookingDialog() {
+    public void createFinishCookingDialog(View view) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -236,7 +249,7 @@ public class CookNowActivity extends AppCompatActivity {
     public static void cancelNotification(int index, boolean showRemoveToast) {
         try {
             TimerListItem listItemToRemove = null;
-            for(TimerListItem listItem : timer) {
+            for(TimerListItem listItem : timerList) {
                 if(listItem.getInstruction() == index) {
                     listItem.getTimer().cancel();
                     listItemToRemove = listItem;
@@ -244,9 +257,21 @@ public class CookNowActivity extends AppCompatActivity {
                 }
             }
             if(listItemToRemove != null) {
-                timer.remove(listItemToRemove);
+                timerList.remove(listItemToRemove);
+                TimerListItemWithCountdown tempItem = getTimerListCountdownObject(index);
 
-                if(showRemoveToast) {
+                Long timeRemaining = null;
+
+                if(tempItem != null) {
+                    timeRemaining = tempItem.getTimeRemaining();
+                    timerListCountdown.remove(tempItem);
+                    timerAdapter.notifyDataSetChanged();
+                }
+
+                // if timeRemaining == 0 -> timer was completed
+                if(timeRemaining != null && timeRemaining == 0) {
+                    Toast.makeText(RecipePickerApplication.getAppContext(), "Removed the completed instruction " + index, Toast.LENGTH_LONG).show();
+                } else if(showRemoveToast) {
                     Toast.makeText(RecipePickerApplication.getAppContext(), "Canceled the timer for instruction " + index, Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(RecipePickerApplication.getAppContext(), "Restarted the timer for instruction " + index, Toast.LENGTH_LONG).show();
@@ -256,6 +281,21 @@ public class CookNowActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.e("NotificationError", e.getMessage());
         }
+    }
+
+    /**
+     * Returns the TimerListItemWithCountdown from the timerListCountdown list with a given instructionNumber
+     *
+     * @param instructionNumber - the instructionNumber you want to find the object of
+     * @return - the found TimerListItemWithCountdown, or null if it doesn't exist
+     */
+    private static TimerListItemWithCountdown getTimerListCountdownObject(int instructionNumber) {
+        for (TimerListItemWithCountdown listItem : timerListCountdown) {
+            if(listItem.getInstructionNumber() == instructionNumber) {
+                return listItem;
+            }
+        }
+        return null;
     }
 
     /**
@@ -275,7 +315,7 @@ public class CookNowActivity extends AppCompatActivity {
 
         Intent cancelIntent = new Intent(this, CancelNotification.class);
         cancelIntent.putExtra("instructionNumber", instructionNumber);
-        PendingIntent cancelPendingIntent =
+        final PendingIntent cancelPendingIntent =
                 PendingIntent.getActivity(this, instructionNumber, cancelIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "1")
@@ -287,14 +327,16 @@ public class CookNowActivity extends AppCompatActivity {
                 .setOnlyAlertOnce(true)
                 .addAction(R.drawable.ic_home_black_24dp, "Cancel", cancelPendingIntent);
 
-        // notificationId is a unique int for each notification that you must define
-        notificationManager.notify(instructionNumber, builder.build());
+        final TimerListItemWithCountdown tempTimerListItemWithCountdown = new TimerListItemWithCountdown(instructionNumber, currentInstruction.getMilliseconds());
+        timerListCountdown.add(tempTimerListItemWithCountdown);
 
-        timer.add( new TimerListItem(instructionNumber, new CountDownTimer(currentInstruction.getMilliseconds(), 1000) {
+        TimerListItem tempTimerlistItem = new TimerListItem(instructionNumber, new CountDownTimer(currentInstruction.getMilliseconds(), 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 builder.setContentText("Instruction " + instructionNumber +" will take " + (millisUntilFinished / 60000) + " minutes and " + ((millisUntilFinished / 1000) % 60) + " seconds.");
                 notificationManager.notify(instructionNumber,builder.build());
+                timerListCountdown.get(timerListCountdown.indexOf(tempTimerListItemWithCountdown)).lowerBy1000Millis();
+                timerAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -305,9 +347,11 @@ public class CookNowActivity extends AppCompatActivity {
                         .setDefaults(Notification.DEFAULT_ALL)
                         .setOnlyAlertOnce(false)
                         .setOngoing(false);
+                // notificationId is a unique int for each notification that you must define
                 notificationManager.notify(instructionNumber, builder.build());
             }
-        }.start()));
+        }.start());
+        timerList.add(tempTimerlistItem);
 
     }
 
@@ -318,8 +362,8 @@ public class CookNowActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(timer.size() > 0) {
-            for (TimerListItem timerItem : timer) {
+        if(timerList.size() > 0) {
+            for (TimerListItem timerItem : timerList) {
                 timerItem.getTimer().cancel();
             }
         }
@@ -332,8 +376,8 @@ public class CookNowActivity extends AppCompatActivity {
      * @param view  needed for the button to connect
      */
     public void cancelCookNow(View view) {
-        if(timer.size() > 0) {
-            for (TimerListItem timerItem : timer) {
+        if(timerList.size() > 0) {
+            for (TimerListItem timerItem : timerList) {
                 timerItem.getTimer().cancel();
             }
         }
