@@ -4,7 +4,9 @@ import com.maarten.recipepicker.enums.CookTime;
 import com.maarten.recipepicker.enums.Difficulty;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -145,5 +147,33 @@ public class Recipe implements Serializable {
         Recipe o = (Recipe) obj;
         return o.getTitle().equals(this.getTitle());
         // check ingredientlist!!
+    }
+
+    /**
+     * Generates the ingredient list ordered by quantity
+     *
+     * @return - string of the ingredient list
+     */
+    public String getOrderedIngredientString() {
+        if(ingredientList == null) {
+            return "";
+        }
+        List<Ingredient> tempList = new ArrayList<>(ingredientList);
+
+        Collections.sort(tempList);
+
+        StringBuilder builder = new StringBuilder();
+
+        for (Ingredient ingredient : tempList) {
+
+            builder.append(ingredient.getName());
+            builder.append(", ");
+        }
+        // remove the last separator ', '
+        if(builder.length() >= 2) {
+            builder.delete(builder.length() - 2, builder.length() - 1) ;
+        }
+
+        return builder.toString();
     }
 }

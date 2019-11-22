@@ -2,11 +2,13 @@ package com.maarten.recipepicker;
 
 import java.io.Serializable;
 
-public class Ingredient implements Serializable {
+public class Ingredient implements Serializable, Comparable<Ingredient> {
 
     private String name;
     private Double quantity;
     private type ingredientType;
+
+
 
     public enum type {
         grams,
@@ -55,6 +57,7 @@ public class Ingredient implements Serializable {
 
     /**
      * Makes it possible for quantity to be 'null'
+     *
      * @return returns "" if null or the quantity if not null
      */
     private String printQuantity() {
@@ -68,6 +71,7 @@ public class Ingredient implements Serializable {
 
     /**
      * Makes it possible for quantity to be 'null'
+     *
      * @return returns "" if null or the quantity if not null
      */
     private String printType() {
@@ -77,5 +81,26 @@ public class Ingredient implements Serializable {
         else {
             return ingredientType.name();
         }
+    }
+
+    /**
+     * this orders the ingredient list on the quantity
+     *
+     * @param o - the other ingredient to compare to
+     * @return returns -1,0,1 depending on the other ingredient
+     */
+    @Override
+    public int compareTo(Ingredient o) {
+        // different null checks
+        if(getQuantity()  == null && o.getQuantity() == null) {
+            return 0;
+        }
+        if(getQuantity() == null) {
+            return 1;
+        }
+        if (o.getQuantity() == null) {
+            return -1;
+        }
+        return o.getQuantity().compareTo(this.getQuantity());
     }
 }
