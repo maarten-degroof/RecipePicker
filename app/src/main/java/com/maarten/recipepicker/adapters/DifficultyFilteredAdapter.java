@@ -1,6 +1,7 @@
 package com.maarten.recipepicker.adapters;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -31,7 +32,7 @@ public class DifficultyFilteredAdapter extends RecyclerView.Adapter<DifficultyFi
     public DifficultyFilteredAdapter(Activity context, List<Recipe> recipeList){
         this.context = context;
         this.recipeList = recipeList;
-        inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
     }
 
@@ -49,6 +50,7 @@ public class DifficultyFilteredAdapter extends RecyclerView.Adapter<DifficultyFi
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
         final Recipe recipe = recipeList.get(position);
         holder.recipeTitleTextView.setText(recipe.getTitle());
+        holder.recipeIngredientsTextView.setText(recipe.getOrderedIngredientString());
 
         if(recipe.getImagePath() != null) {
             Bitmap bitmap;
@@ -89,6 +91,7 @@ public class DifficultyFilteredAdapter extends RecyclerView.Adapter<DifficultyFi
     class CustomViewHolder extends RecyclerView.ViewHolder {
 
         private TextView recipeTitleTextView;
+        private TextView recipeIngredientsTextView;
         private ImageView recipeImageView;
         private View parentView;
 
@@ -97,7 +100,7 @@ public class DifficultyFilteredAdapter extends RecyclerView.Adapter<DifficultyFi
             this.parentView = itemView;
             this.recipeTitleTextView = itemView.findViewById(R.id.recipeTitleTextView);
             this.recipeImageView = itemView.findViewById(R.id.recipeImageView);
-
+            this.recipeIngredientsTextView = itemView.findViewById(R.id.recipeIngredientsTextView);
         }
     }
 

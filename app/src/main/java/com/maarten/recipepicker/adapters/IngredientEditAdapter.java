@@ -1,6 +1,7 @@
 package com.maarten.recipepicker.adapters;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,7 @@ public class IngredientEditAdapter extends BaseAdapter {
     public IngredientEditAdapter(Activity context, List<Ingredient> ingredientList){
         this.context = context;
         this.ingredientList = ingredientList;
-        inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
