@@ -2,16 +2,21 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <SwitchPreferenceCompat
-        android:defaultValue="false"
-        app:key="dark_theme_switch"
-        app:summaryOff="the switch is off - Currently doesn't do anything"
-        app:summaryOn="the switch is on - Currently doesn't do anything"
-        app:title="Dark theme" />
+<!--    <SwitchPreferenceCompat-->
+<!--        android:defaultValue="false"-->
+<!--        app:key="dark_theme_switch"-->
+<!--        app:summaryOff="the switch is off - Currently doesn't do anything"-->
+<!--        app:summaryOn="the switch is on - Currently doesn't do anything"-->
+<!--        app:title="Dark theme" />-->
 
     <Preference
-        android:title="Reset"
+        android:title="Github"
+        android:key="github_button"
+        android:summary="Go to the GitHub-page" />
+
+    <Preference
+        android:title="Reset everything"
         android:key="remove_all_button"
-        android:summary="Remove all Recipes. Be careful" />
+        android:summary="Remove all the Recipes. Be careful" />
 
 </androidx.preference.PreferenceScreen>

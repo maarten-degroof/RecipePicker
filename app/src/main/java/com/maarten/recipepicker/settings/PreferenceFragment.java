@@ -1,6 +1,8 @@
 package com.maarten.recipepicker.settings;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
@@ -17,19 +19,30 @@ import com.maarten.recipepicker.R;
  */
 public class PreferenceFragment extends PreferenceFragmentCompat {
 
-    private Preference buttonPreference;
+    private Preference removeAllButtonPreference, goToGithubButtonPreference;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         // Indicate here the XML resource you created above that holds the preferences
         setPreferencesFromResource(R.xml.settings, rootKey);
 
-        buttonPreference =  getPreferenceManager().findPreference("remove_all_button");
-        if (buttonPreference != null) {
-            buttonPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        removeAllButtonPreference =  getPreferenceManager().findPreference("remove_all_button");
+        if (removeAllButtonPreference != null) {
+            removeAllButtonPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     createDeleteDialog();
+                    return true;
+                }
+            });
+        }
+
+        goToGithubButtonPreference = getPreferenceManager().findPreference("github_button");
+        if(goToGithubButtonPreference != null) {
+            goToGithubButtonPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    goToGithub();
                     return true;
                 }
             });
@@ -66,5 +79,15 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
     private void removeRecipe() {
         MainActivity.recipeList.clear();
         Toast.makeText(getActivity(), "Removed all the recipes", Toast.LENGTH_LONG).show();
+    }
+
+    /**
+     * opens the GitHub page
+     */
+    private void goToGithub() {
+        String url = "https://github.com/maarten-degroof/RecipePicker";
+        Intent intent = new Intent(Intent.ACTION_VIEW,
+                Uri.parse(url));
+        startActivity(intent);
     }
 }

@@ -52,7 +52,7 @@ import java.util.List;
  *
  * when viewing favorites, the sort by feature doesn't work
  *
- * 
+ * Timers aren't started on the same millisecond
  *
  ********* THINGS TO MAKE *********
  * archiving an item (by swiping the listitem)
