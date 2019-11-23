@@ -54,6 +54,7 @@ public class InstructionEditAdapter extends RecyclerView.Adapter<InstructionEdit
         });
 
         if(instruction.getMilliseconds() != null) {
+            holder.instructionTimerTextView.setVisibility(View.VISIBLE);
             int totalSeconds = (int) (instruction.getMilliseconds() / 1000);
             int minutes = totalSeconds / 60;
             int seconds = totalSeconds % 60;
