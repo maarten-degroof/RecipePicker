@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:fillViewport="true">
 
@@ -76,20 +76,17 @@
             tools:layout_conversion_absoluteHeight="24dp"
             tools:layout_conversion_absoluteWidth="217dp" />
 
-        <ListView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/viewRecipeIngredientList"
             android:layout_width="0dp"
-            android:layout_height="228dp"
-            android:layout_margin="5dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
+            app:layout_constrainedHeight="false"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/neededIngredients"
-            tools:layout_conversion_absoluteHeight="226dp"
-            tools:layout_conversion_absoluteWidth="410dp" />
+            app:layout_constraintTop_toBottomOf="@+id/neededIngredients" />
 
         <TextView
             android:id="@+id/recipeInstructionTextView"
@@ -101,7 +98,7 @@
             android:textColor="@color/primaryColor"
             android:textSize="22sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/viewRecipeIngredientList"
+            app:layout_constraintTop_toBottomOf="@id/ingredientBarrier"
             tools:layout_conversion_absoluteHeight="27dp"
             tools:layout_conversion_absoluteWidth="225dp" />
 
@@ -286,6 +283,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/recipeInstructionTextView" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/ingredientBarrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="viewRecipeIngredientList"
+            tools:layout_editor_absoluteY="1319dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

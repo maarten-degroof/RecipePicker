@@ -278,7 +278,7 @@
         <include layout="@layout/toolbar"
             android:id="@+id/toolbar"/>
 
-        <ListView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/editRecipeIngredientList"
             android:layout_width="match_parent"
             android:layout_height="228dp"
@@ -287,10 +287,7 @@
             android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addIngredientButton">
-
-        </ListView>
-
+            app:layout_constraintTop_toBottomOf="@+id/addIngredientButton" />
 
         <View
             android:id="@+id/view"
@@ -409,12 +406,13 @@
         <TextView
             android:id="@+id/noIngredientsTextView"
             android:layout_width="match_parent"
-            android:layout_height="121dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="72dp"
             android:layout_marginEnd="16dp"
             android:text="@string/no_ingredients_yet"
             android:textSize="18sp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"

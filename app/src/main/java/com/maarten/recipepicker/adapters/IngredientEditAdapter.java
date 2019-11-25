@@ -9,12 +9,15 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.maarten.recipepicker.Ingredient;
 import com.maarten.recipepicker.R;
 
 import java.util.List;
 
-public class IngredientEditAdapter extends BaseAdapter {
+public class IngredientEditAdapter extends RecyclerView.Adapter<IngredientEditAdapter.CustomViewHolder> {
 
     private Activity context;
     private List<Ingredient> ingredientList;
@@ -26,14 +29,28 @@ public class IngredientEditAdapter extends BaseAdapter {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+    @NonNull
     @Override
-    public int getCount() {
-        return ingredientList.size();
+    public CustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new CustomViewHolder(
+                LayoutInflater
+                        .from(context)
+                        .inflate(R.layout.ingredient_list_item_with_remove, parent, false)
+        );
     }
 
     @Override
-    public Ingredient getItem(int position) {
-        return ingredientList.get(position);
+    public void onBindViewHolder(@NonNull CustomViewHolder holder, final int position) {
+        final Ingredient ingredient = ingredientList.get(position);
+        holder.ingredientListTextView.setText(ingredient.toString());
+
+        holder.removeIngredientButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ingredientList.remove(position);
+                notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -42,33 +59,21 @@ public class IngredientEditAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        View itemView = convertView;
-        itemView = (itemView == null) ? inflater.inflate(R.layout.ingredient_list_item_with_remove, null): itemView;
-        TextView textViewIngredient = itemView.findViewById(R.id.ingredientListTextView);
-        Ingredient selectedIngredient = ingredientList.get(position);
-        textViewIngredient.setText(selectedIngredient.toString());
-
-        // the remove button
-        ImageButton removeButton = itemView.findViewById(R.id.removeIngredientButton);
-
-        removeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ingredientList.remove(position);
-                notifyDataSetChanged();
-            }
-        });
-
-        return itemView;
+    public int getItemCount() {
+        return ingredientList.size();
     }
 
+    class CustomViewHolder extends RecyclerView.ViewHolder {
 
+        private TextView ingredientListTextView;
+        private ImageButton removeIngredientButton;
+        private View parentView;
 
-
-
-
-
-
-
+        public CustomViewHolder(@NonNull View itemView) {
+            super(itemView);
+            this.parentView = itemView;
+            this.ingredientListTextView = itemView.findViewById(R.id.ingredientListTextView);
+            this.removeIngredientButton = itemView.findViewById(R.id.removeIngredientButton);
+        }
+    }
 }

@@ -43,17 +43,6 @@
             android:id="@+id/toolbar"
             layout="@layout/toolbar" />
 
-        <ListView
-            android:id="@+id/addRecipeIngredientList"
-            android:layout_width="match_parent"
-            android:layout_height="228dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ingredientButton" />
-
 
         <View
             android:id="@+id/view"
@@ -111,10 +100,11 @@
             android:layout_marginEnd="16dp"
             android:text="@string/no_ingredients_yet"
             android:textSize="18sp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ingredientButton" />
+            app:layout_constraintTop_toBottomOf="@+id/ingredientButton"
+            tools:visibility="gone" />
 
         <TextView
             android:id="@+id/instructionsTextView"
@@ -511,6 +501,28 @@
             app:barrierDirection="bottom"
             app:constraint_referenced_ids="instructionRecyclerView,noInstructionsTextView"
             tools:layout_editor_absoluteY="2011dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/addRecipeIngredientList"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_default="wrap"
+            app:layout_constraintHeight_max="228dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ingredientButton" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/ingredientBarrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="addRecipeIngredientList,noIngredientsTextView"
+            tools:layout_editor_absoluteY="1937dp" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

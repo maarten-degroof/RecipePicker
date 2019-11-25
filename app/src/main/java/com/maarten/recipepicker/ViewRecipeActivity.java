@@ -14,6 +14,7 @@ import androidx.core.view.ViewCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -134,13 +135,16 @@ public class ViewRecipeActivity extends AppCompatActivity {
         }
 
         // get the ingredientlist and add it to the listview
-        ListView listView = findViewById(R.id.viewRecipeIngredientList);
+        RecyclerView ingredientListRecyclerView = findViewById(R.id.viewRecipeIngredientList);
 
         IngredientAdapter adapter = new IngredientAdapter(this,recipe.getIngredientList());
-        listView.setAdapter(adapter);
+        ingredientListRecyclerView.setAdapter(adapter);
+        ingredientListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        ingredientListRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        ingredientListRecyclerView.setHasFixedSize(true);
 
         // make the listview also scrollable
-        ViewCompat.setNestedScrollingEnabled(listView, true);
+        ViewCompat.setNestedScrollingEnabled(ingredientListRecyclerView, true);
 
         // the index is used to update the favorite status
         recipeIndex = MainActivity.recipeList.indexOf(recipe);

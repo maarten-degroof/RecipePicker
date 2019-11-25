@@ -32,6 +32,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,7 +45,6 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -61,7 +61,7 @@ public class EditRecipeActivity extends AppCompatActivity {
     private IngredientEditAdapter ingredientAdapter;
 
     private TextView recipeTitle, noIngredientTextView, recipeComments, recipeURL;
-    private ListView ingredientListView;
+    private RecyclerView ingredientListRecyclerView;
     private List<Ingredient> ingredientList;
 
     private EditText ingredientNameField, ingredientQuantityField;
@@ -109,11 +109,13 @@ public class EditRecipeActivity extends AppCompatActivity {
         ingredientList = recipe.getIngredientList();
 
         ingredientAdapter = new IngredientEditAdapter(this,ingredientList);
-        ingredientListView = findViewById(R.id.editRecipeIngredientList);
-        ingredientListView.setAdapter(ingredientAdapter);
+        ingredientListRecyclerView = findViewById(R.id.editRecipeIngredientList);
+        ingredientListRecyclerView.setAdapter(ingredientAdapter);
+        ingredientListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        ingredientListRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         // make the listview (ingredientList) also scrollable when inserting text
-        ViewCompat.setNestedScrollingEnabled(ingredientListView, true);
+        ViewCompat.setNestedScrollingEnabled(ingredientListRecyclerView, true);
 
         recipeTitleLayout = findViewById(R.id.nameFieldLayout);
 
@@ -390,7 +392,7 @@ public class EditRecipeActivity extends AppCompatActivity {
             noIngredientTextView.setVisibility(TextView.INVISIBLE);
 
             // unhide the list
-            ingredientListView.setVisibility(TextView.VISIBLE);
+            ingredientListRecyclerView.setVisibility(TextView.VISIBLE);
 
         } catch (IllegalArgumentException e) {
             Toast.makeText(EditRecipeActivity.this, "Oops, something went wrong with that ingredient, try again", Toast.LENGTH_LONG).show();

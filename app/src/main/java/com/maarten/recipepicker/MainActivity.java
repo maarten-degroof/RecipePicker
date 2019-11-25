@@ -54,7 +54,13 @@ import java.util.List;
  *
  * Timers aren't started on the same millisecond
  *
+ * Something is wrong when asking file permissions
+ *
  ********* THINGS TO MAKE *********
+ *
+ * Add a counter to recipe to say for how many people the recipe is. Save a default value in the settings, and allow users to change it there.
+ * In viewRecipe, calculate what's needed for this settings value. Show a popup the first time explaining it. Save this value also in preferenceManager
+ *
  * archiving an item (by swiping the listitem)
  * reordering a list (by dragging)
  * material design everywhere

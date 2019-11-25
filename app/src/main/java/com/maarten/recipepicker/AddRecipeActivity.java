@@ -14,27 +14,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-
-import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.switchmaterial.SwitchMaterial;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
-import com.maarten.recipepicker.adapters.IngredientEditAdapter;
-import com.maarten.recipepicker.adapters.InstructionEditAdapter;
-import com.maarten.recipepicker.enums.CookTime;
-import com.maarten.recipepicker.enums.Difficulty;
-
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.ViewCompat;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
@@ -46,13 +25,30 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import com.maarten.recipepicker.adapters.IngredientEditAdapter;
+import com.maarten.recipepicker.adapters.InstructionEditAdapter;
+import com.maarten.recipepicker.enums.CookTime;
+import com.maarten.recipepicker.enums.Difficulty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +62,7 @@ public class AddRecipeActivity extends AppCompatActivity {
 
     private EditText ingredientNameField, ingredientQuantityField;
     private Spinner ingredientTypeField;
-    private ListView ingredientListView;
+    private RecyclerView ingredientListView;
 
     private TextInputLayout recipeTitleLayout;
 
@@ -75,7 +71,6 @@ public class AddRecipeActivity extends AppCompatActivity {
 
     private ImageView imageView;
     private String imagePath;
-
     private Button removeImageButton, differentImageButton, addImageButton;
 
     private InstructionEditAdapter instructionAdapter;
@@ -95,9 +90,11 @@ public class AddRecipeActivity extends AppCompatActivity {
         ingredientAdapter = new IngredientEditAdapter(this, ingredientList);
         ingredientListView = findViewById(R.id.addRecipeIngredientList);
         ingredientListView.setAdapter(ingredientAdapter);
+        ingredientListView.setLayoutManager(new LinearLayoutManager(this));
+        ingredientListView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         // hide the list since it is empty
-        ingredientListView.setVisibility(TextView.INVISIBLE);
+        //ingredientListView.setVisibility(TextView.INVISIBLE);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Add Recipe");
@@ -109,7 +106,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         recipeTitleLayout = findViewById(R.id.nameFieldLayout);
 
         // make the listView (ingredientList) also scrollable when inserting text
-        ViewCompat.setNestedScrollingEnabled(ingredientListView, true);
+        //ViewCompat.setNestedScrollingEnabled(ingredientListView, true);
 
         imageView = findViewById(R.id.imageView);
         imagePath = null;
@@ -245,11 +242,8 @@ public class AddRecipeActivity extends AppCompatActivity {
             ingredientAdapter.notifyDataSetChanged();
 
             // hide the 'no ingredients yet' text view
-            TextView noIngredientTextView = findViewById(R.id.noIngredientsTextView);
-            noIngredientTextView.setVisibility(TextView.GONE);
-
-            // unhide the list
-            ingredientListView.setVisibility(TextView.VISIBLE);
+//            TextView noIngredientTextView = findViewById(R.id.noIngredientsTextView);
+//            noIngredientTextView.setVisibility(TextView.GONE);
 
         } catch (IllegalArgumentException e) {
             Toast.makeText(AddRecipeActivity.this, "Oops, something went wrong with that ingredient, try again", Toast.LENGTH_LONG).show();
