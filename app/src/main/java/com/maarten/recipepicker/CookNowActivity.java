@@ -86,7 +86,7 @@ public class CookNowActivity extends AppCompatActivity {
 
         currentInstruction = recipe.getInstructionList().get(0);
 
-        currentInstructionNumberTextView.setText("Step " + currentInstructionNumber);
+        currentInstructionNumberTextView.setText(getString(R.string.step, currentInstructionNumber));
         currentInstructionTextView.setText(currentInstruction.getDescription());
 
         createNotificationChannel();
@@ -105,8 +105,7 @@ public class CookNowActivity extends AppCompatActivity {
             int calcMinutes = totalSeconds / 60;
             int calcSeconds = totalSeconds % 60;
 
-            timerDescriptionTextView.setText("This step takes " + calcMinutes + " minutes and " + calcSeconds + " seconds.\n" +
-                    "You can start a timer if you want. We'll notify you when it's time.");
+            timerDescriptionTextView.setText(getString(R.string.timer_duration_text, calcMinutes, calcSeconds));
         }
 
         timerListCountdown = new ArrayList<>();
@@ -117,11 +116,15 @@ public class CookNowActivity extends AppCompatActivity {
         timerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
+        // there's only one instruction
+        if(currentInstructionNumber >= recipe.getInstructionList().size()) {
+            nextButton.setEnabled(false);
+        }
 
     }
 
     /**
-     * Shows the next button
+     * Shows the next instruction
      *
      * @param view - the 'next' button
      */
@@ -132,7 +135,7 @@ public class CookNowActivity extends AppCompatActivity {
             currentInstruction =  recipe.getInstructionList().get(currentInstructionNumber - 1);
 
             currentInstructionTextView.setText(currentInstruction.getDescription());
-            currentInstructionNumberTextView.setText("Step " + currentInstructionNumber);
+            currentInstructionNumberTextView.setText(getString(R.string.step, currentInstructionNumber));
 
             if(currentInstruction.getMilliseconds() == null) {
                 startTimerButton.setEnabled(false);
@@ -144,19 +147,14 @@ public class CookNowActivity extends AppCompatActivity {
                 int calcMinutes = totalSeconds / 60;
                 int calcSeconds = totalSeconds % 60;
 
-                timerDescriptionTextView.setText("This step takes " + calcMinutes + " minutes and " + calcSeconds + " seconds.\n" +
-                        "You can start a timer if you want. We'll notify you when it's time.");
-
+                timerDescriptionTextView.setText(getString(R.string.timer_duration_text, calcMinutes, calcSeconds));
             }
 
+            // we're at the last instruction
+            if(currentInstructionNumber+1 > recipe.getInstructionList().size()) {
+                nextButton.setEnabled(false);
+            }
         }
-        // else we're at the last instruction
-        else {
-            nextButton.setEnabled(false);
-            //createFinishCookingDialog(null);
-        }
-
-
     }
 
     /**
@@ -170,7 +168,7 @@ public class CookNowActivity extends AppCompatActivity {
 
         currentInstruction =  recipe.getInstructionList().get(currentInstructionNumber - 1);
         currentInstructionTextView.setText(currentInstruction.getDescription());
-        currentInstructionNumberTextView.setText("Step " + currentInstructionNumber);
+        currentInstructionNumberTextView.setText(getString(R.string.step, currentInstructionNumber));
 
         if(currentInstruction.getMilliseconds() == null) {
             startTimerButton.setEnabled(false);
@@ -182,9 +180,7 @@ public class CookNowActivity extends AppCompatActivity {
             int calcMinutes = totalSeconds / 60;
             int calcSeconds = totalSeconds % 60;
 
-            timerDescriptionTextView.setText("This step takes " + calcMinutes + " minutes and " + calcSeconds + " seconds.\n" +
-                    "You can start a timer if you want. We'll notify you when it's time.");
-
+            timerDescriptionTextView.setText(getString(R.string.timer_duration_text, calcMinutes, calcSeconds));
         }
 
         // we're at the first step

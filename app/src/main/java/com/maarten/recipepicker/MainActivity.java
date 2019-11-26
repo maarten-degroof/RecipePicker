@@ -56,11 +56,9 @@ import java.util.List;
  *
  * Something is wrong when asking file permissions
  *
+ * When adding an instruction with a timer, if you type the number, the last typed number will not be saved
+ *
  ********* THINGS TO MAKE *********
- *
- * Add a counter to recipe to say for how many people the recipe is. Save a default value in the settings, and allow users to change it there.
- * In viewRecipe, calculate what's needed for this settings value. Show a popup the first time explaining it. Save this value also in preferenceManager
- *
  * give optional checkbox when removing all items, to put the dummy values back
  *
  * archiving an item (by swiping the listitem)
@@ -94,6 +92,7 @@ import java.util.List;
  * search on title and ingredients
  * add home button in all screens
  * images
+ * servings
  **/
 
 
@@ -143,27 +142,7 @@ public class MainActivity extends AppCompatActivity {
         }
         // if the file doesn't exist, create an arrayList with dummy value
         else {
-            List<Ingredient> dummyIngredientList = new ArrayList<>();
-            dummyIngredientList.add(new Ingredient("Spaghetti",500.0,Ingredient.type.grams));
-            dummyIngredientList.add(new Ingredient("Minced meat",350.0,Ingredient.type.grams));
-            dummyIngredientList.add(new Ingredient("Tomatoes",3.0,Ingredient.type.empty));
-            dummyIngredientList.add(new Ingredient("Paprika's",3.0,Ingredient.type.empty));
-            dummyIngredientList.add(new Ingredient("Water",100.0,Ingredient.type.millimetres));
-            dummyIngredientList.add(new Ingredient("A bit of salt and pepper",null,Ingredient.type.empty));
-
-            String dummyImage =  String.valueOf(R.drawable.spaghetti_bolognese);
-            String dummyURL = "https://www.jamieoliver.com/recipes/beef-recipes/spaghetti-bolognese/";
-            String dummyComments = "Really easy to make!\n\nOnly be sure not to cook the spaghetti too long.";
-
-            ArrayList<Instruction> tempInstructionList = new ArrayList<>();
-            tempInstructionList.add(new Instruction("Cook the spaghetti.",(long) 600000));
-            tempInstructionList.add(new Instruction("Bake the minced meat.", null));
-            tempInstructionList.add(new Instruction("Cut the tomatoes and the paprika into pieces.", null));
-            tempInstructionList.add(new Instruction("Once the minced meat is done, throw the paprika and tomatoes in the same pan and bake them together. Spice with salt and pepper.", (long) 300000));
-            tempInstructionList.add(new Instruction("Mix the sauce with the spaghetti.", (long) 10000));
-
-            recipeList.add(new Recipe("Spaghetti Bolognese for people who don't have a lot of time",dummyIngredientList,
-                    false, CookTime.MEDIUM, dummyImage, dummyURL, Difficulty.BEGINNER, dummyComments, tempInstructionList, 4));
+            insertDummyRecipes();
         }
 
         // get the spinner
@@ -207,9 +186,6 @@ public class MainActivity extends AppCompatActivity {
 
         listViewRecipes.setAdapter(adapter);
         listViewRecipes.setLayoutManager(new LinearLayoutManager(this));
-
-
-        //listViewRecipes.setHasFixedSize(true);
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -271,6 +247,32 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    public static void insertDummyRecipes() {
+        List<Ingredient> dummyIngredientList = new ArrayList<>();
+        dummyIngredientList.add(new Ingredient("Spaghetti",500.0,Ingredient.type.grams));
+        dummyIngredientList.add(new Ingredient("Minced meat",350.0,Ingredient.type.grams));
+        dummyIngredientList.add(new Ingredient("Tomatoes",3.0,Ingredient.type.empty));
+        dummyIngredientList.add(new Ingredient("Paprika's",3.0,Ingredient.type.empty));
+        dummyIngredientList.add(new Ingredient("Water",100.0,Ingredient.type.millimetres));
+        dummyIngredientList.add(new Ingredient("A bit of salt and pepper",null,Ingredient.type.empty));
+
+        String dummyImage =  String.valueOf(R.drawable.spaghetti_bolognese);
+        String dummyURL = "https://www.jamieoliver.com/recipes/beef-recipes/spaghetti-bolognese/";
+        String dummyComments = "Really easy to make!\n\nOnly be sure not to cook the spaghetti too long.";
+
+        ArrayList<Instruction> tempInstructionList = new ArrayList<>();
+        tempInstructionList.add(new Instruction("Cook the spaghetti.",(long) 600000));
+        tempInstructionList.add(new Instruction("Bake the minced meat.", null));
+        tempInstructionList.add(new Instruction("Cut the tomatoes and the paprika into pieces.", null));
+        tempInstructionList.add(new Instruction("Once the minced meat is done, throw the paprika and tomatoes in the same pan and bake them together. Spice with salt and pepper.", (long) 300000));
+        tempInstructionList.add(new Instruction("Mix the sauce with the spaghetti.", (long) 10000));
+
+        recipeList.add(new Recipe("Spaghetti Bolognese for people who don't have a lot of time",dummyIngredientList,
+                false, CookTime.MEDIUM, dummyImage, dummyURL, Difficulty.BEGINNER, dummyComments, tempInstructionList, 4));
+    }
+
+
 
     // this connects the hamburger icon to the navigation drawer
     @Override

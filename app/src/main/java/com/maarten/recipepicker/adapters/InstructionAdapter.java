@@ -5,7 +5,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -49,7 +48,7 @@ public class InstructionAdapter extends RecyclerView.Adapter<InstructionAdapter.
             int minutes = totalSeconds / 60;
             int seconds = totalSeconds % 60;
 
-            holder.instructionTimerTextView.setText(minutes + ":" + seconds);
+            holder.instructionTimerTextView.setText(context.getString(R.string.time_left_timer, minutes, seconds));
         } else {
             holder.instructionTimerTextView.setVisibility(View.GONE);
         }

@@ -43,17 +43,17 @@ public class TimerAdapter extends RecyclerView.Adapter<TimerAdapter.CustomViewHo
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
         final TimerListItemWithCountdown timer = timerList.get(position);
-        holder.timerItemStepNumber.setText("Step " + timer.getInstructionNumber() + ": ");
+        holder.timerItemStepNumber.setText(context.getString(R.string.step_with_column, timer.getInstructionNumber()));
 
         int totalSeconds = (int) (timer.getTimeRemaining() / 1000);
         int calcMinutes = totalSeconds / 60;
         int calcSeconds = totalSeconds % 60;
 
-        holder.timerItemTimer.setText(calcMinutes + ":" + calcSeconds);
+        holder.timerItemTimer.setText(context.getString(R.string.time_left_timer, calcMinutes, calcSeconds));
 
         // it finished
         if((calcMinutes + calcSeconds) <= 1 ) {
-            holder.timerItemTimer.setText("It's done!");
+            holder.timerItemTimer.setText(context.getString(R.string.done));
         }
 
         holder.removeTimerButton.setOnClickListener(new View.OnClickListener() {

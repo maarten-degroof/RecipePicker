@@ -6,19 +6,19 @@
     <item
         android:id="@+id/action_edit"
         android:orderInCategory="100"
-        android:title="edit"
+        android:title="@string/edit"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_delete"
         android:orderInCategory="100"
-        android:title="delete"
+        android:title="@string/delete"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_home"
         android:orderInCategory="100"
-        android:title="Home"
+        android:title="@string/home"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_home_white_24dp"
         />
@@ -26,14 +26,14 @@
     <item
         android:id="@+id/action_favorite_full"
         android:orderInCategory="200"
-        android:title="Favorite"
+        android:title="@string/favorite"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_favorite_white_24dp"
         />
     <item
         android:id="@+id/action_favorite_empty"
         android:orderInCategory="200"
-        android:title="Favorite"
+        android:title="@string/not_favorite"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_favorite_border_white_24dp"
         />

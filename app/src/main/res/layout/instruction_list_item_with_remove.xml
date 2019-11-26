@@ -38,7 +38,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="0dp"
             android:layout_marginBottom="16dp"
-            android:text="10"
+            android:text="@string/four"
             android:textColor="@color/primaryColor"
             android:textSize="30sp" />
 
@@ -53,7 +53,7 @@
             android:layout_toStartOf="@+id/removeInstructionButton"
             android:layout_toEndOf="@+id/instructionNumberTextView"
             android:drawableStart="@drawable/ic_alarm_black_24dp"
-            android:text="Timer"
+            android:text="@string/timer"
             android:textSize="18sp" />
 
         <ImageButton
@@ -65,7 +65,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="5dp"
             android:background="@null"
-            android:contentDescription="Button to remove the current ingredient"
+            android:contentDescription="@string/button_to_remove_instruction"
             cardview:layout_constraintEnd_toEndOf="parent"
             cardview:layout_constraintHorizontal_bias="0.365"
             cardview:layout_constraintTop_toTopOf="parent"

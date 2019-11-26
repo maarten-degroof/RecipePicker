@@ -14,9 +14,11 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
 import android.text.InputType;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.material.checkbox.MaterialCheckBox;
 import com.maarten.recipepicker.BuildConfig;
 import com.maarten.recipepicker.MainActivity;
 import com.maarten.recipepicker.R;
@@ -111,12 +113,20 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
+        // get the layout
+        View dialog_layout = getLayoutInflater().inflate(R.layout.remove_all_dialog, null);
+        final MaterialCheckBox resetListCheckbox = dialog_layout.findViewById(R.id.resetListCheckBox);
+
         builder.setTitle("Remove ALL recipes");
         builder.setMessage("Are you sure you want to remove ALL recipes? Be careful, this can not be undone!");
 
         builder.setPositiveButton("Remove all", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 removeRecipe();
+                // if it's checked, restock the list
+                if(resetListCheckbox.isChecked()) {
+                    MainActivity.insertDummyRecipes();
+                }
             }
         });
         builder.setNegativeButton("Keep", new DialogInterface.OnClickListener() {
@@ -125,6 +135,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
         });
         // create and show the dialog
         final AlertDialog alertDialog = builder.create();
+        alertDialog.setView(dialog_layout);
         alertDialog.show();
     }
 

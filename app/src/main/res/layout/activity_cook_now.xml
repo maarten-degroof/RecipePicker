@@ -16,7 +16,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="20dp"
         android:onClick="nextInstruction"
-        android:text="next"
+        android:text="@string/next"
         app:layout_constraintBottom_toTopOf="@+id/finishCookingButton"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -47,7 +47,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="24dp"
         android:onClick="createFinishCookingDialog"
-        android:text="Finish"
+        android:text="@string/finish"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -60,7 +60,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginBottom="20dp"
         android:onClick="previousInstruction"
-        android:text="Previous"
+        android:text="@string/previous"
         app:layout_constraintBottom_toTopOf="@+id/cancelButton"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -87,7 +87,7 @@
                 android:id="@+id/currentInstructionNumberTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Step 10:"
+                android:text="@string/step"
                 android:textColor="@color/primaryLightColor"
                 android:textSize="28sp"
                 android:textStyle="bold"
@@ -129,7 +129,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:text="Timers"
+        android:text="@string/timers"
         android:textColor="@color/primaryLightColor"
         android:textSize="28sp"
         android:textStyle="bold"
@@ -142,7 +142,7 @@
         android:id="@+id/cookingTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Time to cook!"
+        android:text="@string/cooking_time_to"
         android:textAlignment="center"
         android:textColor="@color/primaryColor"
         android:textSize="30sp"
@@ -159,7 +159,7 @@
 
         android:layout_marginBottom="8dp"
         android:onClick="setTimerAndNotification"
-        android:text="Start timer"
+        android:text="@string/timer_button"
         app:layout_constraintBottom_toTopOf="@+id/previousInstructionButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -171,7 +171,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="12dp"
-        android:text="Time this step takes: 10 minutes\nYou can start a timer if you want. We'll notify you when it's time."
+        android:text="@string/timer_duration_text"
         android:textAlignment="center"
         android:textColor="@color/primaryLightColor"
         android:textSize="18sp"

@@ -30,7 +30,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="2dp"
         android:layout_marginBottom="16dp"
-        android:text="10"
+        android:text="@string/four"
         android:textColor="@color/primaryColor"
         android:textSize="30sp" />
 
@@ -43,7 +43,7 @@
         android:layout_marginTop="8dp"
         android:layout_toEndOf="@+id/instructionNumberTextView"
         android:drawableStart="@drawable/ic_alarm_black_24dp"
-        android:text="Timer"
+        android:text="@string/timer"
         android:textSize="18sp" />
 
     <View
