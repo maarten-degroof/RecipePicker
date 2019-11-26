@@ -111,19 +111,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
         amountCookedField.setText(String.valueOf(amountCookedValue));
 
         ImageView recipeImageView = findViewById(R.id.recipeImageView);
-        if(recipe.getImagePath() != null) {
-            Bitmap bitmap;
-            // if first character == digit => imagepath is drawableID; else it's image path
-            if(Character.isDigit(recipe.getImagePath().charAt(0))) {
-                bitmap = BitmapFactory.decodeResource(this.getResources(), Integer.decode(recipe.getImagePath()));
-            } else {
-                bitmap = BitmapFactory.decodeFile(recipe.getImagePath());
-            }
 
-            recipeImageView.setImageBitmap(bitmap);
-        } else {
-            recipeImageView.setImageResource(R.drawable.no_image_available);
-        }
+        recipeImageView.setImageBitmap(recipe.getImage());
 
         // hide the appropriate elements
         TextView noWebsiteTextView = findViewById(R.id.noWebsiteTextView);

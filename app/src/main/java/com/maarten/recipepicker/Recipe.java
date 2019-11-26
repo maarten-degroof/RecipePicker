@@ -1,5 +1,8 @@
 package com.maarten.recipepicker;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import com.maarten.recipepicker.enums.CookTime;
 import com.maarten.recipepicker.enums.Difficulty;
 
@@ -23,6 +26,7 @@ public class Recipe implements Serializable {
     private String comments;
     private List<Instruction> instructionList;
     private int serves;
+    private transient Bitmap image;
 
 
     public Recipe(String title, List<Ingredient> ingredientList, Boolean favorite,
@@ -107,6 +111,7 @@ public class Recipe implements Serializable {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+        image = null;
     }
 
     public String getURL() {
@@ -139,6 +144,30 @@ public class Recipe implements Serializable {
 
     public void setServes(int serves) {
         this.serves = serves;
+    }
+
+    /*
+     * returns (and creates) a bitmap to use
+     */
+    public Bitmap getImage() {
+        if(image != null) {
+            return image;
+        }
+        else {
+            Bitmap bitmap;
+            // no image given
+            if(imagePath == null) {
+                bitmap = BitmapFactory.decodeResource(RecipePickerApplication.getAppContext().getResources(), R.drawable.no_image_available);
+            }
+            // image is a drawable
+            else if(Character.isDigit(imagePath.charAt(0))) {
+                bitmap = BitmapFactory.decodeResource(RecipePickerApplication.getAppContext().getResources(), Integer.decode(imagePath));
+            } else {
+                bitmap = BitmapFactory.decodeFile(imagePath);
+            }
+            image = bitmap;
+            return bitmap;
+        }
     }
 
     /**

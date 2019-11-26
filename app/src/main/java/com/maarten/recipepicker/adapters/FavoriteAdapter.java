@@ -50,19 +50,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Custom
         holder.recipeTitleTextView.setText(recipe.getTitle());
         holder.recipeIngredientsTextView.setText(recipe.getOrderedIngredientString());
 
-        if(recipe.getImagePath() != null) {
-            Bitmap bitmap;
-            // if first character == digit => imagepath is drawableID; else it's image path
-            if(Character.isDigit(recipe.getImagePath().charAt(0))) {
-                bitmap = BitmapFactory.decodeResource(context.getResources(), Integer.decode(recipe.getImagePath()));
-            } else {
-                bitmap = BitmapFactory.decodeFile(recipe.getImagePath());
-            }
-
-            holder.recipeImageView.setImageBitmap(bitmap);
-        } else {
-            holder.recipeImageView.setImageResource(R.drawable.no_image_available);
-        }
+        holder.recipeImageView.setImageBitmap(recipe.getImage());
 
         holder.parentView.setOnClickListener(new View.OnClickListener() {
             @Override

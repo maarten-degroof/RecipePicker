@@ -145,6 +145,11 @@ public class MainActivity extends AppCompatActivity {
             insertDummyRecipes();
         }
 
+        // initialise the images for each recipe so the adapter won't have to do the calculations again
+        for(Recipe recipe : recipeList) {
+            recipe.getImage();
+        }
+
         // get the spinner
         sortSpinner = findViewById(R.id.sortSpinner);
 
