@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        android:title="settings">
+        android:title="@string/settings">
         <EditTextPreference
             android:inputType="number"
             android:summary="Choose for how many serves the ingredients will be shown"
