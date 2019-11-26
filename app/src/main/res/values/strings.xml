@@ -154,7 +154,7 @@
     <string name="your_favorites">Your Favorites</string>
     <string name="reset_amount_cooked">Reset amount cooked</string>
     <string name="update">Update</string>
-    <string name="needed_ingredients">The ingredients needed:</string>
+    <string name="needed_ingredients">The ingredients needed for &lt;b>%1$d&lt;/b> persons:</string>
     <string name="the_recipe">The recipe:</string>
     <string name="times_cooked">Times cooked:</string>
     <string name="website">Website:</string>
@@ -170,4 +170,5 @@
     <string name="filter_difficulty_description">How difficult should it be?</string>
     <string name="filter_button">Filter your cookbook</string>
     <string name="difficulty_filtered_description">Here you can find more %1$s recipes!</string>
+    <string name="four">4</string>
 </resources>

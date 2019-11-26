@@ -2,15 +2,22 @@ package com.maarten.recipepicker.settings;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 
+import android.text.InputType;
+import android.widget.EditText;
 import android.widget.Toast;
 
+import com.maarten.recipepicker.BuildConfig;
 import com.maarten.recipepicker.MainActivity;
 import com.maarten.recipepicker.R;
 
@@ -19,7 +26,10 @@ import com.maarten.recipepicker.R;
  */
 public class PreferenceFragment extends PreferenceFragmentCompat {
 
-    private Preference removeAllButtonPreference, goToGithubButtonPreference;
+    private Preference removeAllButtonPreference, goToGithubButtonPreference, versionPreference;
+    private EditTextPreference servesPreference;
+
+    private SharedPreferences.OnSharedPreferenceChangeListener listener;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -47,6 +57,42 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
                 }
             });
         }
+
+        versionPreference = getPreferenceManager().findPreference("version");
+        versionPreference.setSummary(BuildConfig.VERSION_NAME);
+
+        servesPreference = getPreferenceManager().findPreference("serves_value");
+
+        if(servesPreference != null) {
+            // takes care of inputType="Number"
+            servesPreference.setOnBindEditTextListener(new EditTextPreference.OnBindEditTextListener() {
+                @Override
+                public void onBindEditText(@NonNull EditText editText) {
+                    editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                }
+            });
+        }
+        createListener();
+
+    }
+
+    /**
+     * Listener to make sure that when the user leaves the serves blank, it fills in '4'
+     */
+    private void createListener() {
+        listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                String value = sharedPreferences.getString("serves_value", "4");
+                    if(value.equals("")) {
+                        servesPreference.setText("4");
+                        //setPreferenceScreen(null);
+                        //addPreferencesFromResource(R.xml.settings);
+                    }
+            }
+        };
+            PreferenceManager.getDefaultSharedPreferences(getContext())
+                    .registerOnSharedPreferenceChangeListener(listener);
     }
 
     /**

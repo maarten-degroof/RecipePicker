@@ -80,6 +80,8 @@ public class AddRecipeActivity extends AppCompatActivity {
     private List<Instruction> instructionList = new ArrayList<>();
     private EditText instructionDescription;
 
+    private NumberPicker servesNumberPicker;
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,6 +170,11 @@ public class AddRecipeActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        servesNumberPicker = findViewById(R.id.servesNumberPicker);
+        servesNumberPicker.setMinValue(1);
+        servesNumberPicker.setMaxValue(50);
+        servesNumberPicker.setValue(4);
 
     }
 
@@ -416,6 +423,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         String recipeName = ((EditText) findViewById(R.id.nameField)).getText().toString();
         String recipeURL = ((EditText) findViewById(R.id.URLField)).getText().toString();
         String comments = ((EditText) findViewById(R.id.commentsText)).getText().toString();
+        int serves = servesNumberPicker.getValue();
 
         // get the selected cookingTime
         ChipGroup chipGroupDuration = findViewById(R.id.chipGroupDuration);
@@ -456,7 +464,7 @@ public class AddRecipeActivity extends AppCompatActivity {
             Toast.makeText(AddRecipeActivity.this, "You have to add at least one instruction", Toast.LENGTH_LONG).show();
         } else {
             Recipe recipe = new Recipe(recipeName, ingredientList, favouriteSwitch,
-                    cookTime, imagePath, recipeURL, difficulty, comments, instructionList);
+                    cookTime, imagePath, recipeURL, difficulty, comments, instructionList, serves);
             recipeList.add(recipe);
             Toast.makeText(AddRecipeActivity.this, "Your recipe was added!", Toast.LENGTH_LONG).show();
             finish();

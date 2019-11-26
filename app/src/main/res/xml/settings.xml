@@ -2,21 +2,44 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<!--    <SwitchPreferenceCompat-->
-<!--        android:defaultValue="false"-->
-<!--        app:key="dark_theme_switch"-->
-<!--        app:summaryOff="the switch is off - Currently doesn't do anything"-->
-<!--        app:summaryOn="the switch is on - Currently doesn't do anything"-->
-<!--        app:title="Dark theme" />-->
+    <PreferenceCategory
+        android:title="settings">
+        <EditTextPreference
+            android:inputType="number"
+            android:summary="Choose for how many serves the ingredients will be shown"
+            app:title="Serves"
+            android:defaultValue="@string/four"
+            app:useSimpleSummaryProvider="true"
+            app:key="serves_value"
+            />
 
-    <Preference
-        android:title="Github"
-        android:key="github_button"
-        android:summary="Go to the GitHub-page" />
+    </PreferenceCategory>
 
-    <Preference
-        android:title="Reset everything"
-        android:key="remove_all_button"
-        android:summary="Remove all the Recipes. Be careful" />
+    <PreferenceCategory
+        android:title="Recipe Picker">
+        <Preference
+            android:title="Github"
+            android:key="github_button"
+            android:summary="Go to the GitHub-page"
+            android:icon="@drawable/ic_github_logo"
+            />
+
+        <Preference
+            android:title="Version"
+            android:key="version"
+            android:icon="@drawable/ic_info_black_24dp"
+            />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Danger Zone">
+        <Preference
+            android:title="Reset everything"
+            android:key="remove_all_button"
+            android:summary="Remove all the Recipes. Be careful"
+            android:icon="@drawable/ic_delete_black_24dp"
+            />
+    </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

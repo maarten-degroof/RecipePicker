@@ -34,8 +34,6 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-
-
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
 
 

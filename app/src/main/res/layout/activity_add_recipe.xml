@@ -106,6 +106,15 @@
             app:layout_constraintTop_toBottomOf="@+id/ingredientButton"
             tools:visibility="gone" />
 
+        <NumberPicker
+            android:id="@+id/servesNumberPicker"
+            android:layout_width="57dp"
+            android:layout_height="114dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="@+id/middleOfScreenGuideline"
+            app:layout_constraintTop_toBottomOf="@+id/extrasTextView" />
+
         <TextView
             android:id="@+id/instructionsTextView"
             android:layout_width="match_parent"
@@ -261,7 +270,7 @@
             android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/extrasTextView">
+            app:layout_constraintTop_toBottomOf="@+id/servesNumberPicker">
 
 
             <com.google.android.material.textfield.TextInputEditText
@@ -523,6 +532,25 @@
             app:barrierDirection="bottom"
             app:constraint_referenced_ids="addRecipeIngredientList,noIngredientsTextView"
             tools:layout_editor_absoluteY="1937dp" />
+
+        <TextView
+            android:id="@+id/servesTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="56dp"
+            android:layout_marginEnd="8dp"
+            android:text="Serves:"
+            android:textColor="@color/primaryColor"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/middleOfScreenGuideline"
+            app:layout_constraintTop_toBottomOf="@+id/extrasTextView" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/middleOfScreenGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

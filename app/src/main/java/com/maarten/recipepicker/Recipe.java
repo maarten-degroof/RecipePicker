@@ -22,10 +22,11 @@ public class Recipe implements Serializable {
     private Difficulty difficulty;
     private String comments;
     private List<Instruction> instructionList;
+    private int serves;
 
 
     public Recipe(String title, List<Ingredient> ingredientList, Boolean favorite,
-                  CookTime cookTime, String imagePath, String URL, Difficulty difficulty, String comments, List<Instruction> instructionList) {
+                  CookTime cookTime, String imagePath, String URL, Difficulty difficulty, String comments, List<Instruction> instructionList, int serves) {
         this.title = title;
         this.ingredientList = ingredientList;
         this.favorite = favorite;
@@ -37,6 +38,7 @@ public class Recipe implements Serializable {
         this.difficulty = difficulty;
         this.comments = comments;
         this.instructionList = instructionList;
+        this.serves = serves;
     }
 
     public List<Instruction> getInstructionList() {
@@ -131,7 +133,13 @@ public class Recipe implements Serializable {
         this.comments = comments;
     }
 
+    public int getServes() {
+        return serves;
+    }
 
+    public void setServes(int serves) {
+        this.serves = serves;
+    }
 
     /**
      * compares an object to itself. returns true if they're the same

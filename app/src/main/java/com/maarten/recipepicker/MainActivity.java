@@ -61,6 +61,8 @@ import java.util.List;
  * Add a counter to recipe to say for how many people the recipe is. Save a default value in the settings, and allow users to change it there.
  * In viewRecipe, calculate what's needed for this settings value. Show a popup the first time explaining it. Save this value also in preferenceManager
  *
+ * give optional checkbox when removing all items, to put the dummy values back
+ *
  * archiving an item (by swiping the listitem)
  * reordering a list (by dragging)
  * material design everywhere
@@ -161,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
             tempInstructionList.add(new Instruction("Mix the sauce with the spaghetti.", (long) 10000));
 
             recipeList.add(new Recipe("Spaghetti Bolognese for people who don't have a lot of time",dummyIngredientList,
-                    false, CookTime.MEDIUM, dummyImage, dummyURL, Difficulty.BEGINNER, dummyComments, tempInstructionList));
+                    false, CookTime.MEDIUM, dummyImage, dummyURL, Difficulty.BEGINNER, dummyComments, tempInstructionList, 4));
         }
 
         // get the spinner

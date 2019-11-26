@@ -5,19 +5,12 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.core.view.ViewCompat;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
@@ -26,9 +19,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.ViewCompat;
+import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
@@ -36,14 +37,16 @@ import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.snackbar.Snackbar;
 import com.maarten.recipepicker.adapters.IngredientAdapter;
 import com.maarten.recipepicker.adapters.InstructionAdapter;
-import com.maarten.recipepicker.adapters.InstructionEditAdapter;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
+
+import static androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY;
 
 public class ViewRecipeActivity extends AppCompatActivity {
 
@@ -137,7 +140,24 @@ public class ViewRecipeActivity extends AppCompatActivity {
         // get the ingredientlist and add it to the listview
         RecyclerView ingredientListRecyclerView = findViewById(R.id.viewRecipeIngredientList);
 
-        IngredientAdapter adapter = new IngredientAdapter(this,recipe.getIngredientList());
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        int servesCount = Integer.parseInt(sharedPrefs.getString("serves_value", "4"));
+
+        // create a new ingredientList, and create all the ingredients again, otherwise it'd be the same object and you'd change the wrong values
+        List<Ingredient> calculatedIngredientList = new ArrayList<>();
+
+        for (Ingredient ingredient : recipe.getIngredientList()) {
+            calculatedIngredientList.add(new Ingredient(ingredient));
+        }
+        // now update the values
+        for (Ingredient ingredient : calculatedIngredientList) {
+            if(ingredient.getQuantity()!= null) {
+                ingredient.setQuantity(ingredient.getQuantity() / recipe.getServes() * servesCount);
+            }
+        }
+
+        IngredientAdapter adapter = new IngredientAdapter(this,calculatedIngredientList);
         ingredientListRecyclerView.setAdapter(adapter);
         ingredientListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         ingredientListRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
@@ -180,6 +200,10 @@ public class ViewRecipeActivity extends AppCompatActivity {
         instructionRecyclerView.setAdapter(instructionAdapter);
         instructionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        // fill the string in so it says 'ingredients needed for [4] persons:
+        String ingredientString = getString(R.string.needed_ingredients, servesCount);
+        TextView neededIngredients = findViewById(R.id.neededIngredients);
+        neededIngredients.setText(Html.fromHtml(ingredientString, FROM_HTML_MODE_LEGACY));
     }
 
     /**

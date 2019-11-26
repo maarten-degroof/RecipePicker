@@ -86,6 +86,8 @@ public class EditRecipeActivity extends AppCompatActivity {
     private List<Instruction> instructionList;
     private EditText instructionDescription;
 
+    private NumberPicker servesNumberPicker;
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -233,6 +235,10 @@ public class EditRecipeActivity extends AppCompatActivity {
         instructionRecyclerView.setAdapter(instructionAdapter);
         instructionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        servesNumberPicker = findViewById(R.id.servesNumberPicker);
+        servesNumberPicker.setMinValue(1);
+        servesNumberPicker.setMaxValue(50);
+        servesNumberPicker.setValue(recipe.getServes());
     }
 
     /**
@@ -293,6 +299,8 @@ public class EditRecipeActivity extends AppCompatActivity {
 
             recipeList.get(recipeIndex).setURL(recipeURL.getText().toString());
             recipeList.get(recipeIndex).setComments(recipeComments.getText().toString());
+
+            recipeList.get(recipeIndex).setServes(servesNumberPicker.getValue());
 
             Toast.makeText(this, "Your recipe was updated!", Toast.LENGTH_LONG).show();
 

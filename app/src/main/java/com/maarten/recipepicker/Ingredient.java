@@ -19,6 +19,11 @@ public class Ingredient implements Serializable, Comparable<Ingredient> {
         empty
     }
 
+    public Ingredient(Ingredient ingredient){
+        this.name = ingredient.getName();
+        this.quantity = ingredient.getQuantity();
+        this.ingredientType = ingredient.getIngredientType();
+    }
 
     public Ingredient(String name, Double quantity, type ingredientType) {
         this.name = name;
