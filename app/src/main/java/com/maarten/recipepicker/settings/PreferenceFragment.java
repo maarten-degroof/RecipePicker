@@ -83,16 +83,25 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
         listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-                String value = sharedPreferences.getString("serves_value", "4");
+
+                if(key.equals("serves_value")) {
+                    String value = sharedPreferences.getString("serves_value", "4");
                     if(value.equals("")) {
                         servesPreference.setText("4");
-                        //setPreferenceScreen(null);
-                        //addPreferencesFromResource(R.xml.settings);
                     }
+                    // more than two characters is always longer dan 50
+                    else if(value.length() > 2) {
+                        servesPreference.setText("50");
+                    }
+                    else if(Integer.parseInt(value) > 50) {
+                        servesPreference.setText("50");
+                    }
+                }
             }
         };
-            PreferenceManager.getDefaultSharedPreferences(getContext())
-                    .registerOnSharedPreferenceChangeListener(listener);
+        PreferenceManager.getDefaultSharedPreferences(getContext())
+                .registerOnSharedPreferenceChangeListener(listener);
+
     }
 
     /**
