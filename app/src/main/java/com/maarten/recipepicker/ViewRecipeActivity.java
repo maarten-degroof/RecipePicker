@@ -204,6 +204,16 @@ public class ViewRecipeActivity extends AppCompatActivity {
         String ingredientString = getString(R.string.needed_ingredients, servesCount);
         TextView neededIngredients = findViewById(R.id.neededIngredients);
         neededIngredients.setText(Html.fromHtml(ingredientString, FROM_HTML_MODE_LEGACY));
+
+        // check to show the tip. Change the preferences so it won't show again
+        boolean shouldShowServesTip = sharedPrefs.getBoolean("tip_serves", true);
+        if(shouldShowServesTip) {
+            showServeTip();
+            SharedPreferences.Editor editor = sharedPrefs.edit();
+            editor.putBoolean("tip_serves", false);
+            editor.apply();
+        }
+
     }
 
     /**
@@ -300,6 +310,23 @@ public class ViewRecipeActivity extends AppCompatActivity {
         final AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
+
+    private void showServeTip() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Tip!");
+        builder.setMessage("In the settings you can change the serve amount. All the recipes will then be recalculated for that amount of serves!");
+
+        builder.setPositiveButton("OK I understand", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+        // create and show the dialog
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+
 
     /**
      * Removes the current recipe
