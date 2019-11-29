@@ -23,6 +23,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
+import com.maarten.recipepicker.Models.Instruction;
+import com.maarten.recipepicker.Models.Recipe;
+import com.maarten.recipepicker.Models.TimerListItem;
+import com.maarten.recipepicker.Models.TimerListItemWithCountdown;
 import com.maarten.recipepicker.adapters.TimerAdapter;
 
 import java.util.ArrayList;

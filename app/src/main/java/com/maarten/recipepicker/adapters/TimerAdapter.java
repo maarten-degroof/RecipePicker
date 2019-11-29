@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.maarten.recipepicker.R;
-import com.maarten.recipepicker.TimerListItemWithCountdown;
+import com.maarten.recipepicker.Models.TimerListItemWithCountdown;
 
 import java.util.List;
 

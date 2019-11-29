@@ -3,8 +3,6 @@ package com.maarten.recipepicker.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.maarten.recipepicker.enums.CookTime;
 import com.maarten.recipepicker.enums.Difficulty;
 import com.maarten.recipepicker.R;
-import com.maarten.recipepicker.Recipe;
+import com.maarten.recipepicker.Models.Recipe;
 import com.maarten.recipepicker.ViewRecipeActivity;
 
 import org.json.JSONObject;

@@ -1,5 +1,7 @@
 package com.maarten.recipepicker;
 
+import com.maarten.recipepicker.Models.Recipe;
+
 import java.util.Comparator;
 
 public class AmountCookedComparator implements Comparator<Recipe> {

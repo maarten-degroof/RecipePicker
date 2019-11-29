@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
@@ -35,6 +33,9 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.snackbar.Snackbar;
+import com.maarten.recipepicker.Models.Ingredient;
+import com.maarten.recipepicker.Models.Instruction;
+import com.maarten.recipepicker.Models.Recipe;
 import com.maarten.recipepicker.adapters.IngredientAdapter;
 import com.maarten.recipepicker.adapters.InstructionAdapter;
 

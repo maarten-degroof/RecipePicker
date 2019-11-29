@@ -2,7 +2,7 @@ package com.maarten.recipepicker.listSorters;
 
 import android.util.Log;
 
-import com.maarten.recipepicker.Recipe;
+import com.maarten.recipepicker.Models.Recipe;
 
 import java.util.Comparator;
 

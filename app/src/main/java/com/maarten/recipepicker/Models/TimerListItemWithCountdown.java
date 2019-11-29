@@ -1,4 +1,4 @@
-package com.maarten.recipepicker;
+package com.maarten.recipepicker.Models;
 
 public class TimerListItemWithCountdown {
     private int instructionNumber;

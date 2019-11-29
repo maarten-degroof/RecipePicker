@@ -6,6 +6,9 @@ import androidx.annotation.NonNull;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.maarten.recipepicker.Models.Ingredient;
+import com.maarten.recipepicker.Models.Instruction;
+import com.maarten.recipepicker.Models.Recipe;
 import com.maarten.recipepicker.adapters.RecipeAdapter;
 import com.maarten.recipepicker.enums.CookTime;
 import com.maarten.recipepicker.enums.Difficulty;

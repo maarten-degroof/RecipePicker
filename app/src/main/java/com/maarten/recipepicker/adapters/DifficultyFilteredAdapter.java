@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.maarten.recipepicker.enums.Difficulty;
 import com.maarten.recipepicker.R;
-import com.maarten.recipepicker.Recipe;
+import com.maarten.recipepicker.Models.Recipe;
 import com.maarten.recipepicker.ViewRecipeActivity;
 
 import java.util.ArrayList;

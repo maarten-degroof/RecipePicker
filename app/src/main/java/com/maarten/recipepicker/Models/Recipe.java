@@ -1,8 +1,10 @@
-package com.maarten.recipepicker;
+package com.maarten.recipepicker.Models;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.maarten.recipepicker.R;
+import com.maarten.recipepicker.RecipePickerApplication;
 import com.maarten.recipepicker.enums.CookTime;
 import com.maarten.recipepicker.enums.Difficulty;
 

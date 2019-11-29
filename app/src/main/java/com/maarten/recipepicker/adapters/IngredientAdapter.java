@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.maarten.recipepicker.Ingredient;
+import com.maarten.recipepicker.Models.Ingredient;
 import com.maarten.recipepicker.R;
 
 import java.util.List;
