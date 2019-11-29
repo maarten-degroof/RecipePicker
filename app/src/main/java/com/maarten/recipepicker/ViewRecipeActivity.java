@@ -76,7 +76,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // back button pressed
-                finish();
+                supportFinishAfterTransition();
             }
         });
 

@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.maarten.recipepicker.R;
@@ -43,7 +45,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.CustomView
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final CustomViewHolder holder, int position) {
         final Recipe recipe = recipeList.get(position);
         holder.recipeTitleTextView.setText(recipe.getTitle());
         holder.recipeIngredientsTextView.setText(recipe.getOrderedIngredientString());
@@ -55,7 +57,17 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.CustomView
             public void onClick(View v) {
                 Intent intent = new Intent(context, ViewRecipeActivity.class);
                 intent.putExtra("Recipe", recipe);
-                context.startActivity(intent);
+
+//                Pair<View, String> p1 = Pair.create((View)holder.recipeTitleTextView, "recipeTitle");
+//                Pair<View, String> p2 = Pair.create((View)holder.recipeImageView, "recipeImage");
+//
+//                ActivityOptionsCompat options = ActivityOptionsCompat.
+//                        makeSceneTransitionAnimation(context, p1, p2);
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation(context, holder.recipeImageView, "recipeImage");
+                context.startActivity(intent, options.toBundle());
+
             }
         });
     }

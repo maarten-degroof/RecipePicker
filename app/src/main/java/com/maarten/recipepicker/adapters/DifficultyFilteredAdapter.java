@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.maarten.recipepicker.enums.Difficulty;
@@ -47,7 +48,7 @@ public class DifficultyFilteredAdapter extends RecyclerView.Adapter<DifficultyFi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final CustomViewHolder holder, int position) {
         final Recipe recipe = recipeList.get(position);
         holder.recipeTitleTextView.setText(recipe.getTitle());
         holder.recipeIngredientsTextView.setText(recipe.getOrderedIngredientString());
@@ -71,7 +72,9 @@ public class DifficultyFilteredAdapter extends RecyclerView.Adapter<DifficultyFi
             public void onClick(View v) {
                 Intent intent = new Intent(context, ViewRecipeActivity.class);
                 intent.putExtra("Recipe", recipe);
-                context.startActivity(intent);
+                ActivityOptionsCompat options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation(context, holder.recipeImageView, "recipeImage");
+                context.startActivity(intent, options.toBundle());
             }
         });
     }

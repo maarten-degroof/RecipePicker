@@ -14,6 +14,7 @@
 
         <ImageView
             android:id="@+id/recipeImageView"
+            android:transitionName="recipeImage"
             android:layout_width="match_parent"
             android:layout_height="180dp"
             android:layout_alignParentTop="true"
@@ -27,6 +28,7 @@
 
         <TextView
             android:id="@+id/recipeTitleTextView"
+            android:transitionName="recipeTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/recipeImageView"
