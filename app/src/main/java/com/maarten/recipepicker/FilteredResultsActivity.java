@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ public class FilteredResultsActivity extends AppCompatActivity {
     private RecyclerView listViewFiltered;
 
     private int filterMin, filterMax;
+    private int ratingMin, ratingMax;
     private Boolean durationShort, durationMedium, durationLong;
     private Boolean difficultyBeginner, difficultyIntermediate, difficultyExpert;
 
@@ -45,6 +47,8 @@ public class FilteredResultsActivity extends AppCompatActivity {
             // get the values for which you filtered
             filterMin = (int) filterObject.get("filterMin");
             filterMax = (int) filterObject.get("filterMax");
+            ratingMin = (int) filterObject.get("ratingMin");
+            ratingMax = (int) filterObject.get("ratingMax");
             durationShort = (Boolean) filterObject.get("durationShort");
             durationMedium = (Boolean) filterObject.get("durationMedium");
             durationLong = (Boolean) filterObject.get("durationLong");
@@ -61,7 +65,7 @@ public class FilteredResultsActivity extends AppCompatActivity {
             filterAdapter.getFilter().filter(filterObject.toString());
 
         } catch (Exception e) {
-            e.getStackTrace();
+            Log.e("intentError", e.getMessage());
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -73,7 +77,7 @@ public class FilteredResultsActivity extends AppCompatActivity {
 
         // write the text to say for which times cooked you have filtered. FromHtml is used to make the numbers bold
         TextView filteredDescriptionTextView = findViewById(R.id.filteredDescriptionTextField);
-        String description = getString(R.string.filtered_recipe_description, filterMin, filterMax);
+        String description = getString(R.string.filtered_recipe_description, filterMin, filterMax, ratingMin, ratingMax);
         filteredDescriptionTextView.setText(Html.fromHtml(description, FROM_HTML_MODE_LEGACY));
 
         ChipGroup chipGroup = findViewById(R.id.chipGroup);

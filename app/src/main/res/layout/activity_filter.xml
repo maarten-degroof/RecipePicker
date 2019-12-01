@@ -14,6 +14,64 @@
         tools:context=".FilterActivity">
 
 
+        <TextView
+            android:id="@+id/maxRating"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/filter_max_rating"
+            android:textColor="@color/primaryColor"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ratedQuestion" />
+
+        <TextView
+            android:id="@+id/minRating"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/no_rating"
+            android:textColor="@color/primaryColor"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ratedQuestion" />
+
+        <com.appyvet.materialrangebar.RangeBar
+            android:id="@+id/ratingRangeBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/maxRating"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/minRating"
+            app:layout_constraintTop_toBottomOf="@+id/ratedQuestion"
+            app:mrb_barWeight="2dp"
+            app:mrb_connectingLineColor="@color/primaryColor"
+            app:mrb_connectingLineWeight="4dp"
+            app:mrb_leftSelectorColor="@color/primaryColor"
+
+            app:mrb_pinColor="@color/primaryColor"
+            app:mrb_pinMaxFont="15sp"
+            app:mrb_pinMinFont="12sp"
+            app:mrb_pinRadius="14dp"
+            app:mrb_pinTextColor="@android:color/white"
+            app:mrb_rangeBar="true"
+            app:mrb_rangeBarColor="@color/primaryDarkColor"
+            app:mrb_rangeBarPaddingBottom="30dp"
+            app:mrb_rangeBar_rounded="true"
+            app:mrb_rightSelectorColor="@color/primaryColor"
+            app:mrb_selectorBoundaryColor="@color/primaryColor"
+            app:mrb_selectorBoundarySize="2dp"
+            app:mrb_selectorColor="@color/primaryColor"
+            app:mrb_selectorSize="10dp"
+            app:mrb_temporaryPins="true"
+            app:mrb_tickDefaultColor="@color/primaryDarkColor"
+            app:mrb_tickEnd="10"
+            app:mrb_tickStart="0" />
+
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chipGroupDifficulty"
             android:layout_width="wrap_content"
@@ -54,13 +112,15 @@
 
         <TextView
             android:id="@+id/filterDifficultyTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
             android:text="@string/filter_difficulty_description"
             android:textColor="@color/primaryColor"
             android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/chipGroupDuration" />
 
@@ -118,9 +178,9 @@
             android:id="@+id/filterDescriptionTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:text="@string/filter_description"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -129,15 +189,31 @@
 
         <TextView
             android:id="@+id/amountCookedQuestion"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="32dp"
+            android:layout_marginEnd="8dp"
             android:text="@string/filter_times_cooked_description"
             android:textColor="@color/primaryColor"
             android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/filterDescriptionTextView" />
+
+        <TextView
+            android:id="@+id/ratedQuestion"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/rating_description"
+            android:textColor="@color/primaryColor"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/amountCookedRangeBar" />
 
         <TextView
             android:id="@+id/minAmountCooked"
@@ -182,15 +258,17 @@
 
         <TextView
             android:id="@+id/filterDurationTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
             android:text="@string/filter_duration_description"
             android:textColor="@color/primaryColor"
             android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/amountCookedRangeBar" />
+            app:layout_constraintTop_toBottomOf="@+id/ratingRangeBar" />
 
 
         <com.google.android.material.chip.ChipGroup

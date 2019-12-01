@@ -142,7 +142,7 @@
     <string name="filter_duration_description">How long should cooking it take?</string>
     <string name="filter_max_template">1000</string>
     <string name="filtered_recipes">Filtered Recipes</string>
-    <string name="filtered_recipe_description">Showing all recipes which you have cooked between &lt;b>%1$d&lt;/b> and &lt;b>%2$d&lt;/b> times.</string>
+    <string name="filtered_recipe_description">Showing all recipes which you have cooked between &lt;b>%1$d&lt;/b> and &lt;b>%2$d&lt;/b> times and which have a rating between &lt;b>%3$d&lt;/b> and &lt;b>%4$d&lt;/b>.</string>
     <string name="dummy_value">This is a dummy value which will be overwritten</string>
     <string name="search">Search</string>
     <string name="search_input_field">What do you want to find?</string>
@@ -204,4 +204,7 @@
     <string name="time_left_timer">%1$d:%2$d left</string>
     <string name="done">It\'s done!</string>
     <string name="step_with_column">Step %1$d:</string>
+    <string name="filter_max_rating">10</string>
+    <string name="no_rating">No rating</string>
+    <string name="rating_description">How high should its rating be?</string>
 </resources>

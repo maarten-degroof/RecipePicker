@@ -218,7 +218,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
         if(currentRating != 0) {
             currentRatingTextView.setText(String.valueOf((int)currentRating));
         } else {
-            currentRatingTextView.setText("No Rating");
+            currentRatingTextView.setText(getString(R.string.no_rating));
             currentRatingTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_star_border_green_24dp, 0);
         }
     }
@@ -237,6 +237,9 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         final TextView currentRatingTextView = dialog_layout.findViewById(R.id.currentRatingTextView);
         currentRatingTextView.setText(String.valueOf((int)currentRating));
+        if(currentRating == 0) {
+            currentRatingTextView.setText(getString(R.string.no_rating));
+        }
 
         final RatingBar recipeRatingBar = dialog_layout.findViewById(R.id.recipeRatingBar);
         recipeRatingBar.setRating(currentRating);
@@ -245,6 +248,9 @@ public class ViewRecipeActivity extends AppCompatActivity {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 currentRatingTextView.setText(String.valueOf((int)rating));
+                if (rating == 0) {
+                    currentRatingTextView.setText(getString(R.string.no_rating));
+                }
             }
         });
 
@@ -259,7 +265,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
                     ViewRecipeActivity.this.currentRatingTextView.setText(String.valueOf((int)currentRating));
                     ViewRecipeActivity.this.currentRatingTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_star_green_24dp, 0);
                 } else {
-                    ViewRecipeActivity.this.currentRatingTextView.setText("No Rating");
+                    ViewRecipeActivity.this.currentRatingTextView.setText(getString(R.string.no_rating));
                     ViewRecipeActivity.this.currentRatingTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_star_border_green_24dp, 0);
                 }
 

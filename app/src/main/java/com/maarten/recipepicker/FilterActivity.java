@@ -22,23 +22,16 @@ import org.json.JSONObject;
 
 public class FilterActivity extends AppCompatActivity {
 
-
-    /**
-     * Create new activity for the results; create new adapter and send the items on which to filter
-     * to the new activity. You can do so by using an intent and putting a json object through it
-     *
-     *
-     * @param savedInstanceState
-     */
-
     int minCookedValue = 0;
     int maxCookedValue = 2;
+
+    int minRatingValue = 0;
+    int maxRatingValue = 10;
 
     // keeps track of which chips are ticked. Duration: [short, medium = default, long]
     //  Difficulty: [beginner, intermediate = default, expert]
     Boolean[] durationArray = {false, true, false};
     Boolean[] difficultyArray = {false, true, false};
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +50,6 @@ public class FilterActivity extends AppCompatActivity {
         final TextView minAmountCooked = findViewById(R.id.minAmountCooked);
         final TextView maxAmountCooked = findViewById(R.id.maxAmountCooked);
 
-
         if(MainActivity.recipeList != null && MainActivity.recipeList.size() > 0) {
             // get the max and minimum values to default the slider to
             int tempAmount = Collections.max(MainActivity.recipeList, new AmountCookedComparator()).getAmountCooked();
@@ -67,8 +59,6 @@ public class FilterActivity extends AppCompatActivity {
             }
             maxAmountCooked.setText(String.valueOf(maxCookedValue));
         }
-
-
 
         amountCookedRangeBar.setTickStart(minCookedValue);
         amountCookedRangeBar.setTickEnd(maxCookedValue);
@@ -94,6 +84,37 @@ public class FilterActivity extends AppCompatActivity {
             }
         });
 
+        RangeBar ratingRangeBar = findViewById(R.id.ratingRangeBar);
+        final TextView minRating = findViewById(R.id.minRating);
+        final TextView maxRating = findViewById(R.id.maxRating);
+
+        ratingRangeBar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
+            @Override
+            public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex, String leftPinValue, String rightPinValue) {
+                minRatingValue = Integer.valueOf(leftPinValue);
+                if(Integer.valueOf(leftPinValue) == 0){
+                   minRating.setText(getString(R.string.no_rating));
+                } else {
+                    minRating.setText(leftPinValue);
+                }
+                maxRatingValue = Integer.valueOf(rightPinValue);
+                if(Integer.valueOf(rightPinValue) == 0) {
+                    maxRating.setText(getString(R.string.no_rating));
+                } else {
+                    maxRating.setText(rightPinValue);
+                }
+            }
+
+            @Override
+            public void onTouchStarted(RangeBar rangeBar) {
+
+            }
+
+            @Override
+            public void onTouchEnded(RangeBar rangeBar) {
+
+            }
+        });
 
         // change listener for each chip, so it will update the durationArray which keeps track which buttons
         // are checked. Has to be this ugly since you can't ask the chipgroup which ones are ticked
@@ -152,6 +173,8 @@ public class FilterActivity extends AppCompatActivity {
             JSONObject filter = new JSONObject();
             filter.put("filterMin", minCookedValue);
             filter.put("filterMax", maxCookedValue);
+            filter.put("ratingMin", minRatingValue);
+            filter.put("ratingMax", maxRatingValue);
             filter.put("durationShort", durationArray[0]);
             filter.put("durationMedium", durationArray[1]);
             filter.put("durationLong", durationArray[2]);
