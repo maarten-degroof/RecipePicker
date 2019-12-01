@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +60,10 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
     private TextView amountCookedField;
     private int amountCookedValue;
+
+    private float currentRating;
+    private MaterialButton ratingButton;
+    private TextView currentRatingTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -204,6 +209,70 @@ public class ViewRecipeActivity extends AppCompatActivity {
             editor.apply();
         }
 
+        currentRating = recipe.getRating();
+
+        //ratingButton = findViewById(R.id.ratingButton);
+        currentRatingTextView = findViewById(R.id.currentRatingTextView);
+        ratingButton = findViewById(R.id.ratingButton);
+
+        if(currentRating != 0) {
+            currentRatingTextView.setText(String.valueOf((int)currentRating));
+        } else {
+            currentRatingTextView.setText("No Rating");
+            currentRatingTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_star_border_green_24dp, 0);
+        }
+    }
+
+    /**
+     * Creates the AlertDialog where the user can choose the rating
+     *
+     * @param view - the 'add' and 'edit' rating
+     */
+    public void createRatingDialog(View view) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // get the layout
+        View dialog_layout = getLayoutInflater().inflate(R.layout.rating_dialog, null);
+
+        final TextView currentRatingTextView = dialog_layout.findViewById(R.id.currentRatingTextView);
+        currentRatingTextView.setText(String.valueOf((int)currentRating));
+
+        final RatingBar recipeRatingBar = dialog_layout.findViewById(R.id.recipeRatingBar);
+        recipeRatingBar.setRating(currentRating);
+
+        recipeRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                currentRatingTextView.setText(String.valueOf((int)rating));
+            }
+        });
+
+        builder.setTitle("Choose rating");
+        builder.setMessage("Tap or drag the stars to set a rating. Set it to 0 to remove the rating");
+
+        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                currentRating = recipeRatingBar.getRating();
+                MainActivity.recipeList.get(recipeIndex).setRating((int)currentRating);
+                if(currentRating != 0) {
+                    ViewRecipeActivity.this.currentRatingTextView.setText(String.valueOf((int)currentRating));
+                    ViewRecipeActivity.this.currentRatingTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_star_green_24dp, 0);
+                } else {
+                    ViewRecipeActivity.this.currentRatingTextView.setText("No Rating");
+                    ViewRecipeActivity.this.currentRatingTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_star_border_green_24dp, 0);
+                }
+
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+        // create and show the dialog
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.setView(dialog_layout);
+        alertDialog.show();
     }
 
     /**

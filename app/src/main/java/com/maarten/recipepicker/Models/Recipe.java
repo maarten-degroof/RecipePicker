@@ -29,6 +29,7 @@ public class Recipe implements Serializable {
     private List<Instruction> instructionList;
     private int serves;
     private transient Bitmap image;
+    private int rating;
 
 
     public Recipe(String title, List<Ingredient> ingredientList, Boolean favorite,
@@ -45,6 +46,7 @@ public class Recipe implements Serializable {
         this.comments = comments;
         this.instructionList = instructionList;
         this.serves = serves;
+        this.rating = 0;
     }
 
     public List<Instruction> getInstructionList() {
@@ -146,6 +148,14 @@ public class Recipe implements Serializable {
 
     public void setServes(int serves) {
         this.serves = serves;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 
     /*

@@ -15,33 +15,75 @@
         android:padding="0dp">
 
         <TextView
-            android:id="@+id/commentsTextView"
+            android:id="@+id/ratingTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="20dp"
-            android:text="@string/comments"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:text="Rating"
             android:textColor="@color/primaryColor"
             android:textSize="22sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/copyURLButton" />
 
+        <TextView
+            android:id="@+id/currentRatingTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:drawableRight="@drawable/ic_star_green_24dp"
+            android:text="8"
+            android:textColor="@color/primaryColor"
+            android:textSize="22sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ratingTextView" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ratingButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+            android:layout_width="48dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="12dp"
+
+            android:layout_marginTop="5dp"
+            android:onClick="createRatingDialog"
+            app:icon="@drawable/ic_edit_black_usable_24dp"
+            app:iconGravity="start"
+            app:iconPadding="0dp"
+            app:layout_constraintStart_toEndOf="@+id/currentRatingTextView"
+            app:layout_constraintTop_toBottomOf="@+id/ratingTextView" />
+
+        <TextView
+            android:id="@+id/commentsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/comments"
+            android:textColor="@color/primaryColor"
+            android:textSize="22sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ratingButton" />
+
         <include
             android:id="@+id/toolbar"
-            layout="@layout/toolbar" />
+            layout="@layout/toolbar"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
 
         <TextView
             android:id="@+id/textViewTitle"
-            android:transitionName="recipeTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:text="@string/title"
             android:textColor="@color/primaryDarkColor"
             android:textSize="30sp"
             android:textStyle="bold"
+            android:transitionName="recipeTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/recipeImageView" />
@@ -68,7 +110,7 @@
             android:id="@+id/neededIngredients"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="8dp"
             android:text="@string/needed_ingredients"
@@ -84,7 +126,6 @@
             android:id="@+id/viewRecipeIngredientList"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             app:layout_constrainedHeight="false"
@@ -96,7 +137,7 @@
             android:id="@+id/recipeInstructionTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="24dp"
             android:text="@string/the_instructions"
             android:textColor="@color/primaryColor"
@@ -111,7 +152,7 @@
             android:id="@+id/amountCookedTextField"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="24dp"
             android:text="@string/times_cooked"
             android:textColor="@color/primaryColor"
@@ -159,7 +200,7 @@
             android:id="@+id/websiteTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="28dp"
             android:text="@string/website"
             android:textColor="@color/primaryColor"
@@ -219,7 +260,7 @@
             android:id="@+id/noWebsiteTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:text="@string/no_website_added"
@@ -245,6 +286,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/ratingChip"
+                style="@style/BiggerChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:onClick="startDifficultyFilteredActivity"
+                android:text="@string/beginner"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:chipIcon="@drawable/ic_difficulty_gauge_easy"
+                app:chipMinTouchTargetSize="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/difficultyChip"
@@ -281,7 +338,6 @@
             android:id="@+id/viewInstructionRecyclerView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
