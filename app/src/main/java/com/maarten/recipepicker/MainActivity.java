@@ -62,7 +62,9 @@ import java.util.List;
  * When adding an instruction with a timer, if you type the number, the last typed number will not be saved
  *
  ********* THINGS TO MAKE *********
- * give optional checkbox when removing all items, to put the dummy values back
+ *
+ * create licence + credit used technologies:
+ *      Some Icons made by "https://www.flaticon.com/authors/freepik" Freepik from href="https://www.flaticon.com/"
  *
  * archiving an item (by swiping the listitem)
  * reordering a list (by dragging)

@@ -3,6 +3,7 @@ package com.maarten.recipepicker.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +22,14 @@ import com.maarten.recipepicker.ViewRecipeActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.CustomViewHolder> {
 
     private Activity context;
     private List<Recipe> recipeList;
     private static LayoutInflater inflater = null;
+    private static int returnCount = 0;
 
     public SearchAdapter(Activity context, List<Recipe> recipeList){
         this.context = context;
@@ -90,6 +93,24 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.CustomView
         }
     }
 
+    /**
+     * runs the filter, pauses for 20 milliseconds and then returns the amount of items which succeeded the filter
+     *
+     * @param filterString - the json string on which will be filtered
+     * @return - an int saying the amount of items that are shown
+     */
+    public int filterAndReturnAmount(String filterString) {
+        getFilter().filter(filterString);
+
+        try {
+            TimeUnit.MILLISECONDS.sleep(20);
+        } catch (Exception e) {
+            Log.e("SleepError", e.getMessage());
+        }
+        Log.d("COUNT", "returning: "+returnCount);
+        return returnCount;
+    }
+
     public Filter getFilter() {
 
         final Filter filter = new Filter() {
@@ -97,10 +118,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.CustomView
             @SuppressWarnings("unchecked")
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-
                 recipeList  = (List<Recipe>) results.values;
                 notifyDataSetChanged();
-
             }
 
             @Override
@@ -129,17 +148,15 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.CustomView
                             }
                         }
                     }
-
                     results.count = filteredArray.size();
                     results.values = filteredArray;
+                    returnCount = filteredArray.size();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.e("filterError", e.getMessage());
                 }
-
                 return results;
             }
         };
-
         return filter;
     }
 }

@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.material.button.MaterialButton;
 import com.maarten.recipepicker.adapters.SearchAdapter;
 
 import static androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY;
@@ -23,6 +24,11 @@ public class SearchResultsActivity extends AppCompatActivity {
     private RecyclerView recyclerViewSearched;
     private SearchAdapter adapter;
     private String searchString;
+
+    private MaterialButton addRecipeButton;
+    private TextView noRecipesTextView;
+
+    private int amountOfItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,19 +56,38 @@ public class SearchResultsActivity extends AppCompatActivity {
         recyclerViewSearched.setAdapter(adapter);
         recyclerViewSearched.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter.getFilter().filter(searchString);
+        amountOfItems = adapter.filterAndReturnAmount(searchString);
 
         // write the text to say for which times cooked you have filtered. FromHtml is used to make the searched string bold
         TextView searchedDescriptionTextView = findViewById(R.id.searchedDescriptionTextField);
         String description = getString(R.string.searched_recipe_description, searchString);
         searchedDescriptionTextView.setText(Html.fromHtml(description, FROM_HTML_MODE_LEGACY));
+
+        addRecipeButton = findViewById(R.id.addRecipeButton);
+        noRecipesTextView = findViewById(R.id.noFoundRecipesTextView);
+        controlNoRecipeElements();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        adapter.notifyDataSetChanged();
-        this.adapter.getFilter().filter(searchString);
+        adapter = new SearchAdapter(this, recipeList);
+        recyclerViewSearched.setAdapter(adapter);
+        amountOfItems = adapter.filterAndReturnAmount(searchString);
+        controlNoRecipeElements();
+    }
+
+    /**
+     * This takes care of the 'no found recipes' and 'add recipe' elements when the list is empty
+     */
+    private void controlNoRecipeElements() {
+        if(amountOfItems > 0) {
+            addRecipeButton.setVisibility(View.GONE);
+            noRecipesTextView.setVisibility(View.GONE);
+        } else {
+            addRecipeButton.setVisibility(View.VISIBLE);
+            noRecipesTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
@@ -100,4 +125,13 @@ public class SearchResultsActivity extends AppCompatActivity {
             return super.onOptionsItemSelected(item);
         }
     }
+
+    /**
+     *  opens the AddRecipeActivity
+     */
+    public void addRecipe(View view) {
+        Intent intent = new Intent (this, AddRecipeActivity.class);
+        startActivity(intent);
+    }
+
 }

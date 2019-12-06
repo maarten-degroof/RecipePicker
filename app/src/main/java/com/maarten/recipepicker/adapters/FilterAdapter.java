@@ -25,17 +25,20 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.CustomViewHolder> {
 
     private Activity context;
     private List<Recipe> recipeList;
     private static LayoutInflater inflater = null;
+    private int returnCount;
 
     public FilterAdapter(Activity context, List<Recipe> recipeList){
         this.context = context;
         this.recipeList = recipeList;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        returnCount = 0;
     }
 
     @NonNull
@@ -96,6 +99,24 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.CustomView
         }
     }
 
+    /**
+     * runs the filter, pauses for 20 milliseconds and then returns the amount of items which succeeded the filter
+     *
+     * @param filterString - the json string on which will be filtered
+     * @return - an int saying the amount of items that are shown
+     */
+    public int filterAndReturnAmount(String filterString) {
+        getFilter().filter(filterString);
+
+        try {
+            TimeUnit.MILLISECONDS.sleep(20);
+        } catch (Exception e) {
+            Log.e("SleepError", e.getMessage());
+        }
+        Log.d("COUNT", "returning: "+returnCount);
+        return returnCount;
+    }
+
     //@Override
     public Filter getFilter() {
 
@@ -118,6 +139,8 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.CustomView
                 int ratingMin, ratingMax;
                 Boolean durationShort, durationMedium, durationLong;
                 Boolean difficultyBeginner, difficultyIntermediate, difficultyExpert;
+
+                returnCount = 0;
 
                 try {
                     JSONObject jsonObject = new JSONObject(constraint.toString());
@@ -202,6 +225,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.CustomView
                     }
                     results.count = filteredArray.size();
                     results.values = filteredArray;
+                    returnCount = filteredArray.size();
                 } catch (Exception e) {
                     Log.e("filterError", e.getMessage());
                 }

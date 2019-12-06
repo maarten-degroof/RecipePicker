@@ -1,6 +1,5 @@
 package com.maarten.recipepicker;
 
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -107,6 +106,14 @@ public class AddRecipeActivity extends AppCompatActivity {
 
         // this takes care of the back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // back button pressed
+                finish();
+            }
+        });
 
         recipeTitleLayout = findViewById(R.id.nameFieldLayout);
 

@@ -207,4 +207,5 @@
     <string name="filter_max_rating">10</string>
     <string name="no_rating">No rating</string>
     <string name="rating_description">How high should its rating be?</string>
+    <string name="no_recipes_found">We couldn\'t find any recipes that match what you\'re looking for. Do you want to add one?</string>
 </resources>

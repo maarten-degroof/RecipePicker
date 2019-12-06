@@ -11,8 +11,10 @@ import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.maarten.recipepicker.adapters.FilterAdapter;
@@ -34,6 +36,11 @@ public class FilteredResultsActivity extends AppCompatActivity {
     private Boolean difficultyBeginner, difficultyIntermediate, difficultyExpert;
 
     private JSONObject filterObject;
+
+    private MaterialButton addRecipeButton;
+    private TextView noRecipesTextView;
+
+    private int amountOfItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +119,27 @@ public class FilteredResultsActivity extends AppCompatActivity {
             chip.layout(5, 5, 5, 5);
             chipGroup.addView(chip);
         }
+
+        addRecipeButton = findViewById(R.id.addRecipeButton);
+        noRecipesTextView = findViewById(R.id.noFoundRecipesTextView);
+
+        filterAdapter = new FilterAdapter(this, recipeList);
+        listViewFiltered.setAdapter(filterAdapter);
+        amountOfItems = filterAdapter.filterAndReturnAmount(filterObject.toString());
+        controlNoRecipeElements();
+    }
+
+    /**
+     * This takes care of the 'no found recipes' and 'add recipe' elements when the list is empty
+     */
+    private void controlNoRecipeElements() {
+        if(amountOfItems > 0) {
+            addRecipeButton.setVisibility(View.GONE);
+            noRecipesTextView.setVisibility(View.GONE);
+        } else {
+            addRecipeButton.setVisibility(View.VISIBLE);
+            noRecipesTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
@@ -120,8 +148,11 @@ public class FilteredResultsActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        filterAdapter.notifyDataSetChanged();
-        filterAdapter.getFilter().filter(filterObject.toString());
+        filterAdapter = new FilterAdapter(this, recipeList);
+        listViewFiltered.setAdapter(filterAdapter);
+        amountOfItems = filterAdapter.filterAndReturnAmount(filterObject.toString());
+        Log.d("COUNT", "in onResume: "+amountOfItems);
+        controlNoRecipeElements();
     }
 
     /**
@@ -159,4 +190,13 @@ public class FilteredResultsActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
+
+    /**
+     *  opens the AddRecipeActivity
+     */
+    public void addRecipe(View view) {
+        Intent intent = new Intent (this, AddRecipeActivity.class);
+        startActivity(intent);
+    }
+
 }
