@@ -30,6 +30,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,6 +42,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 
 /**
@@ -232,6 +234,8 @@ public class MainActivity extends AppCompatActivity {
                     viewFilters();
                 } else if (id == R.id.search) {
                     viewSearch();
+                } else if (id == R.id.random) {
+                    openRandomRecipe();
                 }
                 return true;
             }
@@ -296,6 +300,22 @@ public class MainActivity extends AppCompatActivity {
     public void addRecipe(View view) {
         Intent intent = new Intent (this, AddRecipeActivity.class);
         startActivity(intent);
+    }
+
+    /**
+     *  opens a random recipe in the recipeList
+     */
+    public void openRandomRecipe() {
+        Intent intent = new Intent (this, ViewRecipeActivity.class);
+        Random random = new Random();
+
+        if(recipeList.size() == 0) {
+            Toast.makeText(this, "You need at least one recipe for this", Toast.LENGTH_LONG).show();
+        } else {
+            Recipe randomRecipe = recipeList.get(random.nextInt(recipeList.size()));
+            intent.putExtra("Recipe", randomRecipe);
+            startActivity(intent);
+        }
     }
 
     /**
