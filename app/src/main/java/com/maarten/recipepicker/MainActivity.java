@@ -30,12 +30,16 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -43,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 
 /**
@@ -57,6 +62,8 @@ import java.util.Random;
  * Something is wrong when asking file permissions
  *
  * When adding an instruction with a timer, if you type the number, the last typed number will not be saved
+ *
+ * Change notification channel!
  *
  ********* THINGS TO MAKE *********
  *
@@ -108,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton fab;
 
     private Spinner sortSpinner;
+
+    private Random random;
 
     // create activity and the UI links with it
     // only runs ONCE when the application starts
@@ -252,8 +261,33 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        random = new Random();
+
+        setFact();
+
     }
 
+    /**
+     * loads the fact- and tips-file into an arraylist and chooses a random item
+     * from that list which it loads into the TextView in the drawer
+     */
+    private void setFact() {
+        TextView factTextView = findViewById(R.id.factTextView);
+        ArrayList<String> factList = new ArrayList<>();
+        try (Scanner scanner = new Scanner(getResources().getAssets().open("factList.txt"))) {
+            while (scanner.hasNextLine()) {
+                factList.add(scanner.nextLine());
+            }
+
+            factTextView.setText(factList.get(random.nextInt(factList.size())));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * inserts the dummy recipe into the recipeList
+     */
     public static void insertDummyRecipes() {
         List<Ingredient> dummyIngredientList = new ArrayList<>();
         dummyIngredientList.add(new Ingredient("Spaghetti",500.0,Ingredient.type.grams));
@@ -278,8 +312,6 @@ public class MainActivity extends AppCompatActivity {
                 false, CookTime.MEDIUM, dummyImage, dummyURL, Difficulty.BEGINNER, dummyComments, tempInstructionList, 4));
     }
 
-
-
     // this connects the hamburger icon to the navigation drawer
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -299,7 +331,6 @@ public class MainActivity extends AppCompatActivity {
      */
     public void openRandomRecipe() {
         Intent intent = new Intent (this, ViewRecipeActivity.class);
-        Random random = new Random();
 
         if(recipeList.size() == 0) {
             Toast.makeText(this, "You need at least one recipe for this", Toast.LENGTH_LONG).show();
