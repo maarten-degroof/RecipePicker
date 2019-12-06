@@ -376,6 +376,9 @@ public class ViewRecipeActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    /**
+     * Shows the tip on how the serve works
+     */
     private void showServeTip() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -391,13 +394,12 @@ public class ViewRecipeActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-
-
     /**
      * Removes the current recipe
      */
     private void removeRecipe() {
         MainActivity.recipeList.remove(recipe);
+        MainActivity.saveRecipes();
         Toast.makeText(ViewRecipeActivity.this, "Recipe is removed", Toast.LENGTH_SHORT).show();
         finish();
     }
@@ -410,6 +412,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
      */
     public void addToCookedCounter(View view) {
         MainActivity.recipeList.get(recipeIndex).addOneAmountCooked();
+        MainActivity.saveRecipes();
         amountCookedValue++;
         amountCookedField.setText(String.valueOf(amountCookedValue));
 
@@ -419,6 +422,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
                 amountCookedValue--;
                 amountCookedField.setText(String.valueOf(amountCookedValue));
                 MainActivity.recipeList.get(recipeIndex).removeOneAmountCooked();
+                MainActivity.saveRecipes();
             }
         }).show();
     }
@@ -478,20 +482,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
 
-        File file = new File(getFilesDir(), "recipeList.ser");
-
-
-        try (OutputStream fileStream = new FileOutputStream(file);
-             ObjectOutputStream out = new ObjectOutputStream(fileStream)) {
-
-            out.writeObject(MainActivity.recipeList);
-            Log.d("WRITE", "object recipelist is written: " + MainActivity.recipeList);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.d("WRITE", "object recipelist is NOT written: " + MainActivity.recipeList);
-        }
-
+        MainActivity.saveRecipes();
     }
 
     /**

@@ -305,6 +305,8 @@ public class EditRecipeActivity extends AppCompatActivity {
 
             recipeList.get(recipeIndex).setServes(servesNumberPicker.getValue());
 
+            MainActivity.saveRecipes();
+
             Toast.makeText(this, "Your recipe was updated!", Toast.LENGTH_LONG).show();
 
             returnToMainActivity();

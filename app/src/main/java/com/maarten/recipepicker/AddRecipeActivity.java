@@ -476,6 +476,7 @@ public class AddRecipeActivity extends AppCompatActivity {
             Recipe recipe = new Recipe(recipeName, ingredientList, favouriteSwitch,
                     cookTime, imagePath, recipeURL, difficulty, comments, instructionList, serves);
             recipeList.add(recipe);
+            MainActivity.saveRecipes();
             Toast.makeText(AddRecipeActivity.this, "Your recipe was added!", Toast.LENGTH_LONG).show();
             finish();
         }

@@ -126,6 +126,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
                 // if it's checked, restock the list
                 if(resetListCheckbox.isChecked()) {
                     MainActivity.insertDummyRecipes();
+                    MainActivity.saveRecipes();
                 }
             }
         });
@@ -144,6 +145,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
      */
     private void removeRecipe() {
         MainActivity.recipeList.clear();
+        MainActivity.saveRecipes();
         Toast.makeText(getActivity(), "Removed all the recipes", Toast.LENGTH_LONG).show();
     }
 

@@ -47,13 +47,8 @@ import java.util.Random;
 
 /**
  ********* BUGS *********
- * when removing all ingredients; doesn't show the text to at least add one ingredient again
- *
  * sort by is not automatically updated, have to 'set' the times cooked value again in order to see the difference
  * -> can possibly be fixed by putting an extra check in onResume()
- *
- * Performance issue when having a longer list with pictures
- * -> can possibly be solved by having transparent field in recipe which holds the bitmap -> load this when starting the app
  *
  * when viewing favorites, the sort by feature doesn't work
  *
@@ -70,14 +65,11 @@ import java.util.Random;
  *
  * archiving an item (by swiping the listitem)
  * reordering a list (by dragging)
- * material design everywhere
  * Tags
  * Splitting the ingredients into categories
  * settings
  *    - Dark theme
  * filter on ingredients
- *
- * Add each step + a timer to give you a notification when you should do the next step
  *
  ********* WORKING *********
  * adding recipe
@@ -85,7 +77,7 @@ import java.util.Random;
  * showing a recipe + ingredients
  * favorites
  * remove
- * partial material design in textInput + buttons
+ * material design
  * remove an ingredient
  * updating recipe
  * Settings:
@@ -363,24 +355,26 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
     }
 
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        File file = new File(getFilesDir(), "recipeList.ser");
-
+    /**
+     * saves the recipeList to the internal memory
+     */
+    public static void saveRecipes() {
+        File file = new File(RecipePickerApplication.getAppContext().getFilesDir(), "recipeList.ser");
 
         try (OutputStream fileStream = new FileOutputStream(file);
              ObjectOutputStream out = new ObjectOutputStream(fileStream)) {
 
             out.writeObject(recipeList);
             Log.d("WRITE", "object recipelist is written: " + recipeList);
-
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("WriteError",""+ e.getMessage());
             Log.d("WRITE", "object recipelist is NOT written: " + recipeList);
         }
+    }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        saveRecipes();
     }
 }
