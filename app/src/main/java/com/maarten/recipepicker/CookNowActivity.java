@@ -318,6 +318,10 @@ public class CookNowActivity extends AppCompatActivity {
         final PendingIntent cancelPendingIntent =
                 PendingIntent.getActivity(this, instructionNumber, cancelIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        Intent openThisIntent = new Intent(this, CookNowActivity.class);
+        final PendingIntent openThisPendingIntent =
+                PendingIntent.getActivity(this, 0, openThisIntent, 0);
+
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "1")
                 .setSmallIcon(R.drawable.ic_favorite_black_24dp)
                 .setContentTitle("Timer started")
@@ -325,12 +329,13 @@ public class CookNowActivity extends AppCompatActivity {
                 .setPriority(NotificationCompat.PRIORITY_MIN)
                 .setOngoing(true)
                 .setOnlyAlertOnce(true)
-                .addAction(R.drawable.ic_home_black_24dp, "Cancel", cancelPendingIntent);
+                .addAction(R.drawable.ic_home_black_24dp, "Cancel", cancelPendingIntent)
+                .setContentIntent(openThisPendingIntent);
 
         final TimerListItemWithCountdown tempTimerListItemWithCountdown = new TimerListItemWithCountdown(instructionNumber, currentInstruction.getMilliseconds());
         timerListCountdown.add(tempTimerListItemWithCountdown);
 
-        TimerListItem tempTimerlistItem = new TimerListItem(instructionNumber, new CountDownTimer(currentInstruction.getMilliseconds(), 1000) {
+        TimerListItem tempTimerListItem = new TimerListItem(instructionNumber, new CountDownTimer(currentInstruction.getMilliseconds(), 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 builder.setContentText("Instruction " + instructionNumber +" will take " + (millisUntilFinished / 60000) + " minutes and " + ((millisUntilFinished / 1000) % 60) + " seconds.");
@@ -351,7 +356,7 @@ public class CookNowActivity extends AppCompatActivity {
                 notificationManager.notify(instructionNumber, builder.build());
             }
         }.start());
-        timerList.add(tempTimerlistItem);
+        timerList.add(tempTimerListItem);
 
     }
 
@@ -361,13 +366,13 @@ public class CookNowActivity extends AppCompatActivity {
      */
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         if(timerList.size() > 0) {
             for (TimerListItem timerItem : timerList) {
                 timerItem.getTimer().cancel();
             }
         }
         notificationManager.cancelAll();
+        super.onDestroy();
     }
 
     /**

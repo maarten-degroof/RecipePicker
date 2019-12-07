@@ -65,6 +65,8 @@ import java.util.Scanner;
  *
  * Change notification channel!
  *
+ * The timers sometimes stop a few seconds before they end
+ *
  ********* THINGS TO MAKE *********
  *
  * create licence + credit used technologies:

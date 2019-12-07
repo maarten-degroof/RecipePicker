@@ -94,24 +94,6 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
 
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
-
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_settings">Settings</string>
-
     <string name="URL_input_field">What\'s the URL?</string>
     <string name="title">Title</string>
     <string name="ingredients">Ingredients</string>
@@ -209,4 +191,13 @@
     <string name="rating_description">How high should its rating be?</string>
     <string name="no_recipes_found">We couldn\'t find any recipes that match what you\'re looking for. Do you want to add one?</string>
     <string name="random_recipe">Random Recipe</string>
+    <string name="app_settings">App Settings</string>
+    <string name="go_to_github">Go to the GitHub-page</string>
+    <string name="github">GitHub</string>
+    <string name="version">Version</string>
+    <string name="danger_zone">Danger Zone</string>
+    <string name="reset_everything">Reset Everything</string>
+    <string name="remove_all_description">Remove all the Recipes. Be careful</string>
+    <string name="serves">Serves</string>
+    <string name="serves_description">Choose for how many serves the ingredients will be shown</string>
 </resources>

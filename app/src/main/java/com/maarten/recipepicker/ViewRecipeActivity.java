@@ -261,6 +261,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int id) {
                 currentRating = recipeRatingBar.getRating();
                 MainActivity.recipeList.get(recipeIndex).setRating((int)currentRating);
+                MainActivity.saveRecipes();
                 if(currentRating != 0) {
                     ViewRecipeActivity.this.currentRatingTextView.setText(String.valueOf((int)currentRating));
                     ViewRecipeActivity.this.currentRatingTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_star_green_24dp, 0);

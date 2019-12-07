@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        android:title="@string/settings">
+        android:title="@string/app_settings">
         <EditTextPreference
             android:inputType="number"
-            android:summary="Choose for how many serves the ingredients will be shown"
-            app:title="Serves"
+            android:summary="@string/serves_description"
+            app:title="@string/serves"
             android:defaultValue="@string/four"
             app:useSimpleSummaryProvider="true"
             app:key="serves_value"
@@ -16,16 +16,16 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="Recipe Picker">
+        android:title="@string/app_name">
         <Preference
-            android:title="Github"
+            android:title="@string/github"
             android:key="github_button"
-            android:summary="Go to the GitHub-page"
+            android:summary="@string/go_to_github"
             android:icon="@drawable/ic_github_logo"
             />
 
         <Preference
-            android:title="Version"
+            android:title="@string/version"
             android:key="version"
             android:icon="@drawable/ic_info_black_24dp"
             />
@@ -33,11 +33,11 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="Danger Zone">
+        android:title="@string/danger_zone">
         <Preference
-            android:title="Reset everything"
+            android:title="@string/reset_everything"
             android:key="remove_all_button"
-            android:summary="Remove all the Recipes. Be careful"
+            android:summary="@string/remove_all_description"
             android:icon="@drawable/ic_delete_black_24dp"
             />
     </PreferenceCategory>

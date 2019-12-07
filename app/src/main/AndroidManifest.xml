@@ -17,7 +17,8 @@
             android:name=".CancelNotification" />
         <activity
             android:name=".CookNowActivity"
-            android:parentActivityName=".ViewRecipeActivity" />
+            android:parentActivityName=".ViewRecipeActivity"
+            android:launchMode="singleTop" />
         <activity
             android:name=".DifficultyFilteredActivity"
             android:parentActivityName=".ViewRecipeActivity" />
