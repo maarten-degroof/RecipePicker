@@ -200,4 +200,6 @@
     <string name="remove_all_description">Remove all the Recipes. Be careful</string>
     <string name="serves">Serves</string>
     <string name="serves_description">Choose for how many serves the ingredients will be shown</string>
+    <string name="rating_with_column">Rating:</string>
+    <string name="fact_description">Here there\'ll be a fact or a tip which will change every time you start the app.</string>
 </resources>

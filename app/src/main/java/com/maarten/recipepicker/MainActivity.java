@@ -2,28 +2,6 @@ package com.maarten.recipepicker;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
-import com.maarten.recipepicker.Models.Ingredient;
-import com.maarten.recipepicker.Models.Instruction;
-import com.maarten.recipepicker.Models.Recipe;
-import com.maarten.recipepicker.adapters.RecipeAdapter;
-import com.maarten.recipepicker.enums.CookTime;
-import com.maarten.recipepicker.enums.Difficulty;
-import com.maarten.recipepicker.listSorters.AmountCookedSorter;
-import com.maarten.recipepicker.listSorters.DateSorter;
-import com.maarten.recipepicker.settings.SettingsActivity;
-
-import androidx.core.view.ViewCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,13 +11,31 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.ViewCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.maarten.recipepicker.models.Ingredient;
+import com.maarten.recipepicker.models.Instruction;
+import com.maarten.recipepicker.models.Recipe;
+import com.maarten.recipepicker.adapters.RecipeAdapter;
+import com.maarten.recipepicker.enums.CookTime;
+import com.maarten.recipepicker.enums.Difficulty;
+import com.maarten.recipepicker.listSorters.AmountCookedSorter;
+import com.maarten.recipepicker.listSorters.DateSorter;
+import com.maarten.recipepicker.settings.SettingsActivity;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;

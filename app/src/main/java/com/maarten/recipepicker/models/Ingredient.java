@@ -1,4 +1,4 @@
-package com.maarten.recipepicker.Models;
+package com.maarten.recipepicker.models;
 
 import java.io.Serializable;
 
@@ -49,10 +49,6 @@ public class Ingredient implements Serializable, Comparable<Ingredient> {
 
     public type getIngredientType() {
         return ingredientType;
-    }
-
-    public void setIngredientType(type ingredientType) {
-        this.ingredientType = ingredientType;
     }
 
     @Override

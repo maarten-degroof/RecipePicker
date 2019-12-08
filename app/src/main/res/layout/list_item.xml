@@ -47,13 +47,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/recipeTitleTextView"
+            android:layout_alignParentStart="true"
             android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp"
             android:layout_marginBottom="1dp"
+            android:layout_toStartOf="@+id/recipeRatingTextView"
             android:ellipsize="end"
             android:maxLines="1"
             android:padding="2dp"
             android:text="@string/ingredients"
             android:textColor="@color/primaryColor" />
+
+        <TextView
+            android:id="@+id/recipeRatingTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/recipeTitleTextView"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="2dp"
+            android:drawableEnd="@drawable/ic_star_green_24dp"
+            android:text="@string/four"
+            android:textColor="@color/primaryColor"
+            android:textSize="18sp" />
 
     </RelativeLayout>
 

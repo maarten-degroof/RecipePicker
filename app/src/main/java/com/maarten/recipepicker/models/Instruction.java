@@ -1,4 +1,4 @@
-package com.maarten.recipepicker.Models;
+package com.maarten.recipepicker.models;
 
 import java.io.Serializable;
 
@@ -15,15 +15,7 @@ public class Instruction implements Serializable {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public Long getMilliseconds() {
         return milliseconds;
-    }
-
-    public void setMilliseconds(Long milliseconds) {
-        this.milliseconds = milliseconds;
     }
 }

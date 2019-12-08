@@ -34,17 +34,12 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.snackbar.Snackbar;
-import com.maarten.recipepicker.Models.Ingredient;
-import com.maarten.recipepicker.Models.Instruction;
-import com.maarten.recipepicker.Models.Recipe;
+import com.maarten.recipepicker.models.Ingredient;
+import com.maarten.recipepicker.models.Instruction;
+import com.maarten.recipepicker.models.Recipe;
 import com.maarten.recipepicker.adapters.IngredientAdapter;
 import com.maarten.recipepicker.adapters.InstructionAdapter;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -15,9 +15,9 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.maarten.recipepicker.Models.Ingredient;
+import com.maarten.recipepicker.models.Ingredient;
+import com.maarten.recipepicker.models.Recipe;
 import com.maarten.recipepicker.R;
-import com.maarten.recipepicker.Models.Recipe;
 import com.maarten.recipepicker.ViewRecipeActivity;
 
 import java.util.ArrayList;
@@ -53,6 +53,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.CustomView
         holder.recipeTitleTextView.setText(recipe.getTitle());
         holder.recipeIngredientsTextView.setText(recipe.getOrderedIngredientString());
 
+        if(recipe.getRating() == 0) {
+            holder.recipeRatingTextView.setVisibility(View.GONE);
+        } else {
+            holder.recipeRatingTextView.setText(String.valueOf(recipe.getRating()));
+            holder.recipeRatingTextView.setVisibility(View.VISIBLE);
+        }
+
         holder.recipeImageView.setImageBitmap(recipe.getImage());
 
         holder.parentView.setOnClickListener(new View.OnClickListener() {
@@ -81,6 +88,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.CustomView
 
         private TextView recipeTitleTextView;
         private TextView recipeIngredientsTextView;
+        private TextView recipeRatingTextView;
         private ImageView recipeImageView;
         private View parentView;
 
@@ -90,6 +98,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.CustomView
             this.recipeTitleTextView = itemView.findViewById(R.id.recipeTitleTextView);
             this.recipeImageView = itemView.findViewById(R.id.recipeImageView);
             this.recipeIngredientsTextView = itemView.findViewById(R.id.recipeIngredientsTextView);
+            this.recipeRatingTextView = itemView.findViewById(R.id.recipeRatingTextView);
         }
     }
 
@@ -112,8 +121,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.CustomView
     }
 
     public Filter getFilter() {
-
-        final Filter filter = new Filter() {
+        return new Filter() {
 
             @SuppressWarnings("unchecked")
             @Override
@@ -157,6 +165,5 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.CustomView
                 return results;
             }
         };
-        return filter;
     }
 }

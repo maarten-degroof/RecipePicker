@@ -44,9 +44,9 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.maarten.recipepicker.Models.Ingredient;
-import com.maarten.recipepicker.Models.Instruction;
-import com.maarten.recipepicker.Models.Recipe;
+import com.maarten.recipepicker.models.Ingredient;
+import com.maarten.recipepicker.models.Instruction;
+import com.maarten.recipepicker.models.Recipe;
 import com.maarten.recipepicker.adapters.IngredientEditAdapter;
 import com.maarten.recipepicker.adapters.InstructionEditAdapter;
 import com.maarten.recipepicker.enums.CookTime;
@@ -198,7 +198,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         // get the layout
-        View dialog_layout = getLayoutInflater().inflate(R.layout.add_ingredient, null);
+        View dialog_layout = getLayoutInflater().inflate(R.layout.add_ingredient_dialog, null);
 
         // Create the text field in the alert dialog.
         ingredientNameField = dialog_layout.findViewById(R.id.ingredientNameField);
@@ -309,7 +309,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         // get the layout
-        View dialog_layout = getLayoutInflater().inflate(R.layout.add_instruction, null);
+        View dialog_layout = getLayoutInflater().inflate(R.layout.add_instruction_dialog, null);
 
         // get all the fields and initialise + disable them
         minuteTextView = dialog_layout.findViewById(R.id.minutesTextView);

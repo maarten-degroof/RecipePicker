@@ -3,8 +3,6 @@ package com.maarten.recipepicker.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.maarten.recipepicker.enums.Difficulty;
+import com.maarten.recipepicker.models.Recipe;
 import com.maarten.recipepicker.R;
-import com.maarten.recipepicker.Models.Recipe;
 import com.maarten.recipepicker.ViewRecipeActivity;
+import com.maarten.recipepicker.enums.Difficulty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,19 +51,14 @@ public class DifficultyFilteredAdapter extends RecyclerView.Adapter<DifficultyFi
         holder.recipeTitleTextView.setText(recipe.getTitle());
         holder.recipeIngredientsTextView.setText(recipe.getOrderedIngredientString());
 
-        if(recipe.getImagePath() != null) {
-            Bitmap bitmap;
-            // if first character == digit => imagepath is drawableID; else it's image path
-            if(Character.isDigit(recipe.getImagePath().charAt(0))) {
-                bitmap = BitmapFactory.decodeResource(context.getResources(), Integer.decode(recipe.getImagePath()));
-            } else {
-                bitmap = BitmapFactory.decodeFile(recipe.getImagePath());
-            }
-
-            holder.recipeImageView.setImageBitmap(bitmap);
+        if(recipe.getRating() == 0) {
+            holder.recipeRatingTextView.setVisibility(View.GONE);
         } else {
-            holder.recipeImageView.setImageResource(R.drawable.no_image_available);
+            holder.recipeRatingTextView.setText(String.valueOf(recipe.getRating()));
+            holder.recipeRatingTextView.setVisibility(View.VISIBLE);
         }
+
+        holder.recipeImageView.setImageBitmap(recipe.getImage());
 
         holder.parentView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,6 +88,7 @@ public class DifficultyFilteredAdapter extends RecyclerView.Adapter<DifficultyFi
 
         private TextView recipeTitleTextView;
         private TextView recipeIngredientsTextView;
+        private TextView recipeRatingTextView;
         private ImageView recipeImageView;
         private View parentView;
 
@@ -104,30 +98,26 @@ public class DifficultyFilteredAdapter extends RecyclerView.Adapter<DifficultyFi
             this.recipeTitleTextView = itemView.findViewById(R.id.recipeTitleTextView);
             this.recipeImageView = itemView.findViewById(R.id.recipeImageView);
             this.recipeIngredientsTextView = itemView.findViewById(R.id.recipeIngredientsTextView);
+            this.recipeRatingTextView = itemView.findViewById(R.id.recipeRatingTextView);
         }
     }
 
     public Filter getFilter() {
-
         return new Filter() {
 
             @SuppressWarnings("unchecked")
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-
                 recipeList  = (List<Recipe>) results.values;
                 notifyDataSetChanged();
-
             }
 
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
-
                 FilterResults results = new FilterResults();
                 ArrayList<Recipe> filteredArray = new ArrayList<>();
 
                 Difficulty difficulty;
-
 
                 switch(constraint.toString()) {
                     case "BEGINNER":
@@ -147,10 +137,8 @@ public class DifficultyFilteredAdapter extends RecyclerView.Adapter<DifficultyFi
                         filteredArray.add(tempRecipe);
                     }
                 }
-
                 results.count = filteredArray.size();
                 results.values = filteredArray;
-
 
                 return results;
             }

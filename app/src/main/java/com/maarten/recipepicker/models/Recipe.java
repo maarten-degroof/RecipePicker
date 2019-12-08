@@ -1,4 +1,4 @@
-package com.maarten.recipepicker.Models;
+package com.maarten.recipepicker.models;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

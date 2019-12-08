@@ -1,6 +1,6 @@
 package com.maarten.recipepicker;
 
-import com.maarten.recipepicker.Models.Recipe;
+import com.maarten.recipepicker.models.Recipe;
 
 import java.util.Comparator;
 

@@ -14,8 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.maarten.recipepicker.models.Recipe;
 import com.maarten.recipepicker.R;
-import com.maarten.recipepicker.Models.Recipe;
 import com.maarten.recipepicker.ViewRecipeActivity;
 
 import java.util.ArrayList;
@@ -49,6 +49,13 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Custom
         holder.recipeTitleTextView.setText(recipe.getTitle());
         holder.recipeIngredientsTextView.setText(recipe.getOrderedIngredientString());
 
+        if(recipe.getRating() == 0) {
+            holder.recipeRatingTextView.setVisibility(View.GONE);
+        } else {
+            holder.recipeRatingTextView.setText(String.valueOf(recipe.getRating()));
+            holder.recipeRatingTextView.setVisibility(View.VISIBLE);
+        }
+
         holder.recipeImageView.setImageBitmap(recipe.getImage());
 
         holder.parentView.setOnClickListener(new View.OnClickListener() {
@@ -80,6 +87,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Custom
 
         private TextView recipeTitleTextView;
         private TextView recipeIngredientsTextView;
+        private TextView recipeRatingTextView;
         private ImageView recipeImageView;
         private View parentView;
 
@@ -89,24 +97,22 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Custom
             this.recipeTitleTextView = itemView.findViewById(R.id.recipeTitleTextView);
             this.recipeImageView = itemView.findViewById(R.id.recipeImageView);
             this.recipeIngredientsTextView = itemView.findViewById(R.id.recipeIngredientsTextView);
+            this.recipeRatingTextView = itemView.findViewById(R.id.recipeRatingTextView);
         }
     }
 
     public Filter getFilter() {
-
-        Filter filter = new Filter() {
+        return new Filter() {
 
             @SuppressWarnings("unchecked")
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-
                 recipeList  = (List<Recipe>) results.values;
                 notifyDataSetChanged();
             }
 
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
-
                 FilterResults results = new FilterResults();
                 ArrayList<Recipe> filteredArray = new ArrayList<>();
 
@@ -122,8 +128,5 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Custom
                 return results;
             }
         };
-
-        return filter;
     }
-
 }

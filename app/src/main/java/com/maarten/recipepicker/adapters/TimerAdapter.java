@@ -11,8 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.maarten.recipepicker.models.TimerListItemWithCountdown;
 import com.maarten.recipepicker.R;
-import com.maarten.recipepicker.Models.TimerListItemWithCountdown;
 
 import java.util.List;
 
@@ -62,8 +62,6 @@ public class TimerAdapter extends RecyclerView.Adapter<TimerAdapter.CustomViewHo
                 cancelNotification(timer.getInstructionNumber(),true);
             }
         });
-
-
     }
 
     @Override
@@ -75,7 +73,6 @@ public class TimerAdapter extends RecyclerView.Adapter<TimerAdapter.CustomViewHo
     public int getItemCount() {
         return timerList.size();
     }
-
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
 
@@ -92,5 +89,4 @@ public class TimerAdapter extends RecyclerView.Adapter<TimerAdapter.CustomViewHo
             this.removeTimerButton = itemView.findViewById(R.id.removeTimerButton);
         }
     }
-
 }
