@@ -202,4 +202,7 @@
     <string name="serves_description">Choose for how many serves the ingredients will be shown</string>
     <string name="rating_with_column">Rating:</string>
     <string name="fact_description">Here there\'ll be a fact or a tip which will change every time you start the app.</string>
+    <string name="no_recipes_yet">You don\'t have any recipes yet, so there aren\'t any ingredients to filter on. Do you want to add one now?</string>
+    <string name="filtered_recipe_with_ingredients_description">Showing all recipes which have the ingredients: &lt;b>%1$s&lt;/b>.</string>
+    <string name="filter_ingredients_description">Here you can choose which ingredients your recipes should have, so you\'ll only get the ones which meet your criteria.</string>
 </resources>

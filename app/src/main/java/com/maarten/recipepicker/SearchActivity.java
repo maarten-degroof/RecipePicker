@@ -33,7 +33,6 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
-
     /**
      * Inflates the menu into the toolbar
      *
@@ -60,7 +59,6 @@ public class SearchActivity extends AppCompatActivity {
             return super.onOptionsItemSelected(item);
         }
     }
-
 
     /**
      * when the search button is pressed, create a json object with the search string

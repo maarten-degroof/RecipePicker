@@ -46,6 +46,7 @@ public class FilteredResultsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filtered_results);
+        amountOfItems = 0;
 
         try {
             Intent intent = getIntent();
@@ -69,7 +70,7 @@ public class FilteredResultsActivity extends AppCompatActivity {
             listViewFiltered.setAdapter(filterAdapter);
             listViewFiltered.setLayoutManager(new LinearLayoutManager(this));
 
-            filterAdapter.getFilter().filter(filterObject.toString());
+            amountOfItems = filterAdapter.filterAndReturnAmount(filterObject.toString());
 
         } catch (Exception e) {
             Log.e("intentError", e.getMessage());
@@ -123,9 +124,6 @@ public class FilteredResultsActivity extends AppCompatActivity {
         addRecipeButton = findViewById(R.id.addRecipeButton);
         noRecipesTextView = findViewById(R.id.noFoundRecipesTextView);
 
-        filterAdapter = new FilterAdapter(this, recipeList);
-        listViewFiltered.setAdapter(filterAdapter);
-        amountOfItems = filterAdapter.filterAndReturnAmount(filterObject.toString());
         controlNoRecipeElements();
     }
 

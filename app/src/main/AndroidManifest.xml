@@ -6,19 +6,21 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
-    <application android:name="com.maarten.recipepicker.RecipePickerApplication"
+    <application
+        android:name=".RecipePickerApplication"
         android:allowBackup="true"
         android:icon="@drawable/recipe_picker_logo_no_text"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".CancelNotification" />
+        <activity android:name=".FilteredIngredientsResultsActivity"></activity>
+        <activity android:name=".FilterIngredientsActivity" />
+        <activity android:name=".CancelNotification" />
         <activity
             android:name=".CookNowActivity"
-            android:parentActivityName=".ViewRecipeActivity"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:parentActivityName=".ViewRecipeActivity" />
         <activity
             android:name=".DifficultyFilteredActivity"
             android:parentActivityName=".ViewRecipeActivity" />

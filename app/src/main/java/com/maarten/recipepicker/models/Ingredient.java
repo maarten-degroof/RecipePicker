@@ -8,8 +8,6 @@ public class Ingredient implements Serializable, Comparable<Ingredient> {
     private Double quantity;
     private type ingredientType;
 
-
-
     public enum type {
         grams,
         kilograms,

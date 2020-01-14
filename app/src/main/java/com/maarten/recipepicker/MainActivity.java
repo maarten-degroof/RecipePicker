@@ -61,7 +61,14 @@ import java.util.Scanner;
  *
  * Change notification channel!
  *
+ * Improve manifest
+ *
  * The timers sometimes stop a few seconds before they end
+ *
+ * Check portrait mode everywhere
+ *
+ * Portrait mode bugs:  - sidebar menu
+ *                      - CookNow layout
  *
  ********* THINGS TO MAKE *********
  *
@@ -183,7 +190,6 @@ public class MainActivity extends AppCompatActivity {
                     case 1:
                         Collections.sort(recipeList, new AmountCookedSorter());
                         adapter.notifyDataSetChanged();
-
                 }
             }
 
@@ -210,8 +216,7 @@ public class MainActivity extends AppCompatActivity {
         abdt.setDrawerIndicatorEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-        // make the listview also scrollable
+        // make the recyclerView also scrollable
         ViewCompat.setNestedScrollingEnabled(listViewRecipes, true);
 
         dl.addDrawerListener(abdt);
@@ -258,11 +263,9 @@ public class MainActivity extends AppCompatActivity {
                 super.onScrollStateChanged(recyclerView, newState);
             }
         });
-
         random = new Random();
 
         setFact();
-
     }
 
     /**

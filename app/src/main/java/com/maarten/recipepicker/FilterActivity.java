@@ -225,4 +225,14 @@ public class FilterActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
+
+    /**
+     * Opens the FilterIngredientsActivity
+     *
+     * @param view - the 'filter on ingredients' button
+     */
+    public void openFilterIngredientsActivity(View view) {
+        Intent intent = new Intent(this, FilterIngredientsActivity.class);
+        startActivity(intent);
+    }
 }
