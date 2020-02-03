@@ -71,7 +71,6 @@ import java.util.Scanner;
  *                      - CookNow layout
  *
  ********* THINGS TO MAKE *********
- *
  * create licence + credit used technologies:
  *      Some Icons made by "https://www.flaticon.com/authors/freepik" Freepik from href="https://www.flaticon.com/"
  *
@@ -81,8 +80,6 @@ import java.util.Scanner;
  * Splitting the ingredients into categories
  * settings
  *    - Dark theme
- * filter on ingredients
- *
  ********* WORKING *********
  * adding recipe
  * saving/loading
@@ -100,6 +97,7 @@ import java.util.Scanner;
  * filtering:
  *      - a slider to choose how many times you have to have cooked it minimum&maximum
  *      - add cooking time with 'chips' so you can filter them
+ *      - on ingredients
  * search on title and ingredients
  * add home button in all screens
  * images
@@ -290,13 +288,13 @@ public class MainActivity extends AppCompatActivity {
      * inserts the dummy recipe into the recipeList
      */
     public static void insertDummyRecipes() {
-        List<Ingredient> dummyIngredientList = new ArrayList<>();
-        dummyIngredientList.add(new Ingredient("Spaghetti",500.0,Ingredient.type.grams));
-        dummyIngredientList.add(new Ingredient("Minced meat",350.0,Ingredient.type.grams));
-        dummyIngredientList.add(new Ingredient("Tomatoes",3.0,Ingredient.type.empty));
-        dummyIngredientList.add(new Ingredient("Paprika's",3.0,Ingredient.type.empty));
-        dummyIngredientList.add(new Ingredient("Water",100.0,Ingredient.type.millimetres));
-        dummyIngredientList.add(new Ingredient("A bit of salt and pepper",null,Ingredient.type.empty));
+        List<Ingredient> SpaghettiBologneseIngredientList = new ArrayList<>();
+        SpaghettiBologneseIngredientList.add(new Ingredient("Spaghetti",500.0,Ingredient.type.grams));
+        SpaghettiBologneseIngredientList.add(new Ingredient("Minced meat",350.0,Ingredient.type.grams));
+        SpaghettiBologneseIngredientList.add(new Ingredient("Tomatoes",3.0,Ingredient.type.empty));
+        SpaghettiBologneseIngredientList.add(new Ingredient("Paprika's",3.0,Ingredient.type.empty));
+        SpaghettiBologneseIngredientList.add(new Ingredient("Water",100.0,Ingredient.type.millimetres));
+        SpaghettiBologneseIngredientList.add(new Ingredient("A bit of salt and pepper",null,Ingredient.type.empty));
 
         String dummyImage =  String.valueOf(R.drawable.spaghetti_bolognese);
         String dummyURL = "https://www.jamieoliver.com/recipes/beef-recipes/spaghetti-bolognese/";
@@ -309,7 +307,7 @@ public class MainActivity extends AppCompatActivity {
         tempInstructionList.add(new Instruction("Once the minced meat is done, throw the paprika and tomatoes in the same pan and bake them together. Spice with salt and pepper.", (long) 300000));
         tempInstructionList.add(new Instruction("Mix the sauce with the spaghetti.", (long) 10000));
 
-        recipeList.add(new Recipe("Spaghetti Bolognese for people who don't have a lot of time",dummyIngredientList,
+        recipeList.add(new Recipe("Spaghetti Bolognese for people who don't have a lot of time",SpaghettiBologneseIngredientList,
                 false, CookTime.MEDIUM, dummyImage, dummyURL, Difficulty.BEGINNER, dummyComments, tempInstructionList, 4));
     }
 

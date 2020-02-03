@@ -97,10 +97,8 @@
     <string name="URL_input_field">What\'s the URL?</string>
     <string name="title">Title</string>
     <string name="ingredients">Ingredients</string>
-    <string name="description">Description</string>
     <string name="title_input_field">What\'s the recipe called?</string>
     <string name="add_ingredient">Add ingredient</string>
-    <string name="description_input_field">Write your recipe here</string>
     <string name="duration_short">\u003C30 min</string>
     <string name="duration_medium">30\u201360 min</string>
     <string name="duration_long">\u003E60 min</string>
@@ -137,7 +135,6 @@
     <string name="reset_amount_cooked">Reset amount cooked</string>
     <string name="update">Update</string>
     <string name="needed_ingredients">The ingredients needed for &lt;b>%1$d&lt;/b> persons:</string>
-    <string name="the_recipe">The recipe:</string>
     <string name="times_cooked">Times cooked:</string>
     <string name="website">Website:</string>
     <string name="browse">Browse</string>
@@ -183,6 +180,7 @@
     <string name="filters">Filters</string>
     <string name="settings">Settings</string>
     <string name="button_to_remove_timer">Button to remove the current timer</string>
+    <string name="timer_number">%1$d:%2$d</string>
     <string name="time_left_timer">%1$d:%2$d left</string>
     <string name="done">It\'s done!</string>
     <string name="step_with_column">Step %1$d:</string>

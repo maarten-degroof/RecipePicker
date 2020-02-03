@@ -47,7 +47,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.CustomView
         return new CustomViewHolder(
                 LayoutInflater
                         .from(context)
-                        .inflate(R.layout.list_item, parent, false)
+                        .inflate(R.layout.recipe_list_item_card, parent, false)
         );
     }
 

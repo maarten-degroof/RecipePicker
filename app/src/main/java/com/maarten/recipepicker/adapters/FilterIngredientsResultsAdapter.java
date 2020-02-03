@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,16 +15,9 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.checkbox.MaterialCheckBox;
 import com.maarten.recipepicker.R;
 import com.maarten.recipepicker.ViewRecipeActivity;
-import com.maarten.recipepicker.enums.CookTime;
-import com.maarten.recipepicker.enums.Difficulty;
-import com.maarten.recipepicker.models.FilterIngredient;
-import com.maarten.recipepicker.models.Ingredient;
 import com.maarten.recipepicker.models.Recipe;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,7 +43,7 @@ public class FilterIngredientsResultsAdapter extends RecyclerView.Adapter<Filter
         return new CustomViewHolder(
                 LayoutInflater
                         .from(context)
-                        .inflate(R.layout.list_item, parent, false)
+                        .inflate(R.layout.recipe_list_item_card, parent, false)
         );
     }
 

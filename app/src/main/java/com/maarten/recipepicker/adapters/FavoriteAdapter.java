@@ -39,7 +39,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Custom
         return new CustomViewHolder(
                 LayoutInflater
                         .from(context)
-                        .inflate(R.layout.list_item, parent, false)
+                        .inflate(R.layout.recipe_list_item_card, parent, false)
         );
     }
 

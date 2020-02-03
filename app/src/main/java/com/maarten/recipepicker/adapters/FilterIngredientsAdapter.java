@@ -49,7 +49,6 @@ public class FilterIngredientsAdapter extends RecyclerView.Adapter<FilterIngredi
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 ingredient.toggleIsChecked();
-                Toast.makeText(RecipePickerApplication.getAppContext(), "toggled item: " + position + " "+ ingredient.getName() + ingredientList.get(position).isChecked(), Toast.LENGTH_LONG).show();
             }
         });
     }

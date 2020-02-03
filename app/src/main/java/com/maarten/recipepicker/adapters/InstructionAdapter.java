@@ -48,7 +48,7 @@ public class InstructionAdapter extends RecyclerView.Adapter<InstructionAdapter.
             int minutes = totalSeconds / 60;
             int seconds = totalSeconds % 60;
 
-            holder.instructionTimerTextView.setText(context.getString(R.string.time_left_timer, minutes, seconds));
+            holder.instructionTimerTextView.setText(context.getString(R.string.timer_number, minutes, seconds));
         } else {
             holder.instructionTimerTextView.setVisibility(View.GONE);
         }
