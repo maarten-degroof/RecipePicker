@@ -62,9 +62,6 @@ public class DifficultyFilteredActivity extends AppCompatActivity {
         // this takes care of the back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        TextView difficultyFilteredTextView = findViewById(R.id.difficultyFilteredTextView);
-        difficultyFilteredTextView.setText(difficultyType);
-
         TextView filteredDifficultyDescriptionTextField = findViewById(R.id.filteredDifficultyDescriptionTextField);
         filteredDifficultyDescriptionTextField.setText(getString(R.string.difficulty_filtered_description, difficultyType));
 

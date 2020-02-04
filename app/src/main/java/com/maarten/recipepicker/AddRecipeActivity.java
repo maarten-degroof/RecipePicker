@@ -64,7 +64,7 @@ public class AddRecipeActivity extends AppCompatActivity {
 
     private EditText ingredientNameField, ingredientQuantityField;
     private Spinner ingredientTypeField;
-    private RecyclerView ingredientListView;
+    private RecyclerView ingredientRecyclerView;
 
     private TextInputLayout recipeTitleLayout;
 
@@ -92,13 +92,13 @@ public class AddRecipeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_recipe);
 
         ingredientAdapter = new IngredientEditAdapter(this, ingredientList);
-        ingredientListView = findViewById(R.id.addRecipeIngredientList);
-        ingredientListView.setAdapter(ingredientAdapter);
-        ingredientListView.setLayoutManager(new LinearLayoutManager(this));
-        ingredientListView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        ingredientRecyclerView = findViewById(R.id.addRecipeIngredientList);
+        ingredientRecyclerView.setAdapter(ingredientAdapter);
+        ingredientRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        ingredientRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         // hide the list since it is empty
-        //ingredientListView.setVisibility(TextView.INVISIBLE);
+        //ingredientRecyclerView.setVisibility(TextView.INVISIBLE);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Add Recipe");
@@ -118,7 +118,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         recipeTitleLayout = findViewById(R.id.nameFieldLayout);
 
         // make the listView (ingredientList) also scrollable when inserting text
-        //ViewCompat.setNestedScrollingEnabled(ingredientListView, true);
+        //ViewCompat.setNestedScrollingEnabled(ingredientRecyclerView, true);
 
         imageView = findViewById(R.id.imageView);
         imagePath = null;

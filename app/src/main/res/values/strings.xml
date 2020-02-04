@@ -113,21 +113,18 @@
     <string name="cancel">Cancel</string>
     <string name="add_recipe">Add Recipe</string>
     <string name="image_description">Image of the recipe, user can freely choose the image</string>
-    <string name="sort_by">Sort by:</string>
-    <string name="recipes">Recipes</string>
+    <string name="order_by">Order by:</string>
     <string name="filter">Filter</string>
     <string name="filter_description">Here you can filter all your recipes so you will only get the ones which meet your criteria.</string>
     <string name="filter_times_cooked_description">How often have you cooked it?</string>
     <string name="null_number">0</string>
     <string name="filter_duration_description">How long should cooking it take?</string>
     <string name="filter_max_template">1000</string>
-    <string name="filtered_recipes">Filtered Recipes</string>
     <string name="filtered_recipe_description">Showing all recipes which you have cooked between &lt;b>%1$d&lt;/b> and &lt;b>%2$d&lt;/b> times and which have a rating between &lt;b>%3$d&lt;/b> and &lt;b>%4$d&lt;/b>.</string>
     <string name="dummy_value">This is a dummy value which will be overwritten</string>
     <string name="search">Search</string>
     <string name="search_input_field">What do you want to find?</string>
     <string name="search_button">Search your cookbook</string>
-    <string name="search_results">Search Results</string>
     <string name="searched_recipe_description">Showing all recipes that match your search: &lt;b>%1$s&lt;/b></string>
     <string name="ingredient_name">Ingredient name</string>
     <string name="quantity">Quantity</string>
@@ -177,7 +174,6 @@
     <string name="delete">Delete</string>
     <string name="not_favorite">Not favorite</string>
     <string name="favorites">Favorites</string>
-    <string name="filters">Filters</string>
     <string name="settings">Settings</string>
     <string name="button_to_remove_timer">Button to remove the current timer</string>
     <string name="timer_number">%1$d:%2$d</string>
@@ -200,7 +196,12 @@
     <string name="serves_description">Choose for how many serves the ingredients will be shown</string>
     <string name="rating_with_column">Rating:</string>
     <string name="fact_description">Here there\'ll be a fact or a tip which will change every time you start the app.</string>
-    <string name="no_recipes_yet">You don\'t have any recipes yet, so there aren\'t any ingredients to filter on. Do you want to add one now?</string>
+    <string name="no_recipes_yet_for_ingredients">You don\'t have any recipes yet, so there aren\'t any ingredients to filter on. Do you want to add one now?</string>
     <string name="filtered_recipe_with_ingredients_description">Showing all recipes which have the ingredients: &lt;b>%1$s&lt;/b>.</string>
     <string name="filter_ingredients_description">Here you can choose which ingredients your recipes should have, so you\'ll only get the ones which meet your criteria.</string>
+    <string name="no_recipes_yet">You don\'t have any recipes yet. Would you like to add one?</string>
+    <string name="no_favorites_yet">You don\'t have a favorite recipe yet. You can favorite one by pressing the heart in the top right corner of the screen when viewing it.</string>
+    <string name="or_in_caps">OR</string>
+    <string name="filter_on_ingredients">Filter on ingredients</string>
+    <string name="use_filters_instead">Use filters instead</string>
 </resources>

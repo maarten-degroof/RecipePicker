@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="sort_types_array_items">
+    <string-array name="order_types_array_items">
         <item>chronological</item>
         <item>times cooked</item>
     </string-array>

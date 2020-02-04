@@ -20,16 +20,17 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.maarten.recipepicker.models.Ingredient;
-import com.maarten.recipepicker.models.Instruction;
-import com.maarten.recipepicker.models.Recipe;
 import com.maarten.recipepicker.adapters.RecipeAdapter;
 import com.maarten.recipepicker.enums.CookTime;
 import com.maarten.recipepicker.enums.Difficulty;
 import com.maarten.recipepicker.listSorters.AmountCookedSorter;
 import com.maarten.recipepicker.listSorters.DateSorter;
+import com.maarten.recipepicker.models.Ingredient;
+import com.maarten.recipepicker.models.Instruction;
+import com.maarten.recipepicker.models.Recipe;
 import com.maarten.recipepicker.settings.SettingsActivity;
 
 import java.io.File;
@@ -48,11 +49,6 @@ import java.util.Scanner;
 
 /**
  ********* BUGS *********
- * sort by is not automatically updated, have to 'set' the times cooked value again in order to see the difference
- * -> can possibly be fixed by putting an extra check in onResume()
- *
- * when viewing favorites, the sort by feature doesn't work
- *
  * Timers aren't started on the same millisecond
  *
  * Something is wrong when asking file permissions
@@ -121,12 +117,21 @@ public class MainActivity extends AppCompatActivity {
 
     private Random random;
 
+    private MaterialButton addRecipeButton;
+    private TextView noRecipesYetTextView;
+
     // create activity and the UI links with it
     // only runs ONCE when the application starts
+
+    /**
+     * Creates the activity and initialises all UI-fields
+     * Loads the list from memory or creates a new one
+     * @param savedInstanceState - A previously saved instance, gets passed onto the super class
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity_list);
+        setContentView(R.layout.activity_main);
 
         // get listView object
         listViewRecipes = findViewById(R.id.listViewFiltered);
@@ -134,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
         // initialise recipeList
         recipeList = new ArrayList<>();
 
-        // look for the recipelist file
+        // look for the recipeList file
         File file = new File(getFilesDir(), "recipeList.ser");
 
         // check if the file exists
@@ -162,20 +167,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // get the spinner
-        sortSpinner = findViewById(R.id.sortSpinner);
+        sortSpinner = findViewById(R.id.orderSpinner);
 
         // create the spinner adapter with the choices + the standard views of how it should look like
-        ArrayAdapter<CharSequence> sortTypeAdapter = ArrayAdapter.createFromResource(this, R.array.sort_types_array_items, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> sortTypeAdapter = ArrayAdapter.createFromResource(this, R.array.order_types_array_items, android.R.layout.simple_spinner_item);
         sortTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sortSpinner.setAdapter(sortTypeAdapter);
 
 
-        /**
-         * Takes care of the sort functions. Sorts the list based on the chosen item in the spinner.
-         * order of the spinner:
-         *      - chronological (0)
-         *      - times cooked  (1)
-         */
+         // Takes care of the sort functions. Sorts the list based on the chosen item in the spinner.
+         // order of the spinner:
+         //     - chronological (0)
+         //     - times cooked  (1)
         sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -190,7 +193,6 @@ public class MainActivity extends AppCompatActivity {
                         adapter.notifyDataSetChanged();
                 }
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
@@ -201,7 +203,6 @@ public class MainActivity extends AppCompatActivity {
 
         listViewRecipes.setAdapter(adapter);
         listViewRecipes.setLayoutManager(new LinearLayoutManager(this));
-
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Home");
@@ -232,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
                     viewFavorites();
                 } else if (id == R.id.settings) {
                     viewSettings();
-                } else if (id == R.id.filters) {
+                } else if (id == R.id.filter) {
                     viewFilters();
                 } else if (id == R.id.search) {
                     viewSearch();
@@ -264,6 +265,24 @@ public class MainActivity extends AppCompatActivity {
         random = new Random();
 
         setFact();
+
+        addRecipeButton = findViewById(R.id.addRecipeButton);
+        noRecipesYetTextView = findViewById(R.id.noRecipesYetTextView);
+
+        controlNoRecipeElements();
+    }
+
+    /**
+     * This takes care of the 'no found recipes' and 'add recipe' elements when the list is empty
+     */
+    private void controlNoRecipeElements() {
+        if(recipeList.size() > 0) {
+            addRecipeButton.setVisibility(View.GONE);
+            noRecipesYetTextView.setVisibility(View.GONE);
+        } else {
+            addRecipeButton.setVisibility(View.VISIBLE);
+            noRecipesYetTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
@@ -288,37 +307,41 @@ public class MainActivity extends AppCompatActivity {
      * inserts the dummy recipe into the recipeList
      */
     public static void insertDummyRecipes() {
-        List<Ingredient> SpaghettiBologneseIngredientList = new ArrayList<>();
-        SpaghettiBologneseIngredientList.add(new Ingredient("Spaghetti",500.0,Ingredient.type.grams));
-        SpaghettiBologneseIngredientList.add(new Ingredient("Minced meat",350.0,Ingredient.type.grams));
-        SpaghettiBologneseIngredientList.add(new Ingredient("Tomatoes",3.0,Ingredient.type.empty));
-        SpaghettiBologneseIngredientList.add(new Ingredient("Paprika's",3.0,Ingredient.type.empty));
-        SpaghettiBologneseIngredientList.add(new Ingredient("Water",100.0,Ingredient.type.millimetres));
-        SpaghettiBologneseIngredientList.add(new Ingredient("A bit of salt and pepper",null,Ingredient.type.empty));
+        List<Ingredient> spaghettiBologneseIngredientList = new ArrayList<>();
+        spaghettiBologneseIngredientList.add(new Ingredient("Spaghetti",500.0,Ingredient.type.grams));
+        spaghettiBologneseIngredientList.add(new Ingredient("Minced meat",350.0,Ingredient.type.grams));
+        spaghettiBologneseIngredientList.add(new Ingredient("Tomatoes",3.0,Ingredient.type.empty));
+        spaghettiBologneseIngredientList.add(new Ingredient("Paprika's",3.0,Ingredient.type.empty));
+        spaghettiBologneseIngredientList.add(new Ingredient("Water",100.0,Ingredient.type.millimetres));
+        spaghettiBologneseIngredientList.add(new Ingredient("A bit of salt and pepper",null,Ingredient.type.empty));
 
-        String dummyImage =  String.valueOf(R.drawable.spaghetti_bolognese);
-        String dummyURL = "https://www.jamieoliver.com/recipes/beef-recipes/spaghetti-bolognese/";
-        String dummyComments = "Really easy to make!\n\nOnly be sure not to cook the spaghetti too long.";
+        String spaghettiBologneseImage =  String.valueOf(R.drawable.spaghetti_bolognese);
+        String spaghettiBologneseURL = "https://www.jamieoliver.com/recipes/beef-recipes/spaghetti-bolognese/";
+        String SpaghettiBologneseComments = "Really easy to make!\n\nOnly be sure not to cook the spaghetti too long.";
 
-        ArrayList<Instruction> tempInstructionList = new ArrayList<>();
-        tempInstructionList.add(new Instruction("Cook the spaghetti.",(long) 600000));
-        tempInstructionList.add(new Instruction("Bake the minced meat.", null));
-        tempInstructionList.add(new Instruction("Cut the tomatoes and the paprika into pieces.", null));
-        tempInstructionList.add(new Instruction("Once the minced meat is done, throw the paprika and tomatoes in the same pan and bake them together. Spice with salt and pepper.", (long) 300000));
-        tempInstructionList.add(new Instruction("Mix the sauce with the spaghetti.", (long) 10000));
+        ArrayList<Instruction> spaghettiBologneseInstrutionList = new ArrayList<>();
+        spaghettiBologneseInstrutionList.add(new Instruction("Cook the spaghetti.",(long) 600000));
+        spaghettiBologneseInstrutionList.add(new Instruction("Bake the minced meat.", null));
+        spaghettiBologneseInstrutionList.add(new Instruction("Cut the tomatoes and the paprika into pieces.", null));
+        spaghettiBologneseInstrutionList.add(new Instruction("Once the minced meat is done, throw the paprika and tomatoes in the same pan and bake them together. Spice with salt and pepper.", (long) 300000));
+        spaghettiBologneseInstrutionList.add(new Instruction("Mix the sauce with the spaghetti.", (long) 10000));
 
-        recipeList.add(new Recipe("Spaghetti Bolognese for people who don't have a lot of time",SpaghettiBologneseIngredientList,
-                false, CookTime.MEDIUM, dummyImage, dummyURL, Difficulty.BEGINNER, dummyComments, tempInstructionList, 4));
+        recipeList.add(new Recipe("Spaghetti Bolognese for people who don't have a lot of time",spaghettiBologneseIngredientList,
+                false, CookTime.MEDIUM, spaghettiBologneseImage, spaghettiBologneseURL, Difficulty.BEGINNER, SpaghettiBologneseComments, spaghettiBologneseInstrutionList, 4));
     }
 
-    // this connects the hamburger icon to the navigation drawer
+    /**
+     * this connects the hamburger icon to the navigation drawer
+     * @param item - The hamburger icon
+     * @return Returns a boolean
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return abdt.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
     /**
-     *  opens the AddRecipeActivity
+     *  Starts AddRecipeActivity
      */
     public void addRecipe(View view) {
         Intent intent = new Intent (this, AddRecipeActivity.class);
@@ -326,7 +349,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     *  opens a random recipe in the recipeList
+     *  Opens a random recipe in the recipeList
      */
     public void openRandomRecipe() {
         Intent intent = new Intent (this, ViewRecipeActivity.class);
@@ -341,7 +364,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * opens ViewFavoritesActivity
+     * Starts ViewFavoritesActivity
      */
     private void viewFavorites() {
         Intent intent = new Intent(this, ViewFavoritesActivity.class);
@@ -349,7 +372,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * opens ViewFavoritesActivity
+     * Starts ViewFavoritesActivity
      */
     private void viewSearch() {
         Intent intent = new Intent(this, SearchActivity.class);
@@ -357,7 +380,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * opens ViewSettingsActivity
+     * Starts ViewSettingsActivity
      */
     private void viewSettings() {
         Intent intent = new Intent(this, SettingsActivity.class);
@@ -365,19 +388,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * opens FilterActivity
+     * Starts FilterActivity
      */
     private void viewFilters() {
         Intent intent = new Intent(this, FilterActivity.class);
         startActivity(intent);
     }
 
-    // when focus resumes to THIS activity
-    // update the list
+    /**
+     * When focus resumes to this activity,
+     * update the list and order it again.
+     */
     @Override
     public void onResume() {
         super.onResume();
-        adapter.notifyDataSetChanged();
+
+        controlNoRecipeElements();
+        int selectedSortById = (int) sortSpinner.getSelectedItemId();
+        switch (selectedSortById) {
+            case 0:
+                Collections.sort(recipeList, new DateSorter());
+                adapter.notifyDataSetChanged();
+                return;
+            case 1:
+                Collections.sort(recipeList, new AmountCookedSorter());
+                adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -386,7 +422,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * saves the recipeList to the internal memory
+     * Saves the recipeList to the internal memory
      */
     public static void saveRecipes() {
         File file = new File(RecipePickerApplication.getAppContext().getFilesDir(), "recipeList.ser");

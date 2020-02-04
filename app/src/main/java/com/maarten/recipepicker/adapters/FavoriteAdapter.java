@@ -3,6 +3,7 @@ package com.maarten.recipepicker.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +21,14 @@ import com.maarten.recipepicker.ViewRecipeActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.CustomViewHolder> {
 
     private Activity context;
     private List<Recipe> recipeList;
     private static LayoutInflater inflater = null;
+    private int returnCount;
 
     public FavoriteAdapter(Activity context, List<Recipe> recipeList){
         this.context = context;
@@ -101,6 +104,23 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Custom
         }
     }
 
+    /**
+     * runs the filter, pauses for 20 milliseconds and then returns the amount of items which succeeded the filter
+     *
+     * @return - an int saying the amount of items that are shown
+     */
+    public int filterAndReturnAmount() {
+        getFilter().filter("");
+
+        try {
+            TimeUnit.MILLISECONDS.sleep(20);
+        } catch (Exception e) {
+            Log.e("SleepError", e.getMessage());
+        }
+        //Log.d("COUNT", "returning: "+returnCount);
+        return returnCount;
+    }
+
     public Filter getFilter() {
         return new Filter() {
 
@@ -115,6 +135,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Custom
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults results = new FilterResults();
                 ArrayList<Recipe> filteredArray = new ArrayList<>();
+                returnCount = 0;
 
                 for (int i = 0; i < recipeList.size(); i++) {
                     Recipe tempRecipe = recipeList.get(i);
@@ -124,6 +145,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Custom
                 }
                 results.count = filteredArray.size();
                 results.values = filteredArray;
+                returnCount = results.count;
 
                 return results;
             }
