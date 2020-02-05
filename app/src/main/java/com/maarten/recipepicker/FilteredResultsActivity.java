@@ -64,7 +64,7 @@ public class FilteredResultsActivity extends AppCompatActivity {
             difficultyIntermediate = (Boolean) filterObject.get("difficultyIntermediate");
             difficultyExpert = (Boolean) filterObject.get("difficultyExpert");
 
-            listViewFiltered = findViewById(R.id.listViewFiltered);
+            listViewFiltered = findViewById(R.id.mainRecyclerView);
 
             filterAdapter = new FilterAdapter(this, recipeList);
             listViewFiltered.setAdapter(filterAdapter);

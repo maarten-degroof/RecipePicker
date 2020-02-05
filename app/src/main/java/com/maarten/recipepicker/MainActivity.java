@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.maarten.recipepicker.adapters.RecipeAdapter;
 import com.maarten.recipepicker.enums.CookTime;
@@ -49,6 +48,8 @@ import java.util.Scanner;
 
 /**
  ********* BUGS *********
+ * Filter on ingredients: tapping an ingredient in the corners changes the checkbox but doesn't put the value on true
+ *
  * Timers aren't started on the same millisecond
  *
  * Something is wrong when asking file permissions
@@ -111,17 +112,12 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout dl;
     private ActionBarDrawerToggle abdt;
 
-    private FloatingActionButton fab;
-
     private Spinner sortSpinner;
 
     private Random random;
 
     private MaterialButton addRecipeButton;
     private TextView noRecipesYetTextView;
-
-    // create activity and the UI links with it
-    // only runs ONCE when the application starts
 
     /**
      * Creates the activity and initialises all UI-fields
@@ -134,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // get listView object
-        listViewRecipes = findViewById(R.id.listViewFiltered);
+        listViewRecipes = findViewById(R.id.mainRecyclerView);
 
         // initialise recipeList
         recipeList = new ArrayList<>();
@@ -244,24 +240,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        fab = findViewById(R.id.floating_action_button);
-
-        // Listener hides the floatingActionButton when scrolling & shows it again afterwards
-        listViewRecipes.addOnScrollListener(new RecyclerView.OnScrollListener() {
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0 || dy < 0 && fab.isShown())
-                    fab.hide();
-            }
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE)
-                    fab.show();
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        });
         random = new Random();
 
         setFact();

@@ -52,8 +52,6 @@ public class CookNowActivity extends AppCompatActivity {
     private static TimerAdapter timerAdapter;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +59,7 @@ public class CookNowActivity extends AppCompatActivity {
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Cook");
+        toolbar.setTitle("Cooking now");
         setSupportActionBar(toolbar);
 
         // this takes care of the back button

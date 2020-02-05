@@ -7,4 +7,6 @@
     android:layout_height="?attr/actionBarSize"
     app:theme="@style/ToolbarStyle"
     app:popupTheme="@style/ToolbarStyle"
-    app:navigationIcon="?attr/homeAsUpIndicator"/>
+    app:navigationIcon="?attr/homeAsUpIndicator"
+    app:layout_scrollFlags="scroll|enterAlways"
+    android:elevation="4dp" />

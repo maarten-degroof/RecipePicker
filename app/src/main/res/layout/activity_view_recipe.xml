@@ -1,358 +1,374 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    android:fillViewport="true">
+    android:layout_height="match_parent" >
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="0dp">
-
-        <TextView
-            android:id="@+id/ratingTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/rating_with_column"
-            android:textColor="@color/primaryColor"
-            android:textSize="22sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/copyURLButton" />
-
-        <TextView
-            android:id="@+id/currentRatingTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:drawableEnd="@drawable/ic_star_green_24dp"
-            android:text="@string/four"
-            android:textColor="@color/primaryColor"
-            android:textSize="22sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ratingTextView" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/ratingButton"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-            android:layout_width="48dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="12dp"
-
-            android:layout_marginTop="5dp"
-            android:onClick="createRatingDialog"
-            app:icon="@drawable/ic_edit_black_usable_24dp"
-            app:iconGravity="start"
-            app:iconPadding="0dp"
-            app:layout_constraintStart_toEndOf="@+id/currentRatingTextView"
-            app:layout_constraintTop_toBottomOf="@+id/ratingTextView" />
-
-        <TextView
-            android:id="@+id/commentsTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:text="@string/comments"
-            android:textColor="@color/primaryColor"
-            android:textSize="22sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ratingButton" />
+        android:layout_height="wrap_content" >
 
         <include
             android:id="@+id/toolbar"
             layout="@layout/toolbar"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="0dp" />
+    </com.google.android.material.appbar.AppBarLayout>
 
-        <TextView
-            android:id="@+id/textViewTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:text="@string/title"
-            android:textColor="@color/primaryDarkColor"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:transitionName="recipeTitle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/recipeImageView" />
-
-        <ImageView
-            android:id="@+id/recipeImageView"
-            android:transitionName="recipeImage"
-            android:layout_width="0dp"
-            android:layout_height="250dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:contentDescription="@string/image_description"
-            android:scaleType="centerCrop"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.503"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/difficultyChipConstraintLayout"
-            tools:layout_conversion_absoluteHeight="250dp"
-            tools:layout_conversion_absoluteWidth="250dp"
-            tools:srcCompat="@tools:sample/avatars" />
-
-        <TextView
-            android:id="@+id/neededIngredients"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="8dp"
-            android:text="@string/needed_ingredients"
-            android:textColor="@color/primaryColor"
-            android:textSize="22sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewTitle"
-            tools:layout_conversion_absoluteHeight="24dp"
-            tools:layout_conversion_absoluteWidth="217dp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/viewRecipeIngredientList"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constrainedHeight="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/neededIngredients" />
-
-        <TextView
-            android:id="@+id/recipeInstructionTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
-            android:text="@string/the_instructions"
-            android:textColor="@color/primaryColor"
-            android:textSize="22sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ingredientBarrier"
-            tools:layout_conversion_absoluteHeight="27dp"
-            tools:layout_conversion_absoluteWidth="225dp" />
-
-
-        <TextView
-            android:id="@+id/amountCookedTextField"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
-            android:text="@string/times_cooked"
-            android:textColor="@color/primaryColor"
-            android:textSize="22sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/viewInstructionRecyclerView"
-            tools:layout_conversion_absoluteHeight="24dp"
-            tools:layout_conversion_absoluteWidth="120dp" />
-
-        <TextView
-            android:id="@+id/amountCookedField"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/null_number"
-            android:textSize="22sp"
-            app:layout_constraintStart_toEndOf="@+id/amountCookedTextField"
-            app:layout_constraintTop_toBottomOf="@+id/viewInstructionRecyclerView"
-            tools:layout_conversion_absoluteHeight="32dp"
-            tools:layout_conversion_absoluteWidth="10dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/amountCookedAddButton"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="25dp"
-            android:layout_height="39dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="19dp"
-            android:onClick="addToCookedCounter"
-            android:padding="0dp"
-            android:paddingStart="0dp"
-            android:paddingLeft="0dp"
-            android:paddingTop="0dp"
-            android:paddingEnd="0dp"
-            android:paddingRight="0dp"
-            android:paddingBottom="0dp"
-            android:text="@string/plus_sign"
-            android:textSize="12sp"
-            app:layout_constraintStart_toEndOf="@+id/amountCookedField"
-            app:layout_constraintTop_toBottomOf="@+id/viewInstructionRecyclerView"
-            tools:layout_conversion_absoluteHeight="40dp"
-            tools:layout_conversion_absoluteWidth="40dp" />
-
-        <TextView
-            android:id="@+id/websiteTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="28dp"
-            android:text="@string/website"
-            android:textColor="@color/primaryColor"
-            android:textSize="22sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/amountCookedTextField" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/BrowseURLButton"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:onClick="openURL"
-            android:text="@string/browse"
-            app:icon="@drawable/ic_open_in_browser_black_24dp"
-            app:layout_constraintStart_toStartOf="@+id/guidelineMiddleVertical"
-            app:layout_constraintTop_toBottomOf="@+id/websiteTextView" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/copyURLButton"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:onClick="copyURLToClipboard"
-            android:text="@android:string/copy"
-            app:icon="@drawable/ic_content_copy_black_24dp"
-            app:layout_constraintEnd_toStartOf="@+id/guidelineMiddleVertical"
-            app:layout_constraintTop_toBottomOf="@+id/websiteTextView" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guidelineMiddleVertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintGuide_percent="0.5"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/commentTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:text="@string/dummy_value"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/commentsTextView" />
-
-        <TextView
-            android:id="@+id/noWebsiteTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:text="@string/no_website_added"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/websiteTextView" />
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/difficultyChipConstraintLayout"
-            android:layout_width="0dp"
-            android:layout_height="54dp"
-            android:background="#F0F0F0"
-            android:padding="0dp"
-            android:paddingStart="0dp"
-            android:paddingLeft="0dp"
-            android:paddingTop="0dp"
-            android:paddingEnd="0dp"
-            android:paddingRight="0dp"
-            android:paddingBottom="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="0dp">
 
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/ratingChip"
-                style="@style/BiggerChip"
+            <TextView
+                android:id="@+id/ratingTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:onClick="startDifficultyFilteredActivity"
-                android:text="@string/beginner"
-                android:textStyle="bold"
-                android:visibility="gone"
-                app:chipIcon="@drawable/ic_difficulty_gauge_easy"
-                app:chipMinTouchTargetSize="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/rating_with_column"
+                android:textColor="@color/primaryColor"
+                android:textSize="22sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/copyURLButton" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/difficultyChip"
-                style="@style/BiggerChip"
+            <TextView
+                android:id="@+id/currentRatingTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:onClick="startDifficultyFilteredActivity"
-                android:text="@string/beginner"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:drawableEnd="@drawable/ic_star_green_24dp"
+                android:text="@string/four"
+                android:textColor="@color/primaryColor"
+                android:textSize="22sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ratingTextView" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/ratingButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                android:layout_width="48dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="12dp"
+
+                android:layout_marginTop="5dp"
+                android:onClick="createRatingDialog"
+                app:icon="@drawable/ic_edit_black_usable_24dp"
+                app:iconGravity="start"
+                app:iconPadding="0dp"
+                app:layout_constraintStart_toEndOf="@+id/currentRatingTextView"
+                app:layout_constraintTop_toBottomOf="@+id/ratingTextView" />
+
+            <TextView
+                android:id="@+id/commentsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:text="@string/comments"
+                android:textColor="@color/primaryColor"
+                android:textSize="22sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ratingButton" />
+
+
+
+            <TextView
+                android:id="@+id/textViewTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/title"
+                android:textColor="@color/primaryDarkColor"
+                android:textSize="30sp"
                 android:textStyle="bold"
-                app:chipIcon="@drawable/ic_difficulty_gauge_easy"
-                app:chipMinTouchTargetSize="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:transitionName="recipeTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/recipeImageView" />
+
+            <ImageView
+                android:id="@+id/recipeImageView"
+                android:transitionName="recipeImage"
+                android:layout_width="0dp"
+                android:layout_height="250dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="@string/image_description"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.503"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/difficultyChipConstraintLayout"
+                tools:layout_conversion_absoluteHeight="250dp"
+                tools:layout_conversion_absoluteWidth="250dp"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/neededIngredients"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/needed_ingredients"
+                android:textColor="@color/primaryColor"
+                android:textSize="22sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewTitle"
+                tools:layout_conversion_absoluteHeight="24dp"
+                tools:layout_conversion_absoluteWidth="217dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/viewRecipeIngredientList"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constrainedHeight="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/neededIngredients" />
+
+            <TextView
+                android:id="@+id/recipeInstructionTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="24dp"
+                android:text="@string/the_instructions"
+                android:textColor="@color/primaryColor"
+                android:textSize="22sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ingredientBarrier"
+                tools:layout_conversion_absoluteHeight="27dp"
+                tools:layout_conversion_absoluteWidth="225dp" />
+
+
+            <TextView
+                android:id="@+id/amountCookedTextField"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="24dp"
+                android:text="@string/times_cooked"
+                android:textColor="@color/primaryColor"
+                android:textSize="22sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/viewInstructionRecyclerView"
+                tools:layout_conversion_absoluteHeight="24dp"
+                tools:layout_conversion_absoluteWidth="120dp" />
+
+            <TextView
+                android:id="@+id/amountCookedField"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/null_number"
+                android:textSize="22sp"
+                app:layout_constraintStart_toEndOf="@+id/amountCookedTextField"
+                app:layout_constraintTop_toBottomOf="@+id/viewInstructionRecyclerView"
+                tools:layout_conversion_absoluteHeight="32dp"
+                tools:layout_conversion_absoluteWidth="10dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/amountCookedAddButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="25dp"
+                android:layout_height="39dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="19dp"
+                android:onClick="addToCookedCounter"
+                android:padding="0dp"
+                android:paddingStart="0dp"
+                android:paddingLeft="0dp"
+                android:paddingTop="0dp"
+                android:paddingEnd="0dp"
+                android:paddingRight="0dp"
+                android:paddingBottom="0dp"
+                android:text="@string/plus_sign"
+                android:textSize="12sp"
+                app:layout_constraintStart_toEndOf="@+id/amountCookedField"
+                app:layout_constraintTop_toBottomOf="@+id/viewInstructionRecyclerView"
+                tools:layout_conversion_absoluteHeight="40dp"
+                tools:layout_conversion_absoluteWidth="40dp" />
+
+            <TextView
+                android:id="@+id/websiteTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="28dp"
+                android:text="@string/website"
+                android:textColor="@color/primaryColor"
+                android:textSize="22sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/amountCookedTextField" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/BrowseURLButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:onClick="openURL"
+                android:text="@string/browse"
+                app:icon="@drawable/ic_open_in_browser_black_24dp"
+                app:layout_constraintStart_toStartOf="@+id/guidelineMiddleVertical"
+                app:layout_constraintTop_toBottomOf="@+id/websiteTextView" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/copyURLButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:onClick="copyURLToClipboard"
+                android:text="@android:string/copy"
+                app:icon="@drawable/ic_content_copy_black_24dp"
+                app:layout_constraintEnd_toStartOf="@+id/guidelineMiddleVertical"
+                app:layout_constraintTop_toBottomOf="@+id/websiteTextView" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineMiddleVertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintGuide_percent="0.5"
                 app:layout_constraintStart_toStartOf="parent" />
 
+            <TextView
+                android:id="@+id/commentTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/dummy_value"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/commentsTextView" />
+
+            <TextView
+                android:id="@+id/noWebsiteTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/no_website_added"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/websiteTextView" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/difficultyChipConstraintLayout"
+                android:layout_width="0dp"
+                android:layout_height="54dp"
+                android:background="#F0F0F0"
+                android:padding="0dp"
+                android:paddingStart="0dp"
+                android:paddingLeft="0dp"
+                android:paddingTop="0dp"
+                android:paddingEnd="0dp"
+                android:paddingRight="0dp"
+                android:paddingBottom="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/ratingChip"
+                    style="@style/BiggerChip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:onClick="startDifficultyFilteredActivity"
+                    android:text="@string/beginner"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    app:chipIcon="@drawable/ic_difficulty_gauge_easy"
+                    app:chipMinTouchTargetSize="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/difficultyChip"
+                    style="@style/BiggerChip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:onClick="startDifficultyFilteredActivity"
+                    android:text="@string/beginner"
+                    android:textStyle="bold"
+                    app:chipIcon="@drawable/ic_difficulty_gauge_easy"
+                    app:chipMinTouchTargetSize="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/cookNowButton"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="32dp"
+                android:onClick="startCookNow"
+                android:text="@string/cook_now"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/commentTextView" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/viewInstructionRecyclerView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/recipeInstructionTextView" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/ingredientBarrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="viewRecipeIngredientList"
+                tools:layout_editor_absoluteY="1319dp" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/cookNowButton"
-            style="@style/Widget.MaterialComponents.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="32dp"
-            android:onClick="startCookNow"
-            android:text="@string/cook_now"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/commentTextView" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/viewInstructionRecyclerView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/recipeInstructionTextView" />
 
-        <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/ingredientBarrier"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:barrierDirection="bottom"
-            app:constraint_referenced_ids="viewRecipeIngredientList"
-            tools:layout_editor_absoluteY="1319dp" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
