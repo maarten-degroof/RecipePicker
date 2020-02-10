@@ -218,6 +218,12 @@ public class ViewRecipeActivity extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     /**
      * Creates the AlertDialog where the user can choose the rating
      *

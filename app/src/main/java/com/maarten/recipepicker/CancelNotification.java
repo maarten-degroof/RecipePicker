@@ -17,7 +17,7 @@ public class CancelNotification extends AppCompatActivity {
         Intent intent = getIntent();
         int instructionNumber = intent.getIntExtra("instructionNumber",0);
         if(instructionNumber != 0) {
-            CookNowActivity.cancelNotification(instructionNumber, true);
+            //CookNowActivity.cancelNotification(instructionNumber, true);
         }
         finish();
     }

@@ -16,7 +16,7 @@ import com.maarten.recipepicker.R;
 
 import java.util.List;
 
-import static com.maarten.recipepicker.CookNowActivity.cancelNotification;
+//import static com.maarten.recipepicker.CookNowActivity.cancelNotification;
 
 public class TimerAdapter extends RecyclerView.Adapter<TimerAdapter.CustomViewHolder> {
 
@@ -59,7 +59,7 @@ public class TimerAdapter extends RecyclerView.Adapter<TimerAdapter.CustomViewHo
         holder.removeTimerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cancelNotification(timer.getInstructionNumber(),true);
+                //cancelNotification(timer.getInstructionNumber(),true);
             }
         });
     }
