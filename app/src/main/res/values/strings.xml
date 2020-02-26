@@ -204,4 +204,5 @@
     <string name="or_in_caps">OR</string>
     <string name="filter_on_ingredients">Filter on ingredients</string>
     <string name="use_filters_instead">Use filters instead</string>
+    <string name="timer_tab_description">Here are all your timers for your instructions. Press the minus button next to one to cancel it.</string>
 </resources>

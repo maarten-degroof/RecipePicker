@@ -24,6 +24,11 @@ public class CookNowActivity extends AppCompatActivity {
 
     private Recipe recipe;
 
+    private CookNowTimerFragment timerFragment;
+
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,10 +42,10 @@ public class CookNowActivity extends AppCompatActivity {
         // this takes care of the back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // back button pressed
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // back button pressed
                 finish();
             }
         });
@@ -48,7 +53,7 @@ public class CookNowActivity extends AppCompatActivity {
         Intent intent = getIntent();
         recipe = (Recipe) intent.getSerializableExtra("Recipe");
 
-        TabLayout tabLayout = findViewById(R.id.tabs);
+        tabLayout = findViewById(R.id.tabs);
         tabLayout.addTab(tabLayout.newTab().setText("Instructions"));
         tabLayout.addTab(tabLayout.newTab().setText("Timers"));
 
@@ -60,15 +65,33 @@ public class CookNowActivity extends AppCompatActivity {
         fragmentTransaction.disallowAddToBackStack();
         fragmentList.add(instructionFragment);
 
-        CookNowTimerFragment timerFragment = new CookNowTimerFragment();
+        timerFragment = new CookNowTimerFragment();
         fragmentList.add(timerFragment);
 
         fragmentTransaction.commit();
 
-        final ViewPager viewPager = findViewById(R.id.viewPager);
+        viewPager = findViewById(R.id.viewPager);
         CookNowTabAdapter cookNowTabAdapter = new CookNowTabAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, fragmentList);
         viewPager.setAdapter(cookNowTabAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
     }
+
+    /**
+     * Call the function in the timerFragment to add a new timer
+     *
+     * @param step - the step to which the timer belongs
+     * @param duration - the duration of the timer, noted in milliseconds
+     */
+    public void addTimer(int step, long duration) {
+        timerFragment.setTimer(step, duration);
+    }
+
+    /**
+     * Change the view to the Timer tab
+     */
+    public void changeToTimerFragment() {
+        viewPager.setCurrentItem(1, true);
+    }
+
 }

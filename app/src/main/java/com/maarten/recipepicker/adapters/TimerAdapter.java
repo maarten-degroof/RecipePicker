@@ -1,7 +1,7 @@
 package com.maarten.recipepicker.adapters;
 
 import android.app.Activity;
-import android.content.Context;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,23 +11,52 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.maarten.recipepicker.models.TimerListItemWithCountdown;
 import com.maarten.recipepicker.R;
+import com.maarten.recipepicker.models.TimerListItem;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
-//import static com.maarten.recipepicker.CookNowActivity.cancelNotification;
+import static com.maarten.recipepicker.CookNowTimerFragment.removeTimer;
+
 
 public class TimerAdapter extends RecyclerView.Adapter<TimerAdapter.CustomViewHolder> {
 
     private Activity context;
-    private List<TimerListItemWithCountdown> timerList;
-    private static LayoutInflater inflater = null;
+    private final List<CustomViewHolder> holderList;
+    private List<TimerListItem> timerList;
+    private Handler handler = new Handler();
 
-    public TimerAdapter(Activity context, List<TimerListItemWithCountdown> timerList){
+    public TimerAdapter(Activity context, List<TimerListItem> timerList){
+        super();
         this.context = context;
         this.timerList = timerList;
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        holderList = new ArrayList<>();
+        startUpdateTimer();
+    }
+
+    private Runnable updateRemainingTimeRunnable = new Runnable() {
+        @Override
+        public void run() {
+            synchronized (holderList) {
+                long currentTime = System.currentTimeMillis();
+                for (CustomViewHolder holder : holderList) {
+                    holder.updateTimeRemaining(currentTime);
+                }
+            }
+        }
+    };
+
+    private void startUpdateTimer() {
+        Timer tmr = new Timer();
+        tmr.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(updateRemainingTimeRunnable);
+            }
+        }, 1000, 1000);
     }
 
     @NonNull
@@ -42,26 +71,12 @@ public class TimerAdapter extends RecyclerView.Adapter<TimerAdapter.CustomViewHo
 
     @Override
     public void onBindViewHolder(@NonNull CustomViewHolder holder, int position) {
-        final TimerListItemWithCountdown timer = timerList.get(position);
-        holder.timerItemStepNumber.setText(context.getString(R.string.step_with_column, timer.getInstructionNumber()));
-
-        int totalSeconds = (int) (timer.getTimeRemaining() / 1000);
-        int calcMinutes = totalSeconds / 60;
-        int calcSeconds = totalSeconds % 60;
-
-        holder.timerItemTimer.setText(context.getString(R.string.time_left_timer, calcMinutes, calcSeconds));
-
-        // it finished
-        if((calcMinutes + calcSeconds) <= 1 ) {
-            holder.timerItemTimer.setText(context.getString(R.string.done));
+        holder.setData(timerList.get(position));
+        synchronized (holderList) {
+            holderList.add(holder);
         }
+        holder.updateTimeRemaining(System.currentTimeMillis());
 
-        holder.removeTimerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //cancelNotification(timer.getInstructionNumber(),true);
-            }
-        });
     }
 
     @Override
@@ -80,6 +95,44 @@ public class TimerAdapter extends RecyclerView.Adapter<TimerAdapter.CustomViewHo
         private TextView timerItemTimer;
         private ImageButton removeTimerButton;
         private View parentView;
+        private TimerListItem timer;
+
+        public void setData(TimerListItem item) {
+            timer = item;
+
+            timerItemStepNumber.setText(context.getString(R.string.step_with_column, timer.getInstructionNumber()));
+
+            long timeDiff = timer.getExpirationTime() - System.currentTimeMillis();
+            if (timeDiff > 0) {
+                int seconds = (int) (timeDiff / 1000) % 60;
+                int minutes = (int) ((timeDiff / (1000 * 60)) % 60);
+
+                timerItemTimer.setText(context.getString(R.string.time_left_timer, minutes, seconds));
+            } else {
+                timerItemTimer.setText(context.getString(R.string.done));
+            }
+
+            removeTimerButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    removeTimer(timer.getInstructionNumber(), true);
+                }
+            });
+
+            updateTimeRemaining(System.currentTimeMillis());
+        }
+
+        public void updateTimeRemaining(long currentTime) {
+            long timeDiff = timer.getExpirationTime() - currentTime;
+            if (timeDiff > 0) {
+                int seconds = (int) (timeDiff / 1000) % 60;
+                int minutes = (int) ((timeDiff / (1000 * 60)) % 60);
+
+                timerItemTimer.setText(context.getString(R.string.time_left_timer, minutes, seconds));
+            } else {
+                timerItemTimer.setText(context.getString(R.string.done));
+            }
+        }
 
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);

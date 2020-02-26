@@ -1,25 +1,26 @@
 package com.maarten.recipepicker.models;
 
-import android.os.CountDownTimer;
 
 /**
- * class is used in the timer array ; otherwise we have no way to give the instruction-index to the notification ender.
+ * The timer object. It has a step and an expiration time.
+ * The expiration time is a millisecond value representing a time in the future.
  */
-
 public class TimerListItem {
-    private CountDownTimer timer;
-    private int instruction;
+    private int instructionNumber;
 
-    public TimerListItem(int instruction, CountDownTimer timer)  {
-        this.instruction = instruction;
-        this.timer = timer;
+    private long expirationTime;
+
+    public TimerListItem(int instructionNumber, long expirationTime) {
+        this.instructionNumber = instructionNumber;
+        this.expirationTime = expirationTime;
     }
 
-    public CountDownTimer getTimer() {
-        return timer;
+    public long getExpirationTime() {
+        return expirationTime;
     }
 
-    public int getInstruction() {
-        return instruction;
+    public int getInstructionNumber() {
+        return instructionNumber;
     }
+
 }

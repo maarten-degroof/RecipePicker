@@ -451,7 +451,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
     }
 
     /**
-     * opens the webpage with the URL in the recipe
+     * Opens the webpage with the URL in the recipe
      * Works with and without http(s) in the given URL
      *
      * @param view - the open webpage button
@@ -503,7 +503,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
     }
 
     /**
-     * open the Cook now activity
+     * Open the Cook now activity
      *
      * @param view - the cook now button
      */

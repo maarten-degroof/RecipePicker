@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
@@ -15,7 +14,9 @@ import com.google.android.material.button.MaterialButton;
 import com.maarten.recipepicker.models.Instruction;
 import com.maarten.recipepicker.models.Recipe;
 
-
+/**
+ * This fragment takes care of the instructions
+ */
 public class CookNowInstructionFragment extends Fragment {
 
     private Recipe recipe;
@@ -100,7 +101,6 @@ public class CookNowInstructionFragment extends Fragment {
             }
         });
 
-
         nextInstructionButton = view.findViewById(R.id.nextInstructionButton);
         nextInstructionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,7 +113,7 @@ public class CookNowInstructionFragment extends Fragment {
         startTimerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setTimerAndNotification();
+                setTimer();
             }
         });
 
@@ -136,12 +136,15 @@ public class CookNowInstructionFragment extends Fragment {
         return view;
     }
 
-    private void setTimerAndNotification() {
-        Toast.makeText(getActivity(), "Timer button is pressed", Toast.LENGTH_SHORT).show();
+    /**
+     * Start a new timer on the currently selected instruction
+     */
+    private void setTimer() {
+        ((CookNowActivity)requireActivity()).addTimer(currentInstructionNumber, currentInstruction.getMilliseconds());
     }
 
     /**
-     * Shows the next instruction
+     * Show the next instruction
      */
     private void nextInstruction() {
         previousInstructionButton.setEnabled(true);
@@ -173,7 +176,7 @@ public class CookNowInstructionFragment extends Fragment {
     }
 
     /**
-     * Shows the previous instruction
+     * Show the previous instruction
      */
     private void previousInstruction() {
         nextInstructionButton.setEnabled(true);
@@ -203,7 +206,7 @@ public class CookNowInstructionFragment extends Fragment {
     }
 
     /**
-     * Creates and shows the finish dialog when the finish button is pressed
+     * Create and show the finish dialog when the finish button is pressed
      */
     private void createFinishCookingDialog() {
         if(getActivity() != null) {
