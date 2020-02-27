@@ -50,22 +50,15 @@ import java.util.Scanner;
  ********* BUGS *********
  * Filter on ingredients: tapping an ingredient in the corners changes the checkbox but doesn't put the value on true
  *
- * Timers aren't started on the same millisecond
- *
  * Something is wrong when asking file permissions
  *
  * When adding an instruction with a timer, if you type the number, the last typed number will not be saved
  *
- * Change notification channel!
- *
  * Improve manifest
- *
- * The timers sometimes stop a few seconds before they end
  *
  * Check portrait mode everywhere
  *
  * Portrait mode bugs:  - sidebar menu
- *                      - CookNow layout
  *
  ********* THINGS TO MAKE *********
  * create licence + credit used technologies:
@@ -75,8 +68,6 @@ import java.util.Scanner;
  * reordering a list (by dragging)
  * Tags
  * Splitting the ingredients into categories
- * settings
- *    - Dark theme
  ********* WORKING *********
  * adding recipe
  * saving/loading

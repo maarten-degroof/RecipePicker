@@ -44,7 +44,7 @@ public class CookNowTimerFragment extends Fragment {
 
         timerList = new ArrayList<>();
         timerRecyclerView = view.findViewById(R.id.timerRecyclerView);
-        timerAdapter = new TimerAdapter(requireActivity(), timerList);
+        timerAdapter = new TimerAdapter((CookNowActivity) requireActivity(), timerList);
         timerRecyclerView.setAdapter(timerAdapter);
         timerRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
@@ -89,7 +89,7 @@ public class CookNowTimerFragment extends Fragment {
      * @param step - the step to which the timer belongs
      * @param showCanceledToast - if true shows a toast that it's canceled.
      */
-    public static void removeTimer(int step, boolean showCanceledToast) {
+    public void removeTimer(int step, boolean showCanceledToast) {
         TimerListItem timerToRemove = null;
         for (TimerListItem timer : timerList) {
             if(timer.getInstructionNumber() == step) {
@@ -98,10 +98,12 @@ public class CookNowTimerFragment extends Fragment {
         }
         if(timerToRemove != null) {
             timerList.remove(timerToRemove);
+            timerAdapter.removeHolderFromList(step);
             timerAdapter.notifyDataSetChanged();
             if(showCanceledToast) {
                 Toast.makeText(RecipePickerApplication.getAppContext(), "Canceled the timer for instruction " + step, Toast.LENGTH_LONG).show();
             }
+            removeNotification(step);
         }
     }
 
@@ -145,5 +147,20 @@ public class CookNowTimerFragment extends Fragment {
         // create and show the dialog
         final AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        timerAdapter.onDestroy();
+    }
+
+    /**
+     * Remove a notification
+     *
+     * @param step - the instruction number of the notification
+     */
+    private void removeNotification(int step) {
+        ((CookNowActivity)requireActivity()).removeNotification(step);
     }
 }
