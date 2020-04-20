@@ -30,56 +30,16 @@
             android:padding="0dp">
 
             <TextView
-                android:id="@+id/ratingTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                android:text="@string/rating_with_column"
-                android:textColor="@color/primaryColor"
-                android:textSize="22sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/copyURLButton" />
-
-            <TextView
-                android:id="@+id/currentRatingTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:drawableEnd="@drawable/ic_star_green_24dp"
-                android:text="@string/four"
-                android:textColor="@color/primaryColor"
-                android:textSize="22sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ratingTextView" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/ratingButton"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
-                android:layout_width="48dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="12dp"
-
-                android:layout_marginTop="5dp"
-                android:onClick="createRatingDialog"
-                app:icon="@drawable/ic_edit_black_usable_24dp"
-                app:iconGravity="start"
-                app:iconPadding="0dp"
-                app:layout_constraintStart_toEndOf="@+id/currentRatingTextView"
-                app:layout_constraintTop_toBottomOf="@+id/ratingTextView" />
-
-            <TextView
                 android:id="@+id/commentsTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/comments"
                 android:textColor="@color/primaryColor"
                 android:textSize="22sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ratingButton" />
+                app:layout_constraintTop_toBottomOf="@+id/copyURLButton" />
 
 
 
@@ -288,6 +248,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:text="@string/no_website_added"
+                android:textAlignment="center"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -318,11 +279,11 @@
                     android:layout_height="wrap_content"
                     android:clickable="true"
                     android:focusable="true"
-                    android:onClick="startDifficultyFilteredActivity"
-                    android:text="@string/beginner"
+                    android:onClick="createRatingDialog"
+                    android:text="@string/no_rating"
                     android:textStyle="bold"
-                    android:visibility="gone"
-                    app:chipIcon="@drawable/ic_difficulty_gauge_easy"
+                    android:visibility="visible"
+                    app:chipIcon="@drawable/ic_star_border_green_24dp"
                     app:chipMinTouchTargetSize="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />

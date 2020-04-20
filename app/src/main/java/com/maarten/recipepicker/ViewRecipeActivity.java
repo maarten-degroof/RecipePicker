@@ -60,7 +60,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
     private int amountCookedValue;
 
     private float currentRating;
-    private TextView currentRatingTextView;
+    private Chip ratingChip;
 
     private Gson gson;
 
@@ -210,18 +210,18 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         currentRating = recipe.getRating();
 
-        currentRatingTextView = findViewById(R.id.currentRatingTextView);
-
-        if(currentRating != 0) {
-            currentRatingTextView.setText(String.valueOf((int)currentRating));
-        } else {
-            currentRatingTextView.setText(getString(R.string.no_rating));
-            currentRatingTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_star_border_green_24dp, 0);
+        ratingChip = findViewById(R.id.ratingChip);
+        if (currentRating == 0) {
+            ratingChip.setText(getString(R.string.no_rating));
+            ratingChip.setChipIconResource(R.drawable.ic_star_border_green_24dp);
+        }
+        else {
+            ratingChip.setText(String.valueOf((int) currentRating));
+            ratingChip.setChipIconResource(R.drawable.ic_star_green_24dp);
         }
 
         gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     }
-
 
     @Override
     protected void onResume() {
@@ -260,25 +260,32 @@ public class ViewRecipeActivity extends AppCompatActivity {
         });
 
         builder.setTitle("Choose rating");
-        builder.setMessage("Tap or drag the stars to set a rating. Set it to 0 to remove the rating");
+        builder.setMessage("Tap or drag the stars to set a rating.");
 
-        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Rate", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 currentRating = recipeRatingBar.getRating();
                 MainActivity.recipeList.get(recipeIndex).setRating((int)currentRating);
                 MainActivity.saveRecipes();
-                if(currentRating != 0) {
-                    ViewRecipeActivity.this.currentRatingTextView.setText(String.valueOf((int)currentRating));
-                    ViewRecipeActivity.this.currentRatingTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_star_green_24dp, 0);
-                } else {
-                    ViewRecipeActivity.this.currentRatingTextView.setText(getString(R.string.no_rating));
-                    ViewRecipeActivity.this.currentRatingTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_star_border_green_24dp, 0);
+
+                ratingChip.setText(String.valueOf((int) currentRating));
+                ratingChip.setChipIconResource(R.drawable.ic_star_green_24dp);
+
+                if (currentRating == 0) {
+                    ratingChip.setText(getString(R.string.no_rating));
+                    ratingChip.setChipIconResource(R.drawable.ic_star_border_green_24dp);
                 }
 
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Remove rating", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                currentRating = 0;
+                MainActivity.recipeList.get(recipeIndex).setRating(0);
+                MainActivity.saveRecipes();
+
+                ratingChip.setText(getString(R.string.no_rating));
+                ratingChip.setChipIconResource(R.drawable.ic_star_border_green_24dp);
             }
         });
         // create and show the dialog
@@ -387,8 +394,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
     }
 
     /**
-     *
-     *
+     * Converts the recipe to a Json-representation
+     * and opens a picker where you can choose to send it
      */
     public void shareRecipe() {
         String json_recipe = gson.toJson(recipe);
