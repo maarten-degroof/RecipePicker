@@ -31,10 +31,11 @@ public class Recipe implements Serializable {
     @Expose private int serves;
     private transient Bitmap image;
     private int rating;
+    @Expose private List<String> categories;
 
-    public Recipe(String title, List<Ingredient> ingredientList, Boolean favorite,
-                  CookTime cookTime, String imagePath, String URL, Difficulty difficulty,
-                  String comments, List<Instruction> instructionList, int serves) {
+    public Recipe(String title, List<Ingredient> ingredientList, Boolean favorite, CookTime cookTime,
+                  String imagePath, String URL, Difficulty difficulty, String comments,
+                  List<Instruction> instructionList, int serves, List<String> categories) {
         this.title = title;
         this.ingredientList = ingredientList;
         this.favorite = favorite;
@@ -48,6 +49,7 @@ public class Recipe implements Serializable {
         this.instructionList = instructionList;
         this.serves = serves;
         this.rating = 0;
+        this.categories = categories;
     }
 
     public void resetAddedDate() {
@@ -161,6 +163,14 @@ public class Recipe implements Serializable {
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public void setCategories(List<String> categories) {
+        this.categories = categories;
+    }
+
+    public List<String> getCategories() {
+        return categories;
     }
 
     /*

@@ -61,11 +61,11 @@ import static com.maarten.recipepicker.MainActivity.recipeList;
 public class AddRecipeActivity extends AppCompatActivity {
 
     private List<Ingredient> ingredientList = new ArrayList<>();
-    private IngredientEditAdapter ingredientAdapter;
+    private List<Instruction> instructionList = new ArrayList<>();
 
+    private IngredientEditAdapter ingredientAdapter;
     private EditText ingredientNameField, ingredientQuantityField;
     private Spinner ingredientTypeField;
-    private RecyclerView ingredientRecyclerView;
 
     private TextInputLayout recipeTitleLayout;
 
@@ -76,14 +76,15 @@ public class AddRecipeActivity extends AppCompatActivity {
     private String imagePath;
     private Button removeImageButton, differentImageButton, addImageButton;
 
-    private InstructionEditAdapter instructionAdapter;
-    private RecyclerView instructionRecyclerView;
     private NumberPicker minuteNumberPicker, secondNumberPicker;
     private TextView minuteTextView, secondTextView;
-    private List<Instruction> instructionList = new ArrayList<>();
+
     private EditText instructionDescription;
+    private InstructionEditAdapter instructionAdapter;
 
     private NumberPicker servesNumberPicker;
+
+    private ChipGroup categoriesChipGroup;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -93,7 +94,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_recipe);
 
         ingredientAdapter = new IngredientEditAdapter(this, ingredientList);
-        ingredientRecyclerView = findViewById(R.id.addRecipeIngredientList);
+        RecyclerView ingredientRecyclerView = findViewById(R.id.addRecipeIngredientList);
         ingredientRecyclerView.setAdapter(ingredientAdapter);
         ingredientRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         ingredientRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
@@ -135,7 +136,7 @@ public class AddRecipeActivity extends AppCompatActivity {
 
         // the instruction recyclerView stuff
         instructionAdapter = new InstructionEditAdapter(this, instructionList);
-        instructionRecyclerView = findViewById(R.id.instructionRecyclerView);
+        RecyclerView instructionRecyclerView = findViewById(R.id.instructionRecyclerView);
 
         instructionRecyclerView.setAdapter(instructionAdapter);
         instructionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -187,6 +188,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         servesNumberPicker.setMaxValue(50);
         servesNumberPicker.setValue(4);
 
+        categoriesChipGroup = findViewById(R.id.categoriesChipGroup);
     }
 
     /**
@@ -258,10 +260,6 @@ public class AddRecipeActivity extends AppCompatActivity {
             ingredientList.add(ingredient);
             // notify the ingredientAdapter to update the list
             ingredientAdapter.notifyDataSetChanged();
-
-            // hide the 'no ingredients yet' text view
-//            TextView noIngredientTextView = findViewById(R.id.noIngredientsTextView);
-//            noIngredientTextView.setVisibility(TextView.GONE);
 
         } catch (IllegalArgumentException e) {
             Toast.makeText(AddRecipeActivity.this, "Oops, something went wrong with that ingredient, try again", Toast.LENGTH_LONG).show();
@@ -466,6 +464,12 @@ public class AddRecipeActivity extends AppCompatActivity {
                 difficulty = Difficulty.INTERMEDIATE;
         }
 
+        // Loop through the chipGroup to find all the categories
+        List<String> categoryList = new ArrayList<>();
+        for (int index=0; index < categoriesChipGroup.getChildCount(); index++) {
+            categoryList.add(((Chip)categoriesChipGroup.getChildAt(index)).getText().toString());
+        }
+
         if(recipeName.isEmpty()) {
             recipeTitleLayout.setError("Please fill in a title");
         } else if (ingredientList.isEmpty()) {
@@ -474,12 +478,65 @@ public class AddRecipeActivity extends AppCompatActivity {
             Toast.makeText(AddRecipeActivity.this, "You have to add at least one instruction", Toast.LENGTH_LONG).show();
         } else {
             Recipe recipe = new Recipe(recipeName, ingredientList, favouriteSwitch,
-                    cookTime, imagePath, recipeURL, difficulty, comments, instructionList, serves);
+                    cookTime, imagePath, recipeURL, difficulty, comments, instructionList, serves, categoryList);
             recipeList.add(recipe);
             MainActivity.saveRecipes();
             Toast.makeText(AddRecipeActivity.this, "Your recipe was added!", Toast.LENGTH_LONG).show();
             finish();
         }
+    }
+
+    /**
+     * Creates a dialog to add a category
+     *
+     * @param view - the add category button
+     */
+    public void createCategoryDialog(View view) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // get the layout
+        View dialog_layout = getLayoutInflater().inflate(R.layout.add_category_dialog, null);
+
+        // Create the text field in the alert dialog.
+        final EditText categoryEditText = dialog_layout.findViewById(R.id.categoryEditText);
+
+        builder.setTitle("Add category");
+        builder.setMessage("Add a category here. A category can be 'Pasta' or 'Main course' for example.");
+
+        builder.setPositiveButton("Add category", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                addCategoryChip(categoryEditText.getText().toString());
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+        // create and show the dialog
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.setView(dialog_layout);
+        alertDialog.show();
+    }
+
+    /**
+     * Creates a chip and adds it to the categoriesChipGroup
+     *
+     * @param category - the name of the category
+     */
+    private void addCategoryChip(String category) {
+        final Chip chip = new Chip(this);
+        chip.setText(category);
+        chip.setCloseIconResource(R.drawable.ic_close_black_24dp);
+        chip.setCloseIconVisible(true);
+        chip.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                categoriesChipGroup.removeView(chip);
+            }
+        });
+
+        categoriesChipGroup.addView(chip);
     }
 
     /**

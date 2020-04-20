@@ -53,6 +53,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.maarten.recipepicker.MainActivity.recipeList;
@@ -60,10 +61,9 @@ import static com.maarten.recipepicker.MainActivity.recipeList;
 public class EditRecipeActivity extends AppCompatActivity {
 
     private Recipe recipe;
-    private int recipeIndex;
     private IngredientEditAdapter ingredientAdapter;
 
-    private TextView recipeTitle, noIngredientTextView, recipeComments, recipeURL;
+    private TextView recipeTitle, recipeComments, recipeURL;
     private RecyclerView ingredientListRecyclerView;
     private List<Ingredient> ingredientList;
 
@@ -72,7 +72,7 @@ public class EditRecipeActivity extends AppCompatActivity {
 
     private TextInputLayout recipeTitleLayout;
 
-    private ChipGroup chipGroupDuration, chipGroupDifficulty;
+    private ChipGroup durationChipGroup, difficultyChipGroup, categoriesChipGroup;
 
     private static final int READ_EXTERNAL_PERMISSIONS = 1;
     private static final int GALLERY_REQUEST_CODE = 2;
@@ -83,7 +83,6 @@ public class EditRecipeActivity extends AppCompatActivity {
     private Button removeImageButton, differentImageButton, addImageButton;
 
     private InstructionEditAdapter instructionAdapter;
-    private RecyclerView instructionRecyclerView;
     private NumberPicker minuteNumberPicker, secondNumberPicker;
     private TextView minuteTextView, secondTextView;
     private List<Instruction> instructionList;
@@ -125,7 +124,7 @@ public class EditRecipeActivity extends AppCompatActivity {
         recipeTitleLayout = findViewById(R.id.nameFieldLayout);
 
         // hide
-        noIngredientTextView = findViewById(R.id.noIngredientsTextView);
+        TextView noIngredientTextView = findViewById(R.id.noIngredientsTextView);
         noIngredientTextView.setVisibility(View.INVISIBLE);
 
         imageView = findViewById(R.id.imageView);
@@ -166,49 +165,49 @@ public class EditRecipeActivity extends AppCompatActivity {
         recipeComments.setText(recipe.getComments());
 
         // check the current selected chips
-        chipGroupDuration = findViewById(R.id.chipGroupDuration);
+        durationChipGroup = findViewById(R.id.chipGroupDuration);
         switch (recipe.getCookTime()) {
             case SHORT:
-                chipGroupDuration.check(R.id.shortDurationChip);
+                durationChipGroup.check(R.id.shortDurationChip);
                 break;
             case LONG:
-                chipGroupDuration.check(R.id.longDurationChip);
+                durationChipGroup.check(R.id.longDurationChip);
                 break;
             default:
-                chipGroupDuration.check(R.id.mediumDurationChip);
+                durationChipGroup.check(R.id.mediumDurationChip);
         }
 
-        chipGroupDifficulty = findViewById(R.id.chipGroupDifficulty);
+        difficultyChipGroup = findViewById(R.id.chipGroupDifficulty);
         switch (recipe.getDifficulty()) {
             case BEGINNER:
-                chipGroupDifficulty.check(R.id.beginnerDifficultyChip);
+                difficultyChipGroup.check(R.id.beginnerDifficultyChip);
                 break;
             case EXPERT:
-                chipGroupDifficulty.check(R.id.expertDifficultyChip);
+                difficultyChipGroup.check(R.id.expertDifficultyChip);
                 break;
             default:
-                chipGroupDifficulty.check(R.id.intermediateDifficultyChip);
+                difficultyChipGroup.check(R.id.intermediateDifficultyChip);
         }
 
         // this makes sure that there's always one chip selected
-        chipGroupDuration.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+        durationChipGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(ChipGroup group, int checkedId) {
-                for (int i = 0; i < chipGroupDuration.getChildCount(); i++) {
-                    Chip chip = (Chip) chipGroupDuration.getChildAt(i);
+                for (int i = 0; i < durationChipGroup.getChildCount(); i++) {
+                    Chip chip = (Chip) durationChipGroup.getChildAt(i);
                     if (chip != null) {
-                        chip.setClickable(!(chip.getId() == chipGroupDuration.getCheckedChipId()));
+                        chip.setClickable(!(chip.getId() == durationChipGroup.getCheckedChipId()));
                     }
                 }
             }
         });
-        chipGroupDifficulty.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+        difficultyChipGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(ChipGroup group, int checkedId) {
-                for (int i = 0; i < chipGroupDifficulty.getChildCount(); i++) {
-                    Chip chip = (Chip) chipGroupDifficulty.getChildAt(i);
+                for (int i = 0; i < difficultyChipGroup.getChildCount(); i++) {
+                    Chip chip = (Chip) difficultyChipGroup.getChildAt(i);
                     if (chip != null) {
-                        chip.setClickable(!(chip.getId() == chipGroupDifficulty.getCheckedChipId()));
+                        chip.setClickable(!(chip.getId() == difficultyChipGroup.getCheckedChipId()));
                     }
                 }
             }
@@ -233,7 +232,7 @@ public class EditRecipeActivity extends AppCompatActivity {
 
         // the instruction recyclerview stuff
         instructionAdapter = new InstructionEditAdapter(this, instructionList);
-        instructionRecyclerView = findViewById(R.id.instructionRecyclerView);
+        RecyclerView instructionRecyclerView = findViewById(R.id.instructionRecyclerView);
 
         instructionRecyclerView.setAdapter(instructionAdapter);
         instructionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -242,6 +241,12 @@ public class EditRecipeActivity extends AppCompatActivity {
         servesNumberPicker.setMinValue(1);
         servesNumberPicker.setMaxValue(50);
         servesNumberPicker.setValue(recipe.getServes());
+
+        categoriesChipGroup = findViewById(R.id.categoriesChipGroup);
+        for (String category : recipe.getCategories()) {
+            addCategoryChip(category);
+        }
+
     }
 
     /**
@@ -254,7 +259,7 @@ public class EditRecipeActivity extends AppCompatActivity {
 
         // get the current selected chip
         CookTime cookTime;
-        switch (chipGroupDuration.getCheckedChipId()) {
+        switch (durationChipGroup.getCheckedChipId()) {
             case R.id.shortDurationChip:
                 cookTime = CookTime.SHORT;
                 break;
@@ -265,7 +270,7 @@ public class EditRecipeActivity extends AppCompatActivity {
                 cookTime = CookTime.MEDIUM;
         }
         Difficulty difficulty;
-        switch (chipGroupDifficulty.getCheckedChipId()) {
+        switch (difficultyChipGroup.getCheckedChipId()) {
             case R.id.beginnerDifficultyChip:
                 difficulty = Difficulty.BEGINNER;
                 break;
@@ -276,6 +281,11 @@ public class EditRecipeActivity extends AppCompatActivity {
                 difficulty = Difficulty.INTERMEDIATE;
         }
 
+        // Loop through the chipGroup to find all the categories
+        List<String> categoryList = new ArrayList<>();
+        for (int index=0; index < categoriesChipGroup.getChildCount(); index++) {
+            categoryList.add(((Chip)categoriesChipGroup.getChildAt(index)).getText().toString());
+        }
 
         if(tempRecipeName.isEmpty()) {
             recipeTitleLayout.setError("Please fill in a title");
@@ -287,10 +297,11 @@ public class EditRecipeActivity extends AppCompatActivity {
             boolean resetCookedCounter = ((MaterialCheckBox) findViewById(R.id.resetAmountCookedCheckBox)).isChecked();
 
             // Do the actual updating
-            recipeIndex = recipeList.indexOf(recipe);
+            int recipeIndex = recipeList.indexOf(recipe);
             recipeList.get(recipeIndex).setTitle(tempRecipeName);
             recipeList.get(recipeIndex).setIngredientList(ingredientList);
             recipeList.get(recipeIndex).setInstructionList(instructionList);
+            recipeList.get(recipeIndex).setCategories(categoryList);
 
             if(resetCookedCounter) {
                 recipeList.get(recipeIndex).resetAmountCooked();
@@ -311,6 +322,59 @@ public class EditRecipeActivity extends AppCompatActivity {
 
             returnToMainActivity();
         }
+    }
+
+    /**
+     * Creates a dialog to add a category
+     *
+     * @param view - the add category button
+     */
+    public void createCategoryDialog(View view) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // get the layout
+        View dialog_layout = getLayoutInflater().inflate(R.layout.add_category_dialog, null);
+
+        // Create the text field in the alert dialog.
+        final EditText categoryEditText = dialog_layout.findViewById(R.id.categoryEditText);
+
+        builder.setTitle("Add category");
+        builder.setMessage("Add a category here. A category can be 'Pasta' or 'Main course' for example.");
+
+        builder.setPositiveButton("Add category", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                addCategoryChip(categoryEditText.getText().toString());
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+        // create and show the dialog
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.setView(dialog_layout);
+        alertDialog.show();
+    }
+
+    /**
+     * Creates a chip and adds it to the categoriesChipGroup
+     *
+     * @param category - the name of the category
+     */
+    private void addCategoryChip(String category) {
+        final Chip chip = new Chip(this);
+        chip.setText(category);
+        chip.setCloseIconResource(R.drawable.ic_close_black_24dp);
+        chip.setCloseIconVisible(true);
+        chip.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                categoriesChipGroup.removeView(chip);
+            }
+        });
+
+        categoriesChipGroup.addView(chip);
     }
 
     /**

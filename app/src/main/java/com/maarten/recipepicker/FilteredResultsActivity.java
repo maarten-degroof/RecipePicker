@@ -2,10 +2,13 @@ package com.maarten.recipepicker;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -41,6 +44,8 @@ public class FilteredResultsActivity extends AppCompatActivity {
     private TextView noRecipesTextView;
 
     private int amountOfItems;
+
+    private  ChipGroup chipGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,43 +93,38 @@ public class FilteredResultsActivity extends AppCompatActivity {
         String description = getString(R.string.filtered_recipe_description, filterMin, filterMax, ratingMin, ratingMax);
         filteredDescriptionTextView.setText(Html.fromHtml(description, FROM_HTML_MODE_LEGACY));
 
-        ChipGroup chipGroup = findViewById(R.id.chipGroup);
+        chipGroup = findViewById(R.id.chipGroup);
         if (durationShort) {
-            Chip chip = new Chip(this);
-            chip.setText(getString(R.string.duration_short));
-            chip.layout(5, 5, 5, 5);
-            chipGroup.addView(chip);
+            createChip(getString(R.string.duration_short));
         } if (durationMedium) {
-            Chip chip = new Chip(this);
-            chip.setText(getString(R.string.duration_medium));
-            chip.layout(5, 5, 5, 5);
-            chipGroup.addView(chip);
+            createChip(getString(R.string.duration_medium));
         } if (durationLong) {
-            Chip chip = new Chip(this);
-            chip.setText(getString(R.string.duration_long));
-            chip.layout(5, 5, 5, 5);
-            chipGroup.addView(chip);
+            createChip(getString(R.string.duration_long));
         } if (difficultyBeginner) {
-            Chip chip = new Chip(this);
-            chip.setText(getString(R.string.beginner));
-            chip.layout(5, 5, 5, 5);
-            chipGroup.addView(chip);
+            createChip(getString(R.string.beginner));
         } if (difficultyIntermediate) {
-            Chip chip = new Chip(this);
-            chip.setText(getString(R.string.intermediate));
-            chip.layout(5, 5, 5, 5);
-            chipGroup.addView(chip);
+            createChip(getString(R.string.intermediate));
         } if(difficultyExpert) {
-            Chip chip = new Chip(this);
-            chip.setText(getString(R.string.expert));
-            chip.layout(5, 5, 5, 5);
-            chipGroup.addView(chip);
+            createChip(getString(R.string.expert));
         }
 
         addRecipeButton = findViewById(R.id.addRecipeButton);
         noRecipesTextView = findViewById(R.id.noFoundRecipesTextView);
 
         controlNoRecipeElements();
+    }
+
+    /**
+     * Creates a chip and adds it to the chipGroup
+     *
+     * @param name - the name of the chip
+     */
+    private void createChip(String name) {
+        Chip chip = new Chip(this);
+        chip.setText(name);
+        chip.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.primaryColor)));
+        chip.setTextColor(Color.WHITE);
+        chipGroup.addView(chip);
     }
 
     /**

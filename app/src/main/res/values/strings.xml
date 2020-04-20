@@ -209,4 +209,6 @@
     <string name="import_recipe">Import recipe</string>
     <string name="back">Back</string>
     <string name="copy_ingredients">Copy ingredients</string>
+    <string name="categories">Categories</string>
+    <string name="add_category">Add category</string>
 </resources>

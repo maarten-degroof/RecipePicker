@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -33,6 +36,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -218,6 +222,15 @@ public class ViewRecipeActivity extends AppCompatActivity {
         else {
             ratingChip.setText(String.valueOf((int) currentRating));
             ratingChip.setChipIconResource(R.drawable.ic_star_green_24dp);
+        }
+
+        ChipGroup categoriesChipGroup = findViewById(R.id.categoriesChipGroup);
+        for (String category : recipe.getCategories()) {
+            Chip chip = new Chip(this);
+            chip.setText(category);
+            chip.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.primaryColor)));
+            chip.setTextColor(Color.WHITE);
+            categoriesChipGroup.addView(chip);
         }
 
         gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();

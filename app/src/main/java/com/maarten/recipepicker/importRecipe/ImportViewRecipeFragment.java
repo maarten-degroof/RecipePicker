@@ -95,6 +95,8 @@ public class ImportViewRecipeFragment extends Fragment {
 
     private NumberPicker servesNumberPicker;
 
+    private ChipGroup categoriesChipGroup;
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -301,6 +303,22 @@ public class ImportViewRecipeFragment extends Fragment {
         }
         servesNumberPicker.setValue(recipe.getServes());
 
+        categoriesChipGroup = view.findViewById(R.id.categoriesChipGroup);
+        if (recipe.getCategories() == null) {
+            recipe.setCategories(new ArrayList<String>());
+        }
+        for (String category : recipe.getCategories()) {
+            addCategoryChip(category);
+        }
+
+        MaterialButton addCategoryButton = view.findViewById(R.id.addCategoryButton);
+        addCategoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                createCategoryDialog();
+            }
+        });
+
         MaterialButton addRecipeButton = view.findViewById(R.id.addRecipeButton);
         addRecipeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -359,6 +377,12 @@ public class ImportViewRecipeFragment extends Fragment {
                 difficulty = Difficulty.INTERMEDIATE;
         }
 
+        // Loop through the chipGroup to find all the categories
+        List<String> categoryList = new ArrayList<>();
+        for (int index=0; index < categoriesChipGroup.getChildCount(); index++) {
+            categoryList.add(((Chip)categoriesChipGroup.getChildAt(index)).getText().toString());
+        }
+
         if(tempRecipeName.isEmpty()) {
             recipeTitleLayout.setError("Please fill in a title");
         } else if (ingredientList.isEmpty()) {
@@ -371,6 +395,7 @@ public class ImportViewRecipeFragment extends Fragment {
             recipe.setTitle(tempRecipeName);
             recipe.setIngredientList(ingredientList);
             recipe.setInstructionList(instructionList);
+            recipe.setCategories(categoryList);
 
             recipe.setCookTime(cookTime);
             recipe.setDifficulty(difficulty);
@@ -389,6 +414,57 @@ public class ImportViewRecipeFragment extends Fragment {
 
             returnToMainActivity();
         }
+    }
+
+    /**
+     * Creates a dialog to add a category
+     */
+    private void createCategoryDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+
+        // get the layout
+        View dialog_layout = getLayoutInflater().inflate(R.layout.add_category_dialog, null);
+
+        // Create the text field in the alert dialog.
+        final EditText categoryEditText = dialog_layout.findViewById(R.id.categoryEditText);
+
+        builder.setTitle("Add category");
+        builder.setMessage("Add a category here. A category can be 'Pasta' or 'Main course' for example.");
+
+        builder.setPositiveButton("Add category", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                addCategoryChip(categoryEditText.getText().toString());
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+        // create and show the dialog
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.setView(dialog_layout);
+        alertDialog.show();
+    }
+
+    /**
+     * Creates a chip and adds it to the categoriesChipGroup
+     *
+     * @param category - the name of the category
+     */
+    private void addCategoryChip(String category) {
+        final Chip chip = new Chip(requireActivity());
+        chip.setText(category);
+        chip.setCloseIconResource(R.drawable.ic_close_black_24dp);
+        chip.setCloseIconVisible(true);
+        chip.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                categoriesChipGroup.removeView(chip);
+            }
+        });
+
+        categoriesChipGroup.addView(chip);
     }
 
     /**

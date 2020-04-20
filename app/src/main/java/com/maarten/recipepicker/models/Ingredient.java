@@ -1,5 +1,7 @@
 package com.maarten.recipepicker.models;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.Expose;
 
 import java.io.Serializable;
@@ -51,6 +53,7 @@ public class Ingredient implements Serializable, Comparable<Ingredient> {
         return ingredientType;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return (printQuantity() + " " + printType() + " " + name).trim();

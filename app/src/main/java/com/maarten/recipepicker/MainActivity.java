@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -280,27 +281,34 @@ public class MainActivity extends AppCompatActivity {
      * inserts the dummy recipe into the recipeList
      */
     public static void insertDummyRecipes() {
-        List<Ingredient> spaghettiBologneseIngredientList = new ArrayList<>();
-        spaghettiBologneseIngredientList.add(new Ingredient("Spaghetti",500.0,Ingredient.type.grams));
-        spaghettiBologneseIngredientList.add(new Ingredient("Minced meat",350.0,Ingredient.type.grams));
-        spaghettiBologneseIngredientList.add(new Ingredient("Tomatoes",3.0,Ingredient.type.empty));
-        spaghettiBologneseIngredientList.add(new Ingredient("Paprika's",3.0,Ingredient.type.empty));
-        spaghettiBologneseIngredientList.add(new Ingredient("Water",100.0,Ingredient.type.millimetres));
-        spaghettiBologneseIngredientList.add(new Ingredient("A bit of salt and pepper",null,Ingredient.type.empty));
+        // Spaghetti Bolognese
+        List<Ingredient> SPIngredientList = new ArrayList<>();
+        SPIngredientList.add(new Ingredient("Spaghetti",500.0,Ingredient.type.grams));
+        SPIngredientList.add(new Ingredient("Minced meat",350.0,Ingredient.type.grams));
+        SPIngredientList.add(new Ingredient("Tomatoes",3.0,Ingredient.type.empty));
+        SPIngredientList.add(new Ingredient("Paprika's",3.0,Ingredient.type.empty));
+        SPIngredientList.add(new Ingredient("Water",100.0,Ingredient.type.millimetres));
+        SPIngredientList.add(new Ingredient("A bit of salt and pepper",null,Ingredient.type.empty));
 
-        String spaghettiBologneseImage =  String.valueOf(R.drawable.spaghetti_bolognese);
-        String spaghettiBologneseURL = "https://www.jamieoliver.com/recipes/beef-recipes/spaghetti-bolognese/";
-        String SpaghettiBologneseComments = "Really easy to make!\n\nOnly be sure not to cook the spaghetti too long.";
+        String SPImage =  String.valueOf(R.drawable.spaghetti_bolognese);
+        String SPURL = "https://www.jamieoliver.com/recipes/beef-recipes/spaghetti-bolognese/";
+        String SPComments = "Really easy to make!\n\nOnly be sure not to cook the spaghetti too long.";
 
-        ArrayList<Instruction> spaghettiBologneseInstrutionList = new ArrayList<>();
-        spaghettiBologneseInstrutionList.add(new Instruction("Cook the spaghetti.",(long) 600000));
-        spaghettiBologneseInstrutionList.add(new Instruction("Bake the minced meat.", null));
-        spaghettiBologneseInstrutionList.add(new Instruction("Cut the tomatoes and the paprika into pieces.", null));
-        spaghettiBologneseInstrutionList.add(new Instruction("Once the minced meat is done, throw the paprika and tomatoes in the same pan and bake them together. Spice with salt and pepper.", (long) 300000));
-        spaghettiBologneseInstrutionList.add(new Instruction("Mix the sauce with the spaghetti.", (long) 10000));
+        ArrayList<Instruction> SPInstructionList = new ArrayList<>();
+        SPInstructionList.add(new Instruction("Cook the spaghetti.",(long) 600000));
+        SPInstructionList.add(new Instruction("Bake the minced meat.", null));
+        SPInstructionList.add(new Instruction("Cut the tomatoes and the paprika into pieces.", null));
+        SPInstructionList.add(new Instruction("Once the minced meat is done, throw the paprika and tomatoes in the same pan and bake them together. Spice with salt and pepper.", (long) 300000));
+        SPInstructionList.add(new Instruction("Mix the sauce with the spaghetti.", (long) 10000));
 
-        recipeList.add(new Recipe("Spaghetti Bolognese for people who don't have a lot of time",spaghettiBologneseIngredientList,
-                false, CookTime.MEDIUM, spaghettiBologneseImage, spaghettiBologneseURL, Difficulty.BEGINNER, SpaghettiBologneseComments, spaghettiBologneseInstrutionList, 4));
+        ArrayList<String> SPCategories = new ArrayList<>();
+        SPCategories.add("Pasta");
+        SPCategories.add("Main course");
+        SPCategories.add("Warm meal");
+
+        recipeList.add(new Recipe("Spaghetti Bolognese for people who don't have a lot of time",
+                SPIngredientList, false, CookTime.MEDIUM, SPImage, SPURL, Difficulty.BEGINNER,
+                SPComments, SPInstructionList, 4, SPCategories));
     }
 
     /**
