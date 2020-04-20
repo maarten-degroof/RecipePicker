@@ -208,4 +208,5 @@
     <string name="share">Share</string>
     <string name="import_recipe">Import recipe</string>
     <string name="back">Back</string>
+    <string name="copy_ingredients">Copy ingredients</string>
 </resources>

@@ -60,7 +60,6 @@ public class ViewRecipeActivity extends AppCompatActivity {
     private int amountCookedValue;
 
     private float currentRating;
-    private MaterialButton ratingButton;
     private TextView currentRatingTextView;
 
     private Gson gson;
@@ -211,9 +210,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         currentRating = recipe.getRating();
 
-        //ratingButton = findViewById(R.id.ratingButton);
         currentRatingTextView = findViewById(R.id.currentRatingTextView);
-        ratingButton = findViewById(R.id.ratingButton);
 
         if(currentRating != 0) {
             currentRatingTextView.setText(String.valueOf((int)currentRating));
@@ -475,6 +472,24 @@ public class ViewRecipeActivity extends AppCompatActivity {
         ClipData clip = ClipData.newPlainText("Recipe URL", recipe.getURL());
         clipboard.setPrimaryClip(clip);
         Toast.makeText(this, "website copied:\n" + recipe.getURL(), Toast.LENGTH_LONG).show();
+    }
+
+    /**
+     * Copies all the ingredients to the clipboard
+     *
+     * @param view - the copy ingredients button
+     */
+    public void copyIngredientsToClipboard(View view) {
+        StringBuilder builder = new StringBuilder();
+        for (Ingredient ingredient : recipe.getIngredientList()) {
+            builder.append("- ").append(ingredient.toString()).append("\n");
+        }
+
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("Ingredients", builder.toString());
+        clipboard.setPrimaryClip(clip);
+
+        Toast.makeText(this, "Ingredients are copied", Toast.LENGTH_SHORT).show();
     }
 
     /**
