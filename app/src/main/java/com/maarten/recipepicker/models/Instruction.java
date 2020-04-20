@@ -1,10 +1,12 @@
 package com.maarten.recipepicker.models;
 
+import com.google.gson.annotations.Expose;
+
 import java.io.Serializable;
 
 public class Instruction implements Serializable {
-    private String description;
-    private Long milliseconds;
+    @Expose private String description;
+    @Expose private Long milliseconds;
 
     public Instruction(String description, Long milliseconds) {
         this.description = description;

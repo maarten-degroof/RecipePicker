@@ -44,6 +44,7 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.maarten.recipepicker.importRecipe.ImportActivity;
 import com.maarten.recipepicker.models.Ingredient;
 import com.maarten.recipepicker.models.Instruction;
 import com.maarten.recipepicker.models.Recipe;
@@ -465,7 +466,6 @@ public class AddRecipeActivity extends AppCompatActivity {
                 difficulty = Difficulty.INTERMEDIATE;
         }
 
-
         if(recipeName.isEmpty()) {
             recipeTitleLayout.setError("Please fill in a title");
         } else if (ingredientList.isEmpty()) {
@@ -499,7 +499,7 @@ public class AddRecipeActivity extends AppCompatActivity {
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_home, menu);
+        getMenuInflater().inflate(R.menu.menu_add_recipe, menu);
         return true;
     }
 
@@ -511,10 +511,14 @@ public class AddRecipeActivity extends AppCompatActivity {
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_home) {
+        if (item.getItemId() == R.id.action_home) {
             goToMainActivity();
             return true;
-        } else {
+        } else if (item.getItemId() == R.id.action_import) {
+            goToRecipeImport();
+            return true;
+        }
+        else {
             return super.onOptionsItemSelected(item);
         }
     }
@@ -525,6 +529,14 @@ public class AddRecipeActivity extends AppCompatActivity {
     private void goToMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
+    /**
+     * Goes to the import activity where you can import a recipe
+     */
+    private void goToRecipeImport() {
+        Intent intent = new Intent(this, ImportActivity.class);
         startActivity(intent);
     }
 

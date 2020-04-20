@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.maarten.recipepicker.CookNowActivity;
+import com.maarten.recipepicker.cookNow.CookNowActivity;
 import com.maarten.recipepicker.R;
 import com.maarten.recipepicker.models.TimerListItem;
 

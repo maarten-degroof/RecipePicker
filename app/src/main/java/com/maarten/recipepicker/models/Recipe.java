@@ -3,6 +3,7 @@ package com.maarten.recipepicker.models;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.google.gson.annotations.Expose;
 import com.maarten.recipepicker.R;
 import com.maarten.recipepicker.RecipePickerApplication;
 import com.maarten.recipepicker.enums.CookTime;
@@ -16,24 +17,24 @@ import java.util.Date;
 import java.util.List;
 
 public class Recipe implements Serializable {
-    private String title;
-    private List<Ingredient> ingredientList;
+    @Expose private String title;
+    @Expose private List<Ingredient> ingredientList;
     private Boolean favorite;
     private Integer amountCooked;
     private Date addedDate;
-    private CookTime cookTime;
+    @Expose private CookTime cookTime;
     private String imagePath;
-    private String URL;
-    private Difficulty difficulty;
-    private String comments;
-    private List<Instruction> instructionList;
-    private int serves;
+    @Expose private String URL;
+    @Expose private Difficulty difficulty;
+    @Expose private String comments;
+    @Expose private List<Instruction> instructionList;
+    @Expose private int serves;
     private transient Bitmap image;
     private int rating;
 
-
     public Recipe(String title, List<Ingredient> ingredientList, Boolean favorite,
-                  CookTime cookTime, String imagePath, String URL, Difficulty difficulty, String comments, List<Instruction> instructionList, int serves) {
+                  CookTime cookTime, String imagePath, String URL, Difficulty difficulty,
+                  String comments, List<Instruction> instructionList, int serves) {
         this.title = title;
         this.ingredientList = ingredientList;
         this.favorite = favorite;
@@ -47,6 +48,10 @@ public class Recipe implements Serializable {
         this.instructionList = instructionList;
         this.serves = serves;
         this.rating = 0;
+    }
+
+    public void resetAddedDate() {
+        this.addedDate = Calendar.getInstance().getTime();
     }
 
     public List<Instruction> getInstructionList() {

@@ -205,4 +205,7 @@
     <string name="filter_on_ingredients">Filter on ingredients</string>
     <string name="use_filters_instead">Use filters instead</string>
     <string name="timer_tab_description">Here are all your timers for your instructions. Press the minus button next to one to cancel it.</string>
+    <string name="share">Share</string>
+    <string name="import_recipe">Import recipe</string>
+    <string name="back">Back</string>
 </resources>

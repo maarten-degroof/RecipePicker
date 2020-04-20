@@ -34,6 +34,9 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.maarten.recipepicker.cookNow.CookNowActivity;
 import com.maarten.recipepicker.models.Ingredient;
 import com.maarten.recipepicker.models.Instruction;
 import com.maarten.recipepicker.models.Recipe;
@@ -59,6 +62,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
     private float currentRating;
     private MaterialButton ratingButton;
     private TextView currentRatingTextView;
+
+    private Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -216,6 +221,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
             currentRatingTextView.setText(getString(R.string.no_rating));
             currentRatingTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_star_border_green_24dp, 0);
         }
+
+        gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     }
 
 
@@ -348,6 +355,10 @@ public class ViewRecipeActivity extends AppCompatActivity {
                 goToMainActivity();
                 return true;
 
+            case R.id.action_share:
+                shareRecipe();
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
 
@@ -376,6 +387,22 @@ public class ViewRecipeActivity extends AppCompatActivity {
         // create and show the dialog
         final AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    /**
+     *
+     *
+     */
+    public void shareRecipe() {
+        String json_recipe = gson.toJson(recipe);
+
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, json_recipe);
+        sendIntent.setType("text/plain");
+
+        Intent shareIntent = Intent.createChooser(sendIntent, "Share the recipe");
+        startActivity(shareIntent);
     }
 
     /**

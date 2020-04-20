@@ -5,41 +5,50 @@
     <PreferenceCategory
         android:title="@string/app_settings">
         <EditTextPreference
+            android:id="@+id/servesPreference"
+            android:defaultValue="@string/four"
+            android:icon="@drawable/ic_group_black_24dp"
             android:inputType="number"
             android:summary="@string/serves_description"
-            app:title="@string/serves"
-            android:defaultValue="@string/four"
-            app:useSimpleSummaryProvider="true"
             app:key="serves_value"
-            />
+            app:title="@string/serves"
+            app:useSimpleSummaryProvider="true" />
+        <Preference
+            android:id="@+id/importRecipePreference"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:key="import_button"
+            android:summary="Import a recipe that was shared to you"
+            android:title="Import a recipe"
+            app:icon="@drawable/ic_import_black_24dp" />
 
     </PreferenceCategory>
 
     <PreferenceCategory
         android:title="@string/app_name">
         <Preference
-            android:title="@string/github"
+            android:id="@+id/githubPreference"
+            android:icon="@drawable/ic_github_logo"
             android:key="github_button"
             android:summary="@string/go_to_github"
-            android:icon="@drawable/ic_github_logo"
-            />
+            android:title="@string/github" />
 
         <Preference
-            android:title="@string/version"
-            android:key="version"
+            android:id="@+id/versionPreference"
             android:icon="@drawable/ic_info_black_24dp"
-            />
+            android:key="version"
+            android:title="@string/version" />
 
     </PreferenceCategory>
 
     <PreferenceCategory
         android:title="@string/danger_zone">
         <Preference
-            android:title="@string/reset_everything"
+            android:id="@+id/resetEverythingPreference"
+            android:icon="@drawable/ic_delete_black_24dp"
             android:key="remove_all_button"
             android:summary="@string/remove_all_description"
-            android:icon="@drawable/ic_delete_black_24dp"
-            />
+            android:title="@string/reset_everything" />
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

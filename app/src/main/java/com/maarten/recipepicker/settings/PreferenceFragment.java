@@ -20,25 +20,24 @@ import android.widget.Toast;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.maarten.recipepicker.BuildConfig;
+import com.maarten.recipepicker.EditRecipeActivity;
 import com.maarten.recipepicker.MainActivity;
 import com.maarten.recipepicker.R;
+import com.maarten.recipepicker.importRecipe.ImportActivity;
 
 /**
  * This fragment is used in the settings, and this takes care of the 'delete all' button (can also be used for other settings)
  */
 public class PreferenceFragment extends PreferenceFragmentCompat {
 
-    private Preference removeAllButtonPreference, goToGithubButtonPreference, versionPreference;
     private EditTextPreference servesPreference;
-
-    private SharedPreferences.OnSharedPreferenceChangeListener listener;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         // Indicate here the XML resource you created above that holds the preferences
         setPreferencesFromResource(R.xml.settings, rootKey);
 
-        removeAllButtonPreference =  getPreferenceManager().findPreference("remove_all_button");
+        Preference removeAllButtonPreference =  getPreferenceManager().findPreference("remove_all_button");
         if (removeAllButtonPreference != null) {
             removeAllButtonPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
@@ -49,7 +48,18 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
             });
         }
 
-        goToGithubButtonPreference = getPreferenceManager().findPreference("github_button");
+        Preference importRecipeButton =  getPreferenceManager().findPreference("import_button");
+        if(importRecipeButton != null) {
+            importRecipeButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    goToRecipeImport();
+                    return true;
+                }
+            });
+        }
+
+        Preference goToGithubButtonPreference = getPreferenceManager().findPreference("github_button");
         if(goToGithubButtonPreference != null) {
             goToGithubButtonPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
@@ -60,8 +70,10 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
             });
         }
 
-        versionPreference = getPreferenceManager().findPreference("version");
-        versionPreference.setSummary(BuildConfig.VERSION_NAME);
+        Preference versionPreference = getPreferenceManager().findPreference("version");
+        if (versionPreference != null) {
+            versionPreference.setSummary(BuildConfig.VERSION_NAME);
+        }
 
         servesPreference = getPreferenceManager().findPreference("serves_value");
 
@@ -82,26 +94,26 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
      * Listener to make sure that when the user leaves the serves blank, it fills in '4'
      */
     private void createListener() {
-        listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
                 if(key.equals("serves_value")) {
                     String value = sharedPreferences.getString("serves_value", "4");
-                    if(value.equals("")) {
+                    if(value != null && value.equals("")) {
                         servesPreference.setText("4");
                     }
                     // more than two characters is always longer dan 50
-                    else if(value.length() > 2) {
+                    else if(value != null && value.length() > 2) {
                         servesPreference.setText("50");
                     }
-                    else if(Integer.parseInt(value) > 50) {
+                    else if (value != null && Integer.parseInt(value) > 50) {
                         servesPreference.setText("50");
                     }
                 }
             }
         };
-        PreferenceManager.getDefaultSharedPreferences(getContext())
+        PreferenceManager.getDefaultSharedPreferences(requireContext())
                 .registerOnSharedPreferenceChangeListener(listener);
 
     }
@@ -110,8 +122,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
      * creates the confirm dialog to clear the recipelist
      */
     private void createDeleteDialog() {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
 
         // get the layout
         View dialog_layout = getLayoutInflater().inflate(R.layout.remove_all_dialog, null);
@@ -156,6 +167,14 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
         String url = "https://github.com/maarten-degroof/RecipePicker";
         Intent intent = new Intent(Intent.ACTION_VIEW,
                 Uri.parse(url));
+        startActivity(intent);
+    }
+
+    /**
+     * Goes to the import activity where you can import a recipe
+     */
+    private void goToRecipeImport() {
+        Intent intent = new Intent(requireActivity(), ImportActivity.class);
         startActivity(intent);
     }
 }

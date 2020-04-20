@@ -1,4 +1,4 @@
-package com.maarten.recipepicker;
+package com.maarten.recipepicker.cookNow;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.button.MaterialButton;
+import com.maarten.recipepicker.R;
 import com.maarten.recipepicker.models.Instruction;
 import com.maarten.recipepicker.models.Recipe;
 

@@ -1,4 +1,4 @@
-package com.maarten.recipepicker;
+package com.maarten.recipepicker.cookNow;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.maarten.recipepicker.R;
+import com.maarten.recipepicker.RecipePickerApplication;
 import com.maarten.recipepicker.adapters.TimerAdapter;
 import com.maarten.recipepicker.models.TimerListItem;
 

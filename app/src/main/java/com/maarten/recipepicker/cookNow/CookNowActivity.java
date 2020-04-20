@@ -1,4 +1,4 @@
-package com.maarten.recipepicker;
+package com.maarten.recipepicker.cookNow;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -18,6 +18,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
+import com.maarten.recipepicker.R;
+import com.maarten.recipepicker.RecipePickerApplication;
 import com.maarten.recipepicker.adapters.CookNowTabAdapter;
 import com.maarten.recipepicker.models.Recipe;
 

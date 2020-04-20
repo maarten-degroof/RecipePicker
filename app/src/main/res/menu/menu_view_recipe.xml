@@ -5,13 +5,13 @@
 
     <item
         android:id="@+id/action_edit"
-        android:orderInCategory="100"
+        android:orderInCategory="900"
         android:title="@string/edit"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_delete"
-        android:orderInCategory="100"
+        android:orderInCategory="1000"
         android:title="@string/delete"
         app:showAsAction="never" />
 
@@ -19,22 +19,26 @@
         android:id="@+id/action_home"
         android:orderInCategory="100"
         android:title="@string/home"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_home_white_24dp"
-        />
+        app:showAsAction="always"
+        android:icon="@drawable/ic_home_white_24dp" />
+
+    <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_share_white_24dp"
+        android:orderInCategory="150"
+        android:title="@string/share"
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_favorite_full"
         android:orderInCategory="200"
         android:title="@string/favorite"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_favorite_white_24dp"
-        />
+        app:showAsAction="always"
+        android:icon="@drawable/ic_favorite_white_24dp" />
     <item
         android:id="@+id/action_favorite_empty"
         android:orderInCategory="200"
         android:title="@string/not_favorite"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_favorite_border_white_24dp"
-        />
+        app:showAsAction="always"
+        android:icon="@drawable/ic_favorite_border_white_24dp" />
 </menu>

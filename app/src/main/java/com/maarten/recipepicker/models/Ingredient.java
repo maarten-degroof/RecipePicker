@@ -1,12 +1,14 @@
 package com.maarten.recipepicker.models;
 
+import com.google.gson.annotations.Expose;
+
 import java.io.Serializable;
 
 public class Ingredient implements Serializable, Comparable<Ingredient> {
 
-    private String name;
-    private Double quantity;
-    private type ingredientType;
+    @Expose private String name;
+    @Expose private Double quantity;
+    @Expose private type ingredientType;
 
     public enum type {
         grams,
