@@ -199,8 +199,7 @@ public class Recipe implements Serializable {
         if (obj == this) return true;
         if (!(obj instanceof Recipe)) return false;
         Recipe o = (Recipe) obj;
-        return o.getTitle().equals(this.getTitle());
-        // check ingredientlist!!
+        return o.getAddedDate().equals(this.getAddedDate());
     }
 
     /**

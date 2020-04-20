@@ -27,6 +27,7 @@ import com.maarten.recipepicker.enums.CookTime;
 import com.maarten.recipepicker.enums.Difficulty;
 import com.maarten.recipepicker.listSorters.AmountCookedSorter;
 import com.maarten.recipepicker.listSorters.DateSorter;
+import com.maarten.recipepicker.listSorters.RatingSorter;
 import com.maarten.recipepicker.models.Ingredient;
 import com.maarten.recipepicker.models.Instruction;
 import com.maarten.recipepicker.models.Recipe;
@@ -90,6 +91,7 @@ import java.util.Scanner;
  * add home button in all screens
  * images
  * servings
+ * share + import
  **/
 
 
@@ -98,9 +100,6 @@ public class MainActivity extends AppCompatActivity {
     public static List<Recipe> recipeList;
     private RecipeAdapter adapter;
 
-    private RecyclerView listViewRecipes;
-
-    private DrawerLayout dl;
     private ActionBarDrawerToggle abdt;
 
     private Spinner sortSpinner;
@@ -121,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // get listView object
-        listViewRecipes = findViewById(R.id.mainRecyclerView);
+        RecyclerView listViewRecipes = findViewById(R.id.mainRecyclerView);
 
         // initialise recipeList
         recipeList = new ArrayList<>();
@@ -166,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
          // order of the spinner:
          //     - chronological (0)
          //     - times cooked  (1)
+        //      - rating (2)
         sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -177,6 +177,10 @@ public class MainActivity extends AppCompatActivity {
                         return;
                     case 1:
                         Collections.sort(recipeList, new AmountCookedSorter());
+                        adapter.notifyDataSetChanged();
+                        return;
+                    case 2:
+                        Collections.sort(recipeList, new RatingSorter());
                         adapter.notifyDataSetChanged();
                 }
             }
@@ -197,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().getThemedContext();
 
         // all the navigation drawer stuff
-        dl = findViewById(R.id.dl);
+        DrawerLayout dl = findViewById(R.id.dl);
         abdt = new ActionBarDrawerToggle(this, dl,R.string.Open, R.string.Close);
         abdt.setDrawerIndicatorEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -382,6 +386,10 @@ public class MainActivity extends AppCompatActivity {
             case 1:
                 Collections.sort(recipeList, new AmountCookedSorter());
                 adapter.notifyDataSetChanged();
+                return;
+            case 2:
+                Collections.sort(recipeList, new RatingSorter());
+                adapter.notifyDataSetChanged();
         }
     }
 
@@ -400,10 +408,10 @@ public class MainActivity extends AppCompatActivity {
              ObjectOutputStream out = new ObjectOutputStream(fileStream)) {
 
             out.writeObject(recipeList);
-            Log.d("WRITE", "object recipelist is written: " + recipeList);
+            Log.d("WRITE", "object recipeList is written");
         } catch (IOException e) {
             Log.e("WriteError",""+ e.getMessage());
-            Log.d("WRITE", "object recipelist is NOT written: " + recipeList);
+            Log.d("WRITE", "object recipeList is NOT written");
         }
     }
 

@@ -3,7 +3,6 @@
     <string-array name="order_types_array_items">
         <item>chronological</item>
         <item>times cooked</item>
+        <item>rating</item>
     </string-array>
-
-
 </resources>
