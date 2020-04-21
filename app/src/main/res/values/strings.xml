@@ -145,7 +145,8 @@
     <string name="comment_hint">Do you have any comments about the recipe?</string>
     <string name="filter_difficulty_description">How difficult should it be?</string>
     <string name="filter_button">Filter your cookbook</string>
-    <string name="difficulty_filtered_description">Here you can find more %1$s recipes!</string>
+    <string name="difficulty_filtered_description">Here you can find more &lt;b>%1$s&lt;/b> recipes!</string>
+    <string name="category_filtered_description">Here you can find more recipes that have the &lt;b>%1$s&lt;/b> category!</string>
     <string name="four">4</string>
     <string name="reset_list_values">Reset original list values</string>
     <string name="serves_with_column">Serves:</string>
@@ -214,4 +215,5 @@
     <string name="chronological">Chronological</string>
     <string name="times_cooked">Times cooked</string>
     <string name="rating">Rating</string>
+    <string name="no_recipes_yet_for_criteria">You have no recipes yet for your criteria. Would you like to add one now?</string>
 </resources>

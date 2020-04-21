@@ -225,11 +225,17 @@ public class ViewRecipeActivity extends AppCompatActivity {
         }
 
         ChipGroup categoriesChipGroup = findViewById(R.id.categoriesChipGroup);
-        for (String category : recipe.getCategories()) {
+        for (final String category : recipe.getCategories()) {
             Chip chip = new Chip(this);
             chip.setText(category);
             chip.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.primaryColor)));
             chip.setTextColor(Color.WHITE);
+            chip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startCategoryFilteredActivity(category);
+                }
+            });
             categoriesChipGroup.addView(chip);
         }
 
@@ -554,14 +560,31 @@ public class ViewRecipeActivity extends AppCompatActivity {
     }
 
     /**
-     * When the difficulty button is pressed, open DifficultyFilteredActivity
+     * When the difficulty button is pressed, open TypeFilteredActivity
      *
-     * @param view - the pressed chip
+     * @param view - the pressed difficulty chip
      */
     public void startDifficultyFilteredActivity(View view) {
         try{
-            Intent intent = new Intent(this, DifficultyFilteredActivity.class);
+            Intent intent = new Intent(this, TypeFilteredActivity.class);
+            intent.putExtra("filterType", "Difficulty");
             intent.putExtra("difficulty", recipe.getDifficulty());
+            startActivity(intent);
+        } catch (Exception e) {
+            Log.d("ERROR", e.getLocalizedMessage());
+        }
+    }
+
+    /**
+     * When a category chip is pressed, open TypeFilteredActivity
+     *
+     * @param category - the category that was pressed - a String
+     */
+    public void startCategoryFilteredActivity(String category) {
+        try{
+            Intent intent = new Intent(this, TypeFilteredActivity.class);
+            intent.putExtra("filterType", "Category");
+            intent.putExtra("category", category);
             startActivity(intent);
         } catch (Exception e) {
             Log.d("ERROR", e.getLocalizedMessage());

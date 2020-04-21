@@ -15,25 +15,25 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.maarten.recipepicker.models.Recipe;
 import com.maarten.recipepicker.R;
 import com.maarten.recipepicker.ViewRecipeActivity;
+import com.maarten.recipepicker.models.Recipe;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.CustomViewHolder> {
+public class CategoryFilteredAdapter extends RecyclerView.Adapter<CategoryFilteredAdapter.CustomViewHolder> {
 
     private Activity context;
     private List<Recipe> recipeList;
-    private static LayoutInflater inflater = null;
+
     private int returnCount;
 
-    public FavoriteAdapter(Activity context, List<Recipe> recipeList){
+    public CategoryFilteredAdapter(Activity context, List<Recipe> recipeList){
         this.context = context;
         this.recipeList = recipeList;
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @NonNull
@@ -71,13 +71,13 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Custom
     }
 
     @Override
-    public long getItemId(int position) {
-        return position;
+    public int getItemCount() {
+        return recipeList.size();
     }
 
     @Override
-    public int getItemCount() {
-        return recipeList.size();
+    public long getItemId(int position) {
+        return position;
     }
 
     static class CustomViewHolder extends RecyclerView.ViewHolder {
@@ -101,10 +101,11 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Custom
     /**
      * runs the filter, pauses for 20 milliseconds and then returns the amount of items which succeeded the filter
      *
+     * @param category - the category to filter on
      * @return - an int saying the amount of items that are shown
      */
-    public int filterAndReturnAmount() {
-        getFilter().filter("");
+    public int filterAndReturnAmount(String category) {
+        getFilter().filter(category);
 
         try {
             TimeUnit.MILLISECONDS.sleep(20);
@@ -131,9 +132,11 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Custom
                 ArrayList<Recipe> filteredArray = new ArrayList<>();
                 returnCount = 0;
 
-                for (int i = 0; i < recipeList.size(); i++) {
-                    Recipe tempRecipe = recipeList.get(i);
-                    if(tempRecipe.getFavorite()) {
+                String category = constraint.toString();
+
+                // The actual filtering
+                for (Recipe tempRecipe : recipeList) {
+                    if(tempRecipe.getCategories().stream().anyMatch(category::equalsIgnoreCase)) {
                         filteredArray.add(tempRecipe);
                     }
                 }

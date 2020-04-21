@@ -3,6 +3,7 @@ package com.maarten.recipepicker.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +22,15 @@ import com.maarten.recipepicker.enums.Difficulty;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class DifficultyFilteredAdapter extends RecyclerView.Adapter<DifficultyFilteredAdapter.CustomViewHolder> {
 
     private Activity context;
     private List<Recipe> recipeList;
     private static LayoutInflater inflater = null;
+
+    private int returnCount;
 
     public DifficultyFilteredAdapter(Activity context, List<Recipe> recipeList){
         this.context = context;
@@ -84,7 +88,7 @@ public class DifficultyFilteredAdapter extends RecyclerView.Adapter<DifficultyFi
     }
 
 
-    class CustomViewHolder extends RecyclerView.ViewHolder {
+    static class CustomViewHolder extends RecyclerView.ViewHolder {
 
         private TextView recipeTitleTextView;
         private TextView recipeIngredientsTextView;
@@ -102,6 +106,24 @@ public class DifficultyFilteredAdapter extends RecyclerView.Adapter<DifficultyFi
         }
     }
 
+    /**
+     * runs the filter, pauses for 20 milliseconds and then returns the amount of items which succeeded the filter
+     *
+     * @param difficulty - the difficulty to filter on
+     * @return - an int saying the amount of items that are shown
+     */
+    public int filterAndReturnAmount(String difficulty) {
+        getFilter().filter(difficulty);
+
+        try {
+            TimeUnit.MILLISECONDS.sleep(20);
+        } catch (Exception e) {
+            Log.e("SleepError", e.getMessage());
+        }
+        //Log.d("COUNT", "returning: "+returnCount);
+        return returnCount;
+    }
+
     public Filter getFilter() {
         return new Filter() {
 
@@ -116,6 +138,7 @@ public class DifficultyFilteredAdapter extends RecyclerView.Adapter<DifficultyFi
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults results = new FilterResults();
                 ArrayList<Recipe> filteredArray = new ArrayList<>();
+                returnCount = 0;
 
                 Difficulty difficulty;
 
@@ -130,15 +153,14 @@ public class DifficultyFilteredAdapter extends RecyclerView.Adapter<DifficultyFi
                         difficulty = Difficulty.INTERMEDIATE;
                 }
 
-                for (int i = 0; i < recipeList.size(); i++) {
-                    Recipe tempRecipe = recipeList.get(i);
-
+                for (Recipe tempRecipe : recipeList) {
                     if(tempRecipe.getDifficulty() == difficulty){
                         filteredArray.add(tempRecipe);
                     }
                 }
                 results.count = filteredArray.size();
                 results.values = filteredArray;
+                returnCount = results.count;
 
                 return results;
             }

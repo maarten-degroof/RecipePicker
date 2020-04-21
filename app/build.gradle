@@ -18,6 +18,7 @@ android {
     }
     compileOptions {
         targetCompatibility = var
+        sourceCompatibility = 1.8
     }
 }
 
