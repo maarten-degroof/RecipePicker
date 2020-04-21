@@ -1,18 +1,17 @@
 package com.maarten.recipepicker;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.ViewCompat;
@@ -40,7 +39,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -103,7 +101,9 @@ public class MainActivity extends AppCompatActivity {
 
     private ActionBarDrawerToggle abdt;
 
-    private Spinner sortSpinner;
+    private MaterialButton orderByButton;
+    private int currentOrderBySetting;
+    private AlertDialog orderByDialog;
 
     private Random random;
 
@@ -113,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Creates the activity and initialises all UI-fields
      * Loads the list from memory or creates a new one
+     *
      * @param savedInstanceState - A previously saved instance, gets passed onto the super class
      */
     @Override
@@ -153,43 +154,9 @@ public class MainActivity extends AppCompatActivity {
             recipe.getImage();
         }
 
-        // get the spinner
-        sortSpinner = findViewById(R.id.orderSpinner);
-
-        // create the spinner adapter with the choices + the standard views of how it should look like
-        ArrayAdapter<CharSequence> sortTypeAdapter = ArrayAdapter.createFromResource(this, R.array.order_types_array_items, android.R.layout.simple_spinner_item);
-        sortTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sortSpinner.setAdapter(sortTypeAdapter);
-
-
-         // Takes care of the sort functions. Sorts the list based on the chosen item in the spinner.
-         // order of the spinner:
-         //     - chronological (0)
-         //     - times cooked  (1)
-        //      - rating (2)
-        sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                switch ((int) id) {
-                    case 0:
-                        Collections.sort(recipeList, new DateSorter());
-                        adapter.notifyDataSetChanged();
-                        return;
-                    case 1:
-                        Collections.sort(recipeList, new AmountCookedSorter());
-                        adapter.notifyDataSetChanged();
-                        return;
-                    case 2:
-                        Collections.sort(recipeList, new RatingSorter());
-                        adapter.notifyDataSetChanged();
-                }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+        orderByButton = findViewById(R.id.orderByButton);
+        // 0 -> Chronological
+        currentOrderBySetting = 0;
 
         adapter = new RecipeAdapter(this, recipeList);
 
@@ -244,6 +211,54 @@ public class MainActivity extends AppCompatActivity {
         noRecipesYetTextView = findViewById(R.id.noRecipesYetTextView);
 
         controlNoRecipeElements();
+    }
+
+    /**
+     * Creates the dialog to choose which type of ordering is applied
+     *
+     * @param view - the order button
+     */
+    public void openOrderDialog(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.order_by)
+                .setSingleChoiceItems(R.array.order_types_array_items, currentOrderBySetting, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int index) {
+                        currentOrderBySetting = index;
+                        setOrdering(index);
+                        orderByDialog.dismiss();
+                    }
+                });
+        orderByDialog = builder.create();
+        orderByDialog.show();
+    }
+
+    /**
+     * Takes care of the sort functions. Sorts the list based on the chosen item in the dialog.
+     * order of the dialog:
+     *      - Chronological (0)
+     *      - Times cooked  (1)
+     *      - Rating (2)
+     *
+     * @param orderNumber - the number saying which order the user chose
+     */
+    private void setOrdering(int orderNumber) {
+        switch (orderNumber) {
+            case 0:
+                Collections.sort(recipeList, new DateSorter());
+                orderByButton.setText(R.string.chronological);
+                adapter.notifyDataSetChanged();
+                return;
+            case 1:
+                Collections.sort(recipeList, new AmountCookedSorter());
+                orderByButton.setText(R.string.times_cooked);
+                adapter.notifyDataSetChanged();
+                return;
+            case 2:
+                Collections.sort(recipeList, new RatingSorter());
+                orderByButton.setText(R.string.rating);
+                adapter.notifyDataSetChanged();
+        }
     }
 
     /**
@@ -313,6 +328,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * this connects the hamburger icon to the navigation drawer
+     *
      * @param item - The hamburger icon
      * @return Returns a boolean
      */
@@ -385,20 +401,8 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         controlNoRecipeElements();
-        int selectedSortById = (int) sortSpinner.getSelectedItemId();
-        switch (selectedSortById) {
-            case 0:
-                Collections.sort(recipeList, new DateSorter());
-                adapter.notifyDataSetChanged();
-                return;
-            case 1:
-                Collections.sort(recipeList, new AmountCookedSorter());
-                adapter.notifyDataSetChanged();
-                return;
-            case 2:
-                Collections.sort(recipeList, new RatingSorter());
-                adapter.notifyDataSetChanged();
-        }
+
+        setOrdering(currentOrderBySetting);
     }
 
     @Override

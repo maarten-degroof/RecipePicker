@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="order_types_array_items">
-        <item>chronological</item>
-        <item>times cooked</item>
-        <item>rating</item>
+        <item>Chronological</item>
+        <item>Times cooked</item>
+        <item>Rating</item>
     </string-array>
 </resources>

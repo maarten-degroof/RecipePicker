@@ -132,7 +132,7 @@
     <string name="reset_amount_cooked">Reset amount cooked</string>
     <string name="update">Update</string>
     <string name="needed_ingredients">The ingredients needed for &lt;b>%1$d&lt;/b> persons:</string>
-    <string name="times_cooked">Times cooked:</string>
+    <string name="times_cooked_with_colon">Times cooked:</string>
     <string name="website">Website:</string>
     <string name="browse">Browse</string>
     <string name="plus_sign">+</string>
@@ -211,4 +211,7 @@
     <string name="copy_ingredients">Copy ingredients</string>
     <string name="categories">Categories</string>
     <string name="add_category">Add category</string>
+    <string name="chronological">Chronological</string>
+    <string name="times_cooked">Times cooked</string>
+    <string name="rating">Rating</string>
 </resources>

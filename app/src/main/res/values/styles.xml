@@ -32,10 +32,13 @@
 
     <style name="ToolbarStyle">
         <item name="android:textColorPrimary">@android:color/white</item>
-        <item name="android:background">@color/primaryColor</item>
+        <item name="android:colorBackground">@color/primaryColor</item>
         <item name="colorAccent">@color/primaryLightColor</item>
-        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="colorControlNormal">@android:color/white</item>
+    </style>
+
+    <style name="OverflowToolbarStyle">
+        <item name="android:textColorPrimary">@android:color/black</item>
     </style>
 
     <!-- This is used for difficulty chip on the viewRecipeActivity -->
@@ -49,15 +52,5 @@
     <style parent="TextAppearance.AppCompat.Large" name="LargerText">
         <item name="android:textSize">20sp</item>
     </style>
-
-    <!-- this takes care of the color of the hamburger icon -->
-    <style name="DrawerArrowStyle" parent="@style/Widget.AppCompat.DrawerArrowToggle">
-        <item name="spinBars">true</item>
-        <item name="color">@android:color/white</item>
-    </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

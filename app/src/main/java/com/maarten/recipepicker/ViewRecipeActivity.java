@@ -504,6 +504,10 @@ public class ViewRecipeActivity extends AppCompatActivity {
         for (Ingredient ingredient : recipe.getIngredientList()) {
             builder.append("- ").append(ingredient.toString()).append("\n");
         }
+        // remove the last '/n'
+        if(builder.length() > 0) {
+            builder.setLength(builder.length() - 1);
+        }
 
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("Ingredients", builder.toString());
