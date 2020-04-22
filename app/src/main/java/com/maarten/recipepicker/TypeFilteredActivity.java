@@ -118,8 +118,9 @@ public class TypeFilteredActivity extends AppCompatActivity {
         }
         else if (category != null) {
             categoryFilteredAdapter = new CategoryFilteredAdapter(this, recipeList);
-            typeFilteredRecyclerView.setAdapter(categoryFilteredAdapter);
             amountOfResults = categoryFilteredAdapter.filterAndReturnAmount(category);
+            typeFilteredRecyclerView.setAdapter(categoryFilteredAdapter);
+
         }
 
         controlNoRecipeElements();

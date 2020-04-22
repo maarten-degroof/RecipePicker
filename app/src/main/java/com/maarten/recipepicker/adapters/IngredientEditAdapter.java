@@ -20,12 +20,11 @@ public class IngredientEditAdapter extends RecyclerView.Adapter<IngredientEditAd
 
     private Activity context;
     private List<Ingredient> ingredientList;
-    private static LayoutInflater inflater = null;
 
     public IngredientEditAdapter(Activity context, List<Ingredient> ingredientList){
         this.context = context;
         this.ingredientList = ingredientList;
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        setHasStableIds(true);
     }
 
     @NonNull
@@ -62,7 +61,7 @@ public class IngredientEditAdapter extends RecyclerView.Adapter<IngredientEditAd
         return ingredientList.size();
     }
 
-    class CustomViewHolder extends RecyclerView.ViewHolder {
+    static class CustomViewHolder extends RecyclerView.ViewHolder {
 
         private TextView ingredientListTextView;
         private ImageButton removeIngredientButton;

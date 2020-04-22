@@ -27,13 +27,13 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Custom
 
     private Activity context;
     private List<Recipe> recipeList;
-    private static LayoutInflater inflater = null;
+
     private int returnCount;
 
     public FavoriteAdapter(Activity context, List<Recipe> recipeList){
         this.context = context;
         this.recipeList = recipeList;
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        setHasStableIds(true);
     }
 
     @NonNull

@@ -33,7 +33,7 @@ public class CategoryFilteredAdapter extends RecyclerView.Adapter<CategoryFilter
     public CategoryFilteredAdapter(Activity context, List<Recipe> recipeList){
         this.context = context;
         this.recipeList = recipeList;
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        setHasStableIds(true);
     }
 
     @NonNull

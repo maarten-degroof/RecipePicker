@@ -28,15 +28,13 @@ public class DifficultyFilteredAdapter extends RecyclerView.Adapter<DifficultyFi
 
     private Activity context;
     private List<Recipe> recipeList;
-    private static LayoutInflater inflater = null;
 
     private int returnCount;
 
     public DifficultyFilteredAdapter(Activity context, List<Recipe> recipeList){
         this.context = context;
         this.recipeList = recipeList;
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
+        setHasStableIds(true);
     }
 
     @NonNull
@@ -64,15 +62,12 @@ public class DifficultyFilteredAdapter extends RecyclerView.Adapter<DifficultyFi
 
         holder.recipeImageView.setImageBitmap(recipe.getImage());
 
-        holder.parentView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, ViewRecipeActivity.class);
-                intent.putExtra("Recipe", recipe);
-                ActivityOptionsCompat options = ActivityOptionsCompat.
-                        makeSceneTransitionAnimation(context, holder.recipeImageView, "recipeImage");
-                context.startActivity(intent, options.toBundle());
-            }
+        holder.parentView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ViewRecipeActivity.class);
+            intent.putExtra("Recipe", recipe);
+            ActivityOptionsCompat options = ActivityOptionsCompat.
+                    makeSceneTransitionAnimation(context, holder.recipeImageView, "recipeImage");
+            context.startActivity(intent, options.toBundle());
         });
     }
 

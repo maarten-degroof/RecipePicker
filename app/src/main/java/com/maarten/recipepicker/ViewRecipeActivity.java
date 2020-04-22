@@ -73,24 +73,21 @@ public class ViewRecipeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_recipe);
 
+        Intent intent = getIntent();
+        recipe = (Recipe) intent.getSerializableExtra("Recipe");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Recipe");
+        toolbar.setTitle(recipe.getTitle());
         setSupportActionBar(toolbar);
 
         // this takes care of the back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // back button pressed
-                supportFinishAfterTransition();
-            }
+        toolbar.setNavigationOnClickListener(v -> {
+            // back button pressed
+            supportFinishAfterTransition();
         });
 
-        Intent intent = getIntent();
-        recipe = (Recipe) intent.getSerializableExtra("Recipe");
 
         TextView recipeTitle = findViewById(R.id.textViewTitle);
         amountCookedField = findViewById(R.id.amountCookedField);
@@ -245,6 +242,11 @@ public class ViewRecipeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        // If this recipe was deleted and you get here through going back, go back even further
+        if (!MainActivity.recipeList.contains(recipe)) {
+            createRecipeDeletedDialog();
+        }
     }
 
     /**
@@ -392,23 +394,35 @@ public class ViewRecipeActivity extends AppCompatActivity {
      * Creates the delete dialog
      */
     public void createDeleteDialog() {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setTitle("Remove Recipe");
         builder.setMessage("Are you sure you want to remove this recipe?");
 
-        builder.setPositiveButton("Remove", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                removeRecipe();
-            }
-        });
-        builder.setNegativeButton("Keep", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-            }
+        builder.setPositiveButton("Remove", (dialog, id) -> removeRecipe());
+
+        builder.setNegativeButton("Keep", (dialog, id) -> {
         });
         // create and show the dialog
         final AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    /**
+     * Creates the dialog to say that this recipe doesn't exist anymore.
+     * Will finish this activity.
+     */
+    public void createRecipeDeletedDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Stop!");
+        builder.setMessage("This recipe doesn't exist anymore, so you can't interact with it anymore.");
+        builder.setCancelable(false);
+
+        builder.setPositiveButton("OK I understand", (dialog, id) -> finish());
+        // create and show the dialog
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.show();
     }
 
@@ -547,16 +561,6 @@ public class ViewRecipeActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
-    }
-
-    /**
-     * When app closed from this activity, save the main recipelist to a file
-     */
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        MainActivity.saveRecipes();
     }
 
     /**

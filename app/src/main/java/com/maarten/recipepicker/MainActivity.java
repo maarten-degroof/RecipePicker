@@ -60,6 +60,8 @@ import java.util.Scanner;
  *
  * Portrait mode bugs:  - sidebar menu
  *
+ * When filtering/sorting and pressing a recipe and then going back, list blinks
+ *
  ********* THINGS TO MAKE *********
  * create licence + credit used technologies:
  *      Some Icons made by "https://www.flaticon.com/authors/freepik" Freepik from href="https://www.flaticon.com/"

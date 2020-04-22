@@ -19,12 +19,11 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Cu
 
     private Activity context;
     private List<Ingredient> ingredientList;
-    private static LayoutInflater inflater = null;
 
     public IngredientAdapter(Activity context, List<Ingredient> ingredientList){
         this.context = context;
         this.ingredientList = ingredientList;
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        setHasStableIds(true);
     }
 
     @NonNull
@@ -54,7 +53,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Cu
     }
 
 
-    class CustomViewHolder extends RecyclerView.ViewHolder {
+    static class CustomViewHolder extends RecyclerView.ViewHolder {
 
         private TextView ingredientListTextView;
         private View parentView;

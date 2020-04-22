@@ -23,12 +23,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.CustomView
 
     private Activity context;
     private List<Recipe> recipeList;
-    private static LayoutInflater inflater = null;
 
     public RecipeAdapter(Activity context, List<Recipe> recipeList){
         this.context = context;
         this.recipeList = recipeList;
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        setHasStableIds(true);
     }
 
     @NonNull
@@ -86,7 +85,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.CustomView
         return recipeList.size();
     }
 
-    class CustomViewHolder extends RecyclerView.ViewHolder {
+    static class CustomViewHolder extends RecyclerView.ViewHolder {
 
         private TextView recipeTitleTextView;
         private TextView recipeIngredientsTextView;
@@ -103,5 +102,4 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.CustomView
             this.recipeRatingTextView = itemView.findViewById(R.id.recipeRatingTextView);
         }
     }
-
 }

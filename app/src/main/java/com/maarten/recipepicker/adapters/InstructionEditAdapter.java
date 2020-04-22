@@ -20,12 +20,11 @@ public class InstructionEditAdapter extends RecyclerView.Adapter<InstructionEdit
 
     private Activity context;
     private List<Instruction> instructionList;
-    private static LayoutInflater inflater = null;
 
     public InstructionEditAdapter(Activity context, List<Instruction> instructionList){
         this.context = context;
         this.instructionList = instructionList;
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        setHasStableIds(true);
     }
 
     @NonNull
@@ -76,7 +75,7 @@ public class InstructionEditAdapter extends RecyclerView.Adapter<InstructionEdit
     }
 
 
-    class CustomViewHolder extends RecyclerView.ViewHolder {
+    static class CustomViewHolder extends RecyclerView.ViewHolder {
 
         private TextView instructionNumberTextView;
         private TextView instructionDescriptionTextView;
@@ -94,5 +93,4 @@ public class InstructionEditAdapter extends RecyclerView.Adapter<InstructionEdit
 
         }
     }
-
 }

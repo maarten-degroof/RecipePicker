@@ -31,14 +31,13 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.CustomView
 
     private Activity context;
     private List<Recipe> recipeList;
-    private static LayoutInflater inflater = null;
     private int returnCount;
 
     public FilterAdapter(Activity context, List<Recipe> recipeList){
         this.context = context;
         this.recipeList = recipeList;
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         returnCount = 0;
+        setHasStableIds(true);
     }
 
     @NonNull
@@ -66,15 +65,12 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.CustomView
 
         holder.recipeImageView.setImageBitmap(recipe.getImage());
 
-        holder.parentView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, ViewRecipeActivity.class);
-                intent.putExtra("Recipe", recipe);
-                ActivityOptionsCompat options = ActivityOptionsCompat.
-                        makeSceneTransitionAnimation(context, holder.recipeImageView, "recipeImage");
-                context.startActivity(intent, options.toBundle());
-            }
+        holder.parentView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ViewRecipeActivity.class);
+            intent.putExtra("Recipe", recipe);
+            ActivityOptionsCompat options = ActivityOptionsCompat.
+                    makeSceneTransitionAnimation(context, holder.recipeImageView, "recipeImage");
+            context.startActivity(intent, options.toBundle());
         });
     }
 
@@ -83,14 +79,13 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.CustomView
         return recipeList.size();
     }
 
-
     @Override
     public long getItemId(int position) {
         return position;
     }
 
 
-    class CustomViewHolder extends RecyclerView.ViewHolder {
+    static class CustomViewHolder extends RecyclerView.ViewHolder {
 
         private TextView recipeTitleTextView;
         private TextView recipeIngredientsTextView;

@@ -136,12 +136,8 @@ public class TimerAdapter extends RecyclerView.Adapter<TimerAdapter.CustomViewHo
                 context.createInstructionFinishedNotification(timer.getInstructionNumber());
             }
 
-            removeTimerButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    context.getTimerFragment().removeTimer(timer.getInstructionNumber(), true);
-                }
-            });
+            removeTimerButton.setOnClickListener(v ->
+                    context.getTimerFragment().removeTimer(timer.getInstructionNumber(), true));
 
             updateTimeRemaining(System.currentTimeMillis());
         }
