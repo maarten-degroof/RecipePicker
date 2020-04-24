@@ -165,7 +165,7 @@ public class EditRecipeActivity extends AppCompatActivity {
         recipeComments.setText(recipe.getComments());
 
         // check the current selected chips
-        durationChipGroup = findViewById(R.id.chipGroupDuration);
+        durationChipGroup = findViewById(R.id.durationChipGroup);
         switch (recipe.getCookTime()) {
             case SHORT:
                 durationChipGroup.check(R.id.shortDurationChip);
@@ -177,7 +177,7 @@ public class EditRecipeActivity extends AppCompatActivity {
                 durationChipGroup.check(R.id.mediumDurationChip);
         }
 
-        difficultyChipGroup = findViewById(R.id.chipGroupDifficulty);
+        difficultyChipGroup = findViewById(R.id.difficultyChipGoup);
         switch (recipe.getDifficulty()) {
             case BEGINNER:
                 difficultyChipGroup.check(R.id.beginnerDifficultyChip);

@@ -142,7 +142,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         instructionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // this makes sure that there's always one chip selected
-        final ChipGroup chipGroupDuration = findViewById(R.id.chipGroupDuration);
+        final ChipGroup chipGroupDuration = findViewById(R.id.durationChipGroup);
         chipGroupDuration.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(ChipGroup group, int checkedId) {
@@ -154,33 +154,27 @@ public class AddRecipeActivity extends AppCompatActivity {
                 }
             }
         });
-        final ChipGroup chipGroupDifficulty = findViewById(R.id.chipGroupDifficulty);
-        chipGroupDifficulty.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(ChipGroup group, int checkedId) {
-                for (int i = 0; i < chipGroupDifficulty.getChildCount(); i++) {
-                    Chip chip = (Chip) chipGroupDifficulty.getChildAt(i);
-                    if (chip != null) {
-                        chip.setClickable(!(chip.getId() == chipGroupDifficulty.getCheckedChipId()));
-                    }
+        final ChipGroup difficultyChipGroup = findViewById(R.id.difficultyChipGoup);
+        difficultyChipGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            for (int i = 0; i < difficultyChipGroup.getChildCount(); i++) {
+                Chip chip = (Chip) difficultyChipGroup.getChildAt(i);
+                if (chip != null) {
+                    chip.setClickable(!(chip.getId() == difficultyChipGroup.getCheckedChipId()));
                 }
             }
         });
 
         // This makes it possible to scroll in the comment field
         final TextInputEditText commentField = findViewById(R.id.commentsText);
-        commentField.setOnTouchListener(new View.OnTouchListener() {
-
-            public boolean onTouch(View v, MotionEvent event) {
-                if (commentField.hasFocus()) {
-                    v.getParent().requestDisallowInterceptTouchEvent(true);
-                    if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_SCROLL){
-                        v.getParent().requestDisallowInterceptTouchEvent(false);
-                        return true;
-                    }
+        commentField.setOnTouchListener((v, event) -> {
+            if (commentField.hasFocus()) {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_SCROLL){
+                    v.getParent().requestDisallowInterceptTouchEvent(false);
+                    return true;
                 }
-                return false;
             }
+            return false;
         });
 
         servesNumberPicker = findViewById(R.id.servesNumberPicker);
@@ -435,7 +429,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         int serves = servesNumberPicker.getValue();
 
         // get the selected cookingTime
-        ChipGroup chipGroupDuration = findViewById(R.id.chipGroupDuration);
+        ChipGroup chipGroupDuration = findViewById(R.id.durationChipGroup);
         CookTime cookTime;
 
         switch (chipGroupDuration.getCheckedChipId()) {
@@ -450,7 +444,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         }
 
         // get the selected difficulty
-        ChipGroup chipGroupDifficulty = findViewById(R.id.chipGroupDifficulty);
+        ChipGroup chipGroupDifficulty = findViewById(R.id.difficultyChipGoup);
         Difficulty difficulty;
 
         switch (chipGroupDifficulty.getCheckedChipId()) {
@@ -492,7 +486,6 @@ public class AddRecipeActivity extends AppCompatActivity {
      * @param view - the add category button
      */
     public void createCategoryDialog(View view) {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         // get the layout
@@ -506,7 +499,12 @@ public class AddRecipeActivity extends AppCompatActivity {
 
         builder.setPositiveButton("Add category", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                addCategoryChip(categoryEditText.getText().toString());
+                String inputText = categoryEditText.getText().toString();
+                if(inputText.isEmpty()) {
+                    return;
+                }
+                inputText = RecipeUtility.changeFirstLetterToCapital(inputText);
+                addCategoryChip(inputText);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -529,12 +527,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         chip.setText(category);
         chip.setCloseIconResource(R.drawable.ic_close_black_24dp);
         chip.setCloseIconVisible(true);
-        chip.setOnCloseIconClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                categoriesChipGroup.removeView(chip);
-            }
-        });
+        chip.setOnCloseIconClickListener(v -> categoriesChipGroup.removeView(chip));
 
         categoriesChipGroup.addView(chip);
     }

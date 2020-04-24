@@ -22,7 +22,11 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.maarten.recipepicker.adapters.FilterAdapter;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY;
 import static com.maarten.recipepicker.MainActivity.recipeList;
@@ -38,6 +42,8 @@ public class FilteredResultsActivity extends AppCompatActivity {
     private Boolean durationShort, durationMedium, durationLong;
     private Boolean difficultyBeginner, difficultyIntermediate, difficultyExpert;
 
+    private List<String> categoryList;
+
     private JSONObject filterObject;
 
     private MaterialButton addRecipeButton;
@@ -45,7 +51,8 @@ public class FilteredResultsActivity extends AppCompatActivity {
 
     private int amountOfItems;
 
-    private  ChipGroup chipGroup;
+    private  ChipGroup filteredDurationDifficultyChipGroup;
+    private ChipGroup filteredCategoryChipGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,21 +60,34 @@ public class FilteredResultsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_filtered_results);
         amountOfItems = 0;
 
+        boolean shouldFilterAllCategories = false;
+
+        categoryList = new ArrayList<>();
+        filteredCategoryChipGroup = findViewById(R.id.filteredCategoryChipGroup);
+
         try {
             Intent intent = getIntent();
             filterObject = new JSONObject(intent.getStringExtra("JSONObject"));
 
             // get the values for which you filtered
-            filterMin = (int) filterObject.get("filterMin");
-            filterMax = (int) filterObject.get("filterMax");
-            ratingMin = (int) filterObject.get("ratingMin");
-            ratingMax = (int) filterObject.get("ratingMax");
-            durationShort = (Boolean) filterObject.get("durationShort");
-            durationMedium = (Boolean) filterObject.get("durationMedium");
-            durationLong = (Boolean) filterObject.get("durationLong");
-            difficultyBeginner = (Boolean) filterObject.get("difficultyBeginner");
-            difficultyIntermediate = (Boolean) filterObject.get("difficultyIntermediate");
-            difficultyExpert = (Boolean) filterObject.get("difficultyExpert");
+            filterMin = filterObject.getInt("filterMin");
+            filterMax = filterObject.getInt("filterMax");
+            ratingMin = filterObject.getInt("ratingMin");
+            ratingMax = filterObject.getInt("ratingMax");
+
+            durationShort = filterObject.getBoolean("durationShort");
+            durationMedium = filterObject.getBoolean("durationMedium");
+            durationLong = filterObject.getBoolean("durationLong");
+
+            difficultyBeginner = filterObject.getBoolean("difficultyBeginner");
+            difficultyIntermediate = filterObject.getBoolean("difficultyIntermediate");
+            difficultyExpert = filterObject.getBoolean("difficultyExpert");
+
+            shouldFilterAllCategories = filterObject.getBoolean("shouldFilterAllCategories");
+            JSONArray categoryJsonArray = filterObject.getJSONArray("categories");
+            for (int i=0; i < categoryJsonArray.length(); i++) {
+                categoryList.add(categoryJsonArray.getString(i));
+            }
 
             listViewFiltered = findViewById(R.id.mainRecyclerView);
 
@@ -93,20 +113,39 @@ public class FilteredResultsActivity extends AppCompatActivity {
         String description = getString(R.string.filtered_recipe_description, filterMin, filterMax, ratingMin, ratingMax);
         filteredDescriptionTextView.setText(Html.fromHtml(description, FROM_HTML_MODE_LEGACY));
 
-        chipGroup = findViewById(R.id.chipGroup);
+        filteredDurationDifficultyChipGroup = findViewById(R.id.filteredDurationDifficultyChipGroup);
         if (durationShort) {
-            createChip(getString(R.string.duration_short));
+            createChip(getString(R.string.duration_short), filteredDurationDifficultyChipGroup);
         } if (durationMedium) {
-            createChip(getString(R.string.duration_medium));
+            createChip(getString(R.string.duration_medium), filteredDurationDifficultyChipGroup);
         } if (durationLong) {
-            createChip(getString(R.string.duration_long));
+            createChip(getString(R.string.duration_long), filteredDurationDifficultyChipGroup);
         } if (difficultyBeginner) {
-            createChip(getString(R.string.beginner));
+            createChip(getString(R.string.beginner), filteredDurationDifficultyChipGroup);
         } if (difficultyIntermediate) {
-            createChip(getString(R.string.intermediate));
+            createChip(getString(R.string.intermediate), filteredDurationDifficultyChipGroup);
         } if(difficultyExpert) {
-            createChip(getString(R.string.expert));
+            createChip(getString(R.string.expert), filteredDurationDifficultyChipGroup);
         }
+
+        TextView categoryTextView = findViewById(R.id.categoriesSelectedTextView);
+        if (!categoryList.isEmpty()) {
+            String categoryText;
+            if (shouldFilterAllCategories) {
+                categoryText = getString(R.string.filtered_category_description, getString(R.string.all));
+            } else {
+                categoryText = getString(R.string.filtered_category_description, getString(R.string.some));
+            }
+            categoryTextView.setText(Html.fromHtml(categoryText, FROM_HTML_MODE_LEGACY));
+
+            for (String category : categoryList) {
+                createChip(category, filteredCategoryChipGroup);
+            }
+        } else {
+            categoryTextView.setVisibility(View.GONE);
+            filteredDurationDifficultyChipGroup.setVisibility(View.GONE);
+        }
+
 
         addRecipeButton = findViewById(R.id.addRecipeButton);
         noRecipesTextView = findViewById(R.id.noFoundRecipesTextView);
@@ -119,7 +158,7 @@ public class FilteredResultsActivity extends AppCompatActivity {
      *
      * @param name - the name of the chip
      */
-    private void createChip(String name) {
+    private void createChip(String name, ChipGroup chipGroup) {
         Chip chip = new Chip(this);
         chip.setText(name);
         chip.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.primaryColor)));
@@ -149,7 +188,6 @@ public class FilteredResultsActivity extends AppCompatActivity {
         filterAdapter = new FilterAdapter(this, recipeList);
         listViewFiltered.setAdapter(filterAdapter);
         amountOfItems = filterAdapter.filterAndReturnAmount(filterObject.toString());
-        Log.d("COUNT", "in onResume: "+amountOfItems);
         controlNoRecipeElements();
     }
 

@@ -20,7 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view6" />
+        app:layout_constraintTop_toBottomOf="@+id/view5" />
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -284,7 +284,7 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view6" />
+                app:layout_constraintTop_toBottomOf="@id/view5" />
 
             <TextView
                 android:id="@+id/extrasTextView"
@@ -299,7 +299,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view8" />
+                app:layout_constraintTop_toBottomOf="@id/view6" />
 
             <TextView
                 android:id="@+id/imageTextView"
@@ -314,7 +314,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view5" />
+                app:layout_constraintTop_toBottomOf="@+id/view4" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/URLFieldLayout"
@@ -341,7 +341,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <HorizontalScrollView
-                android:id="@+id/horizontalScrollViewDuration"
+                android:id="@+id/durationHorizontalScollView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -350,7 +350,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/durationTextView">
 
                 <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/chipGroupDuration"
+                    android:id="@+id/durationChipGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -385,15 +385,15 @@
 
 
             <HorizontalScrollView
-                android:id="@+id/horizontalScrollViewDifficulty"
+                android:id="@+id/difficultyHorizontalScrollView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/horizontalScrollViewDuration">
+                app:layout_constraintTop_toBottomOf="@+id/durationHorizontalScollView">
 
                 <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/chipGroupDifficulty"
+                    android:id="@+id/difficultyChipGoup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -519,7 +519,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/instructionRecyclerView" />
 
             <View
-                android:id="@+id/view5"
+                android:id="@+id/view4"
                 style="@style/Divider"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -527,10 +527,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/horizontalScrollViewDifficulty" />
+                app:layout_constraintTop_toBottomOf="@+id/difficultyHorizontalScrollView" />
 
             <View
-                android:id="@+id/view6"
+                android:id="@+id/view5"
                 style="@style/Divider"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -540,7 +540,7 @@
                 app:layout_constraintTop_toBottomOf="@id/imageBarrier" />
 
             <View
-                android:id="@+id/view8"
+                android:id="@+id/view6"
                 style="@style/Divider"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

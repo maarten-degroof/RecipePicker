@@ -208,7 +208,7 @@ public class ImportViewRecipeFragment extends Fragment {
             recipe.setCookTime(CookTime.MEDIUM);
         }
         // check the current selected chips
-        chipGroupDuration = view.findViewById(R.id.chipGroupDuration);
+        chipGroupDuration = view.findViewById(R.id.durationChipGroup);
         switch (recipe.getCookTime()) {
             case SHORT:
                 chipGroupDuration.check(R.id.shortDurationChip);
@@ -223,7 +223,7 @@ public class ImportViewRecipeFragment extends Fragment {
         if (recipe.getDifficulty() == null) {
             recipe.setDifficulty(Difficulty.INTERMEDIATE);
         }
-        chipGroupDifficulty = view.findViewById(R.id.chipGroupDifficulty);
+        chipGroupDifficulty = view.findViewById(R.id.difficultyChipGoup);
         switch (recipe.getDifficulty()) {
             case BEGINNER:
                 chipGroupDifficulty.check(R.id.beginnerDifficultyChip);

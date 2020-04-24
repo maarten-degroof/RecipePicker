@@ -224,15 +224,15 @@
                 app:layout_constraintTop_toBottomOf="@+id/view7" />
 
             <HorizontalScrollView
-                android:id="@+id/horizontalScrollViewDifficulty"
+                android:id="@+id/difficultyHorizontalScrollView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/horizontalScrollViewDuration">
+                app:layout_constraintTop_toBottomOf="@+id/durationHorizontalScollView">
 
                 <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/chipGroupDifficulty"
+                    android:id="@+id/difficultyChipGoup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -406,7 +406,7 @@
                 android:layout_marginTop="12dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/horizontalScrollViewDifficulty" />
+                app:layout_constraintTop_toBottomOf="@id/difficultyHorizontalScrollView" />
 
             <View
                 android:id="@+id/view2"
@@ -518,7 +518,7 @@
 
 
             <HorizontalScrollView
-                android:id="@+id/horizontalScrollViewDuration"
+                android:id="@+id/durationHorizontalScollView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -528,7 +528,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/durationTextView">
 
                 <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/chipGroupDuration"
+                    android:id="@+id/durationChipGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"

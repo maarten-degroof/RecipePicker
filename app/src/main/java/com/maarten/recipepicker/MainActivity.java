@@ -14,6 +14,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -102,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
     private RecipeAdapter adapter;
 
     private ActionBarDrawerToggle abdt;
+    private DrawerLayout drawerLayout;
 
     private MaterialButton orderByButton;
     private int currentOrderBySetting;
@@ -171,15 +173,15 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().getThemedContext();
 
         // all the navigation drawer stuff
-        DrawerLayout dl = findViewById(R.id.dl);
-        abdt = new ActionBarDrawerToggle(this, dl,R.string.Open, R.string.Close);
+        drawerLayout = findViewById(R.id.dl);
+        abdt = new ActionBarDrawerToggle(this, drawerLayout,R.string.Open, R.string.Close);
         abdt.setDrawerIndicatorEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // make the recyclerView also scrollable
         ViewCompat.setNestedScrollingEnabled(listViewRecipes, true);
 
-        dl.addDrawerListener(abdt);
+        drawerLayout.addDrawerListener(abdt);
         abdt.syncState();
 
         NavigationView nav_view = findViewById(R.id.nav_view);
@@ -403,6 +405,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         controlNoRecipeElements();
+        drawerLayout.closeDrawer(GravityCompat.START);
 
         setOrdering(currentOrderBySetting);
     }

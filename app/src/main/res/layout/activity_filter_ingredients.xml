@@ -60,17 +60,41 @@
                 app:layout_constraintTop_toBottomOf="@+id/noRecipesYetTextView"
                 app:layout_constraintVertical_bias="0.0" />
 
-            <TextView
-                android:id="@+id/orTextView"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/orLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:text="@string/or_in_caps"
-                android:textColor="@color/primaryDarkColor"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toTopOf="@+id/goBackToFiltersButton"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/filterButton">
+
+                <View
+                    android:layout_width="40dp"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@color/primaryColor" />
+
+                <TextView
+                    android:id="@+id/orTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="@string/or_in_caps"
+                    android:textAlignment="center"
+                    android:textColor="@color/primaryColor"
+                    android:textSize="18sp" />
+
+                <View
+                    android:layout_width="40dp"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:background="@color/primaryColor" />
+            </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/goBackToFiltersButton"
@@ -79,13 +103,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="24dp"
                 android:onClick="goBackToFilters"
                 android:text="@string/use_filters_instead"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/orLayout" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/filterButton"
@@ -93,14 +118,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="4dp"
                 android:onClick="viewFilterResults"
                 android:text="@string/filter_button"
-                app:layout_constraintBottom_toTopOf="@+id/orTextView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/filterIngredientsRecyclerView" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/filterIngredientsRecyclerView"

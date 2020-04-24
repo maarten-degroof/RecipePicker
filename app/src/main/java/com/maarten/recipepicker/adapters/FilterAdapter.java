@@ -21,6 +21,7 @@ import com.maarten.recipepicker.ViewRecipeActivity;
 import com.maarten.recipepicker.enums.CookTime;
 import com.maarten.recipepicker.enums.Difficulty;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -137,27 +138,38 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.CustomView
             protected FilterResults performFiltering(CharSequence constraint) {
 
                 FilterResults results = new FilterResults();
-                ArrayList<Recipe> filteredArray = new ArrayList<>();
+                ArrayList<Recipe> filteredArray;
 
                 int filterMin, filterMax;
                 int ratingMin, ratingMax;
-                Boolean durationShort, durationMedium, durationLong;
-                Boolean difficultyBeginner, difficultyIntermediate, difficultyExpert;
+                boolean durationShort, durationMedium, durationLong;
+                boolean difficultyBeginner, difficultyIntermediate, difficultyExpert;
+                boolean recipeShouldHaveAllCategories = false;
+                List<String> categoryList = new ArrayList<>();
 
                 returnCount = 0;
 
                 try {
                     JSONObject jsonObject = new JSONObject(constraint.toString());
-                    filterMin = (int) jsonObject.get("filterMin");
-                    filterMax = (int) jsonObject.get("filterMax");
-                    ratingMin = (int) jsonObject.get("ratingMin");
-                    ratingMax = (int) jsonObject.get("ratingMax");
-                    durationShort = (Boolean) jsonObject.get("durationShort");
-                    durationMedium = (Boolean) jsonObject.get("durationMedium");
-                    durationLong = (Boolean) jsonObject.get("durationLong");
-                    difficultyBeginner = (Boolean) jsonObject.get("difficultyBeginner");
-                    difficultyIntermediate = (Boolean) jsonObject.get("difficultyIntermediate");
-                    difficultyExpert = (Boolean) jsonObject.get("difficultyExpert");
+                    filterMin = jsonObject.getInt("filterMin");
+                    filterMax = jsonObject.getInt("filterMax");
+                    ratingMin = jsonObject.getInt("ratingMin");
+                    ratingMax = jsonObject.getInt("ratingMax");
+
+                    durationShort = jsonObject.getBoolean("durationShort");
+                    durationMedium = jsonObject.getBoolean("durationMedium");
+                    durationLong = jsonObject.getBoolean("durationLong");
+
+                    difficultyBeginner = jsonObject.getBoolean("difficultyBeginner");
+                    difficultyIntermediate = jsonObject.getBoolean("difficultyIntermediate");
+                    difficultyExpert = jsonObject.getBoolean("difficultyExpert");
+
+                    recipeShouldHaveAllCategories = jsonObject.getBoolean("shouldFilterAllCategories");
+
+                    JSONArray categoryJsonArray = jsonObject.getJSONArray("categories");
+                    for (int i=0; i < categoryJsonArray.length(); i++) {
+                        categoryList.add(categoryJsonArray.getString(i));
+                    }
 
 
                     /**
@@ -169,6 +181,8 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.CustomView
                      *  -   Then check if both arrays are empty (which means no filter was selected)
                      *  -   Then check if one of the arrays is empty (only one type of filter was selected)
                      *  -   If it wasn't any of the previous, both arrays are set
+                     *
+                     *  -   Lastly, check for the categories
                      */
                     ArrayList<CookTime> durationFilterList = new ArrayList<>();
                     if(durationShort) {
@@ -192,41 +206,60 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.CustomView
                         difficultyFilterList.add(Difficulty.EXPERT);
                     }
 
+                    List<Recipe> partFilterList = new ArrayList<>();
 
-                    for (int i = 0; i < recipeList.size(); i++) {
-                        Recipe tempRecipe = recipeList.get(i);
-
+                    for (Recipe recipe : recipeList) {
                         // check if the times cooked is within the given range
-                        if (tempRecipe.getAmountCooked() >= filterMin && tempRecipe.getAmountCooked() <= filterMax) {
+                        if (recipe.getAmountCooked() >= filterMin && recipe.getAmountCooked() <= filterMax) {
 
                             // check if the rating is within the given range
-                            if (tempRecipe.getRating() >= ratingMin && tempRecipe.getRating() <= ratingMax) {
+                            if (recipe.getRating() >= ratingMin && recipe.getRating() <= ratingMax) {
 
                                 // no filters checked -> add recipe
                                 if (durationFilterList.isEmpty() && difficultyFilterList.isEmpty()) {
-                                    filteredArray.add(tempRecipe);
+                                    partFilterList.add(recipe);
                                 }
                                 // no duration; only difficulty
                                 else if (durationFilterList.isEmpty()) {
-                                    if (difficultyFilterList.contains(tempRecipe.getDifficulty())) {
-                                        filteredArray.add(tempRecipe);
+                                    if (difficultyFilterList.contains(recipe.getDifficulty())) {
+                                        partFilterList.add(recipe);
                                     }
                                 }
                                 // no difficulty; only duration
                                 else if (difficultyFilterList.isEmpty()) {
-                                    if (durationFilterList.contains(tempRecipe.getCookTime())) {
-                                        filteredArray.add(tempRecipe);
+                                    if (durationFilterList.contains(recipe.getCookTime())) {
+                                        partFilterList.add(recipe);
                                     }
                                 }
                                 // both filters are set
                                 else {
-                                    if (durationFilterList.contains(tempRecipe.getCookTime()) && difficultyFilterList.contains(tempRecipe.getDifficulty())) {
-                                        filteredArray.add(tempRecipe);
+                                    if (durationFilterList.contains(recipe.getCookTime()) && difficultyFilterList.contains(recipe.getDifficulty())) {
+                                        partFilterList.add(recipe);
                                     }
                                 }
                             }
                         }
                     }
+
+                    // Part two of the filtering: filter on the categories
+                    if (categoryList.isEmpty()) {
+                        filteredArray = new ArrayList<>(partFilterList);
+                    } else {
+                        filteredArray = new ArrayList<>();
+                        for (Recipe recipe : partFilterList) {
+                            if (recipeShouldHaveAllCategories) {
+                                if (recipe.getCategories().containsAll(categoryList)) {
+                                    filteredArray.add(recipe);
+                                }
+                            }
+                            else {
+                                if (listContainsItem(recipe.getCategories(), categoryList)) {
+                                    filteredArray.add(recipe);
+                                }
+                            }
+                        }
+                    }
+
                     results.count = filteredArray.size();
                     results.values = filteredArray;
                     returnCount = filteredArray.size();
@@ -236,5 +269,21 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.CustomView
                 return results;
             }
         };
+    }
+
+    /**
+     * Checks if the checkList contains an item of the testList
+     *
+     * @param checkList - the list of Strings to check against
+     * @param testList - the list of String to use to check
+     * @return - returns true if an item is found
+     */
+    private boolean listContainsItem(List<String> checkList, List<String> testList) {
+        for (String item : testList) {
+            if (checkList.contains(item)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

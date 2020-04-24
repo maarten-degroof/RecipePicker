@@ -76,7 +76,7 @@ public class FilterIngredientsActivity extends AppCompatActivity {
          for(Recipe recipe : MainActivity.recipeList) {
              List<Ingredient> tempList = recipe.getIngredientList();
              for(Ingredient ingredient : tempList) {
-                 ingredientNameList.add(ChangeFirstLetterToCapital(ingredient.getName()));
+                 ingredientNameList.add(changeFirstLetterToCapital(ingredient.getName()));
              }
          }
          ingredientList = new ArrayList<>();
@@ -85,7 +85,7 @@ public class FilterIngredientsActivity extends AppCompatActivity {
          }
 
          // shows the 'add recipe' button and text when there aren't any ingredients
-         ShowAddRecipeScreen(ingredientList.isEmpty());
+         showAddRecipeScreen(ingredientList.isEmpty());
 
          filterIngredientsAdapter = new FilterIngredientsAdapter(this, ingredientList);
          filterIngredientsRecyclerView.setAdapter(filterIngredientsAdapter);
@@ -98,7 +98,7 @@ public class FilterIngredientsActivity extends AppCompatActivity {
      * @param input the ingredient name to convert
      * @return returns the converted name
      */
-    private String ChangeFirstLetterToCapital(String input) {
+    private String changeFirstLetterToCapital(String input) {
         String convertedValue = "";
         convertedValue += Character.toUpperCase(input.charAt(0));
         convertedValue += input.substring(1).toLowerCase();
@@ -117,7 +117,7 @@ public class FilterIngredientsActivity extends AppCompatActivity {
      *
      * @param shouldShow boolean, if true means there are no ingredients and it should show the 'add recipe' button
      */
-    private void ShowAddRecipeScreen(Boolean shouldShow) {
+    private void showAddRecipeScreen(Boolean shouldShow) {
         if (shouldShow) {
             addRecipeButton.setVisibility(View.VISIBLE);
             addRecipeTextView.setVisibility(View.VISIBLE);

@@ -227,12 +227,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
             chip.setText(category);
             chip.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.primaryColor)));
             chip.setTextColor(Color.WHITE);
-            chip.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    startCategoryFilteredActivity(category);
-                }
-            });
+            chip.setOnClickListener(view -> startCategoryFilteredActivity(category));
             categoriesChipGroup.addView(chip);
         }
 
@@ -243,7 +238,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        // If this recipe was deleted and you get here through going back, go back even further
+        // If this recipe was deleted and you get here through going back,
+        // make sure the user can't interact with the recipe
         if (!MainActivity.recipeList.contains(recipe)) {
             createRecipeDeletedDialog();
         }

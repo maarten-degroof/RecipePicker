@@ -216,4 +216,7 @@
     <string name="times_cooked">Times cooked</string>
     <string name="rating">Rating</string>
     <string name="no_recipes_yet_for_criteria">You have no recipes yet for your criteria. Would you like to add one now?</string>
+    <string name="filtered_category_description">The following recipes include &lt;b>%1$s&lt;/b> of the following categories:</string>
+    <string name="some">some</string>
+    <string name="all">all</string>
 </resources>

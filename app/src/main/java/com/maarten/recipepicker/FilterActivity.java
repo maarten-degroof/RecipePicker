@@ -1,32 +1,39 @@
 package com.maarten.recipepicker;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.CompoundButton;
+import android.view.View;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.appyvet.materialrangebar.RangeBar;
 import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipDrawable;
+import com.google.android.material.chip.ChipGroup;
+import com.maarten.recipepicker.models.Recipe;
 
-import java.util.Collections;
-
-import android.view.View;
-
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class FilterActivity extends AppCompatActivity {
 
-    int minCookedValue = 0;
-    int maxCookedValue = 2;
+    private int minCookedValue = 0;
+    private int maxCookedValue = 2;
 
-    int minRatingValue = 0;
-    int maxRatingValue = 10;
+    private int minRatingValue = 0;
+    private int maxRatingValue = 10;
+
+    private ChipGroup categoryChipGroup;
 
     // keeps track of which chips are ticked. Duration: [short, medium = default, long]
     //  Difficulty: [beginner, intermediate = default, expert]
@@ -68,19 +75,17 @@ public class FilterActivity extends AppCompatActivity {
             @Override
             public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex, String leftPinValue, String rightPinValue) {
                 minAmountCooked.setText(leftPinValue);
-                minCookedValue = Integer.valueOf(leftPinValue);
+                minCookedValue = Integer.parseInt(leftPinValue);
                 maxAmountCooked.setText(rightPinValue);
-                maxCookedValue = Integer.valueOf(rightPinValue);
+                maxCookedValue = Integer.parseInt(rightPinValue);
             }
 
             @Override
             public void onTouchStarted(RangeBar rangeBar) {
-
             }
 
             @Override
             public void onTouchEnded(RangeBar rangeBar) {
-
             }
         });
 
@@ -91,14 +96,14 @@ public class FilterActivity extends AppCompatActivity {
         ratingRangeBar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
             @Override
             public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex, String leftPinValue, String rightPinValue) {
-                minRatingValue = Integer.valueOf(leftPinValue);
-                if(Integer.valueOf(leftPinValue) == 0){
+                minRatingValue = Integer.parseInt(leftPinValue);
+                if(Integer.parseInt(leftPinValue) == 0){
                    minRating.setText(getString(R.string.no_rating));
                 } else {
                     minRating.setText(leftPinValue);
                 }
-                maxRatingValue = Integer.valueOf(rightPinValue);
-                if(Integer.valueOf(rightPinValue) == 0) {
+                maxRatingValue = Integer.parseInt(rightPinValue);
+                if(Integer.parseInt(rightPinValue) == 0) {
                     maxRating.setText(getString(R.string.no_rating));
                 } else {
                     maxRating.setText(rightPinValue);
@@ -107,60 +112,68 @@ public class FilterActivity extends AppCompatActivity {
 
             @Override
             public void onTouchStarted(RangeBar rangeBar) {
-
             }
 
             @Override
             public void onTouchEnded(RangeBar rangeBar) {
-
             }
         });
 
         // change listener for each chip, so it will update the durationArray which keeps track which buttons
         // are checked. Has to be this ugly since you can't ask the chipgroup which ones are ticked
         Chip shortDurationChip = findViewById(R.id.shortDurationChip);
-        shortDurationChip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                durationArray[0] = isChecked;
-            }
-        });
+        shortDurationChip.setOnCheckedChangeListener((buttonView, isChecked) -> durationArray[0] = isChecked);
+
         Chip mediumDurationChip = findViewById(R.id.mediumDurationChip);
-        mediumDurationChip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                durationArray[1] = isChecked;
-            }
-        });
+        mediumDurationChip.setOnCheckedChangeListener((buttonView, isChecked) -> durationArray[1] = isChecked);
+
         Chip longDurationChip = findViewById(R.id.longDurationChip);
-        longDurationChip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                durationArray[2] = isChecked;
-            }
-        });
+        longDurationChip.setOnCheckedChangeListener((buttonView, isChecked) -> durationArray[2] = isChecked);
 
         Chip beginnerDifficultyChip = findViewById(R.id.beginnerDifficultyChip);
-        beginnerDifficultyChip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                difficultyArray[0] = isChecked;
-            }
-        });
+        beginnerDifficultyChip.setOnCheckedChangeListener((buttonView, isChecked) -> difficultyArray[0] = isChecked);
+
         Chip intermediateDifficultyChip = findViewById(R.id.intermediateDifficultyChip);
-        intermediateDifficultyChip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                difficultyArray[1] = isChecked;
-            }
-        });
+        intermediateDifficultyChip.setOnCheckedChangeListener((buttonView, isChecked) -> difficultyArray[1] = isChecked);
+
         Chip expertDifficultyChip = findViewById(R.id.expertDifficultyChip);
-        expertDifficultyChip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                difficultyArray[2] = isChecked;
+        expertDifficultyChip.setOnCheckedChangeListener((buttonView, isChecked) -> difficultyArray[2] = isChecked);
+
+
+        categoryChipGroup = findViewById(R.id.categoryChipGroup);
+        List<String> categoryList = new ArrayList<>();
+
+        for (Recipe recipe : MainActivity.recipeList) {
+            for (String category : recipe.getCategories()) {
+                String current_category = ChangeFirstLetterToCapital(category);
+                if (!categoryList.contains(current_category)) {
+                    categoryList.add(current_category);
+                }
             }
-        });
+        }
+
+        for (String category : categoryList) {
+            Chip chip = new Chip(this);
+            ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(this, null, 0, R.style.Widget_MaterialComponents_Chip_Choice);
+            chip.setChipDrawable(chipDrawable);
+            chip.setCheckedIconVisible(true);
+            chip.setText(category);
+            categoryChipGroup.addView(chip);
+        }
+    }
+
+    /**
+     * Converts string to a string with a capital and all lowercase characters followed
+     *
+     * @param input the ingredient name to convert
+     * @return returns the converted name
+     */
+    private String ChangeFirstLetterToCapital(String input) {
+        String convertedValue = "";
+        convertedValue += Character.toUpperCase(input.charAt(0));
+        convertedValue += input.substring(1).toLowerCase();
+
+        return convertedValue;
     }
 
     /**
@@ -169,18 +182,41 @@ public class FilterActivity extends AppCompatActivity {
      * @param view - the button which is pressed
      */
     public void viewFilteredResults(View view) {
+
+        boolean shouldFilterAllCategories = false;
+        RadioGroup categoriesRadioGroup = findViewById(R.id.categoryRadioGroup);
+        if (categoriesRadioGroup.getCheckedRadioButtonId() == R.id.allCategoriesRadioButton) {
+            shouldFilterAllCategories = true;
+        }
+
+        List<String> checkedCategories = new ArrayList<>();
+        if(categoryChipGroup.getChildCount() > 0) {
+            for (int i=0; i < categoryChipGroup.getChildCount(); i++) {
+                Chip chip = (Chip) categoryChipGroup.getChildAt(i);
+                if (chip.isChecked()) {
+                    checkedCategories.add(chip.getText().toString());
+                }
+            }
+        }
+
         try {
             JSONObject filter = new JSONObject();
             filter.put("filterMin", minCookedValue);
             filter.put("filterMax", maxCookedValue);
             filter.put("ratingMin", minRatingValue);
             filter.put("ratingMax", maxRatingValue);
+
             filter.put("durationShort", durationArray[0]);
             filter.put("durationMedium", durationArray[1]);
             filter.put("durationLong", durationArray[2]);
+
             filter.put("difficultyBeginner", difficultyArray[0]);
             filter.put("difficultyIntermediate", difficultyArray[1]);
             filter.put("difficultyExpert", difficultyArray[2]);
+
+            filter.put("shouldFilterAllCategories", shouldFilterAllCategories);
+            JSONArray categoriesArray = new JSONArray(checkedCategories);
+            filter.put("categories", categoriesArray);
 
             Intent intent = new Intent(this, FilteredResultsActivity.class);
             intent.putExtra("JSONObject", filter.toString());
