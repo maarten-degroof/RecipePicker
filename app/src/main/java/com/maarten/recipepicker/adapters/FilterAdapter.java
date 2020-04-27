@@ -26,6 +26,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 
 public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.CustomViewHolder> {
@@ -144,8 +146,8 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.CustomView
                 int ratingMin, ratingMax;
                 boolean durationShort, durationMedium, durationLong;
                 boolean difficultyBeginner, difficultyIntermediate, difficultyExpert;
-                boolean recipeShouldHaveAllCategories = false;
-                List<String> categoryList = new ArrayList<>();
+                boolean recipeShouldHaveAllCategories;
+                Set<String> categorySet = new TreeSet<>();
 
                 returnCount = 0;
 
@@ -168,7 +170,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.CustomView
 
                     JSONArray categoryJsonArray = jsonObject.getJSONArray("categories");
                     for (int i=0; i < categoryJsonArray.length(); i++) {
-                        categoryList.add(categoryJsonArray.getString(i));
+                        categorySet.add(categoryJsonArray.getString(i));
                     }
 
 
@@ -242,18 +244,18 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.CustomView
                     }
 
                     // Part two of the filtering: filter on the categories
-                    if (categoryList.isEmpty()) {
+                    if (categorySet.isEmpty()) {
                         filteredArray = new ArrayList<>(partFilterList);
                     } else {
                         filteredArray = new ArrayList<>();
                         for (Recipe recipe : partFilterList) {
                             if (recipeShouldHaveAllCategories) {
-                                if (recipe.getCategories().containsAll(categoryList)) {
+                                if (recipe.getCategories().containsAll(categorySet)) {
                                     filteredArray.add(recipe);
                                 }
                             }
                             else {
-                                if (listContainsItem(recipe.getCategories(), categoryList)) {
+                                if (listContainsItem(recipe.getCategories(), categorySet)) {
                                     filteredArray.add(recipe);
                                 }
                             }
@@ -278,7 +280,7 @@ public class FilterAdapter extends RecyclerView.Adapter<FilterAdapter.CustomView
      * @param testList - the list of String to use to check
      * @return - returns true if an item is found
      */
-    private boolean listContainsItem(List<String> checkList, List<String> testList) {
+    private boolean listContainsItem(Set<String> checkList, Set<String> testList) {
         for (String item : testList) {
             if (checkList.contains(item)) {
                 return true;

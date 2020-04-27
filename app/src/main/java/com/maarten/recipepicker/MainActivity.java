@@ -45,6 +45,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.TreeSet;
 
 
 /**
@@ -320,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
         SPInstructionList.add(new Instruction("Once the minced meat is done, throw the paprika and tomatoes in the same pan and bake them together. Spice with salt and pepper.", (long) 300000));
         SPInstructionList.add(new Instruction("Mix the sauce with the spaghetti.", (long) 10000));
 
-        ArrayList<String> SPCategories = new ArrayList<>();
+        Set<String> SPCategories = new TreeSet<>();
         SPCategories.add("Pasta");
         SPCategories.add("Main course");
         SPCategories.add("Warm meal");

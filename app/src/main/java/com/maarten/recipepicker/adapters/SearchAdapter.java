@@ -16,12 +16,18 @@ import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.maarten.recipepicker.models.Ingredient;
+import com.maarten.recipepicker.models.Instruction;
 import com.maarten.recipepicker.models.Recipe;
 import com.maarten.recipepicker.R;
 import com.maarten.recipepicker.ViewRecipeActivity;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.CustomViewHolder> {
@@ -123,7 +129,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.CustomView
             @SuppressWarnings("unchecked")
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                recipeList  = (List<Recipe>) results.values;
+                recipeList = (List<Recipe>) results.values;
                 notifyDataSetChanged();
             }
 
@@ -131,36 +137,118 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.CustomView
             protected FilterResults performFiltering(CharSequence constraint) {
 
                 FilterResults results = new FilterResults();
-                ArrayList<Recipe> filteredArray = new ArrayList<>();
+                ArrayList<Recipe> filteredArray;
+
+                boolean searchTitle = true;
+                boolean searchIngredients = true;
+                boolean searchInstructions = true;
+                boolean searchComments = false;
+                boolean searchOnlyFavorites = false;
+                boolean recipeShouldHaveAllCategories;
+                Set<String> categorySet = new TreeSet<>();
 
                 try {
-                    String searchString = constraint.toString().toLowerCase();
+
+                    JSONObject jsonObject = new JSONObject(constraint.toString());
+                    final String searchString = jsonObject.getString("searchString").toLowerCase();
+                    searchTitle = jsonObject.getBoolean("searchTitle");
+                    searchIngredients = jsonObject.getBoolean("searchIngredients");
+                    searchInstructions = jsonObject.getBoolean("searchInstructions");
+                    searchComments = jsonObject.getBoolean("searchComments");
+                    searchOnlyFavorites = jsonObject.getBoolean("searchOnlyFavorites");
+
+                    recipeShouldHaveAllCategories = jsonObject.getBoolean("shouldFilterAllCategories");
+
+                    JSONArray categoryJsonArray = jsonObject.getJSONArray("categories");
+                    for (int i = 0; i < categoryJsonArray.length(); i++) {
+                        categorySet.add(categoryJsonArray.getString(i));
+                    }
 
                     // checks if part of the title is the same as the searchstring
                     // if that fails checks each ingredient
+                    // if that fails check each instruction
+                    // if that fails check the comments
+                    // then check if all the found recipes have the required categories
+                    List<Recipe> tempSearchedList = new ArrayList<>();
 
-                    for (int i = 0; i < recipeList.size(); i++) {
-                        Recipe tempRecipe = recipeList.get(i);
+                    for (Recipe recipe : recipeList) {
+                        boolean shouldSearchRecipe = true;
 
-                        if(tempRecipe.getTitle().toLowerCase().contains(searchString)) {
-                            filteredArray.add(tempRecipe);
-                        } else {
-                            // if the title didn't match -> check each ingredient
-                            for (Ingredient ingredient : tempRecipe.getIngredientList()) {
-                                if(ingredient.getName().toLowerCase().contains(searchString)) {
-                                    filteredArray.add(tempRecipe);
+                        // if should only search for favorites and this one isn't a favorite, just skip all the checks
+                        if (searchOnlyFavorites && !recipe.getFavorite()) {
+                            shouldSearchRecipe = false;
+                        }
+
+                        if (shouldSearchRecipe && searchTitle) {
+                            if (recipe.getTitle().toLowerCase().contains(searchString)) {
+                                tempSearchedList.add(recipe);
+                                shouldSearchRecipe = false;
+                            }
+                        }
+                        if (shouldSearchRecipe && searchIngredients) {
+                            if (recipe.getIngredientList().stream().anyMatch(ingredient -> ingredient.getName().toLowerCase().contains(searchString))) {
+                                tempSearchedList.add(recipe);
+                                shouldSearchRecipe = false;
+                            }
+                        }
+                        if (shouldSearchRecipe && searchInstructions) {
+                            if (recipe.getInstructionList().stream().anyMatch(instruction -> instruction.getDescription().toLowerCase().contains(searchString))) {
+                                tempSearchedList.add(recipe);
+                                shouldSearchRecipe = false;
+                            }
+                        }
+                        if (shouldSearchRecipe && searchComments) {
+                            if (recipe.getComments().toLowerCase().contains(searchString)) {
+                                tempSearchedList.add(recipe);
+                                shouldSearchRecipe = false;
+                            }
+                        }
+                    }
+
+                    // Part two: filter on the categories
+                    if (categorySet.isEmpty()) {
+                        filteredArray = new ArrayList<>(tempSearchedList);
+                    } else {
+                        filteredArray = new ArrayList<>();
+                        for (Recipe recipe : tempSearchedList) {
+                            if (recipeShouldHaveAllCategories) {
+                                if (recipe.getCategories().containsAll(categorySet)) {
+                                    filteredArray.add(recipe);
+                                }
+                            } else {
+                                if (listContainsItem(recipe.getCategories(), categorySet)) {
+                                    filteredArray.add(recipe);
                                 }
                             }
                         }
                     }
+
                     results.count = filteredArray.size();
                     results.values = filteredArray;
                     returnCount = filteredArray.size();
-                } catch (Exception e) {
+                }
+                catch(Exception e){
                     Log.e("filterError", e.getMessage());
                 }
                 return results;
             }
+
         };
+    }
+
+    /**
+     * Checks if the checkList contains an item of the testList
+     *
+     * @param checkList - the list of Strings to check against
+     * @param testList - the list of String to use to check
+     * @return - returns true if an item is found
+     */
+    private boolean listContainsItem(Set<String> checkList, Set<String> testList) {
+        for (String item : testList) {
+            if (checkList.contains(item)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

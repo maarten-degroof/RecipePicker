@@ -49,6 +49,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.maarten.recipepicker.MainActivity;
 import com.maarten.recipepicker.R;
+import com.maarten.recipepicker.RecipeUtility;
 import com.maarten.recipepicker.adapters.IngredientEditAdapter;
 import com.maarten.recipepicker.adapters.InstructionEditAdapter;
 import com.maarten.recipepicker.enums.CookTime;
@@ -59,6 +60,8 @@ import com.maarten.recipepicker.models.Recipe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static com.maarten.recipepicker.MainActivity.recipeList;
 
@@ -66,16 +69,14 @@ import static com.maarten.recipepicker.MainActivity.recipeList;
 public class ImportViewRecipeFragment extends Fragment {
 
     private Recipe recipe;
-    private IngredientEditAdapter ingredientAdapter;
-
     private TextView recipeTitle, recipeComments, recipeURL;
+    private TextInputLayout recipeTitleLayout;
+
     private RecyclerView ingredientListRecyclerView;
     private List<Ingredient> ingredientList;
-
+    private IngredientEditAdapter ingredientAdapter;
     private EditText ingredientNameField, ingredientQuantityField;
     private Spinner ingredientTypeField;
-
-    private TextInputLayout recipeTitleLayout;
 
     private ChipGroup chipGroupDuration, chipGroupDifficulty;
 
@@ -84,7 +85,6 @@ public class ImportViewRecipeFragment extends Fragment {
 
     private ImageView imageView;
     private String imagePath;
-
     private MaterialButton removeImageButton, differentImageButton, addImageButton;
 
     private InstructionEditAdapter instructionAdapter;
@@ -96,6 +96,7 @@ public class ImportViewRecipeFragment extends Fragment {
     private NumberPicker servesNumberPicker;
 
     private ChipGroup categoriesChipGroup;
+    private Set<String> categorySet;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -305,9 +306,10 @@ public class ImportViewRecipeFragment extends Fragment {
 
         categoriesChipGroup = view.findViewById(R.id.categoriesChipGroup);
         if (recipe.getCategories() == null) {
-            recipe.setCategories(new ArrayList<String>());
+            recipe.setCategories(new TreeSet<>());
         }
-        for (String category : recipe.getCategories()) {
+        categorySet = recipe.getCategories();
+        for (String category : categorySet) {
             addCategoryChip(category);
         }
 
@@ -377,12 +379,6 @@ public class ImportViewRecipeFragment extends Fragment {
                 difficulty = Difficulty.INTERMEDIATE;
         }
 
-        // Loop through the chipGroup to find all the categories
-        List<String> categoryList = new ArrayList<>();
-        for (int index=0; index < categoriesChipGroup.getChildCount(); index++) {
-            categoryList.add(((Chip)categoriesChipGroup.getChildAt(index)).getText().toString());
-        }
-
         if(tempRecipeName.isEmpty()) {
             recipeTitleLayout.setError("Please fill in a title");
         } else if (ingredientList.isEmpty()) {
@@ -395,7 +391,7 @@ public class ImportViewRecipeFragment extends Fragment {
             recipe.setTitle(tempRecipeName);
             recipe.setIngredientList(ingredientList);
             recipe.setInstructionList(instructionList);
-            recipe.setCategories(categoryList);
+            recipe.setCategories(categorySet);
 
             recipe.setCookTime(cookTime);
             recipe.setDifficulty(difficulty);
@@ -432,14 +428,21 @@ public class ImportViewRecipeFragment extends Fragment {
         builder.setTitle("Add category");
         builder.setMessage("Add a category here. A category can be 'Pasta' or 'Main course' for example.");
 
-        builder.setPositiveButton("Add category", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                addCategoryChip(categoryEditText.getText().toString());
+        builder.setPositiveButton("Add category", (dialog, id) -> {
+            String inputText = categoryEditText.getText().toString();
+            // only add if it's not empty and it doesn't exist yet
+            if(inputText.isEmpty()) {
+                return;
+            }
+            inputText = RecipeUtility.changeFirstLetterToCapital(inputText);
+            if(!categorySet.contains(inputText)) {
+                categorySet.add(inputText);
+                addCategoryChip(inputText);
+            } else {
+                Toast.makeText(requireActivity(), "This category already exists", Toast.LENGTH_LONG).show();
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-            }
+        builder.setNegativeButton("Cancel", (dialog, id) -> {
         });
         // create and show the dialog
         final AlertDialog alertDialog = builder.create();

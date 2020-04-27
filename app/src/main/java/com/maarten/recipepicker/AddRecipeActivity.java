@@ -55,13 +55,16 @@ import com.maarten.recipepicker.enums.Difficulty;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static com.maarten.recipepicker.MainActivity.recipeList;
 
 public class AddRecipeActivity extends AppCompatActivity {
 
-    private List<Ingredient> ingredientList = new ArrayList<>();
-    private List<Instruction> instructionList = new ArrayList<>();
+    private List<Ingredient> ingredientList;
+    private List<Instruction> instructionList;
+    private Set<String> categorySet;
 
     private IngredientEditAdapter ingredientAdapter;
     private EditText ingredientNameField, ingredientQuantityField;
@@ -93,14 +96,15 @@ public class AddRecipeActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_add_recipe);
 
+        ingredientList = new ArrayList<>();
+        instructionList = new ArrayList<>();
+        categorySet = new TreeSet<>();
+
         ingredientAdapter = new IngredientEditAdapter(this, ingredientList);
         RecyclerView ingredientRecyclerView = findViewById(R.id.addRecipeIngredientList);
         ingredientRecyclerView.setAdapter(ingredientAdapter);
         ingredientRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         ingredientRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-
-        // hide the list since it is empty
-        //ingredientRecyclerView.setVisibility(TextView.INVISIBLE);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Add Recipe");
@@ -109,12 +113,9 @@ public class AddRecipeActivity extends AppCompatActivity {
         // this takes care of the back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // back button pressed
-                finish();
-            }
+        toolbar.setNavigationOnClickListener(v -> {
+            // back button pressed
+            finish();
         });
 
         recipeTitleLayout = findViewById(R.id.nameFieldLayout);
@@ -458,12 +459,6 @@ public class AddRecipeActivity extends AppCompatActivity {
                 difficulty = Difficulty.INTERMEDIATE;
         }
 
-        // Loop through the chipGroup to find all the categories
-        List<String> categoryList = new ArrayList<>();
-        for (int index=0; index < categoriesChipGroup.getChildCount(); index++) {
-            categoryList.add(((Chip)categoriesChipGroup.getChildAt(index)).getText().toString());
-        }
-
         if(recipeName.isEmpty()) {
             recipeTitleLayout.setError("Please fill in a title");
         } else if (ingredientList.isEmpty()) {
@@ -472,7 +467,7 @@ public class AddRecipeActivity extends AppCompatActivity {
             Toast.makeText(AddRecipeActivity.this, "You have to add at least one instruction", Toast.LENGTH_LONG).show();
         } else {
             Recipe recipe = new Recipe(recipeName, ingredientList, favouriteSwitch,
-                    cookTime, imagePath, recipeURL, difficulty, comments, instructionList, serves, categoryList);
+                    cookTime, imagePath, recipeURL, difficulty, comments, instructionList, serves, categorySet);
             recipeList.add(recipe);
             MainActivity.saveRecipes();
             Toast.makeText(AddRecipeActivity.this, "Your recipe was added!", Toast.LENGTH_LONG).show();
@@ -497,19 +492,21 @@ public class AddRecipeActivity extends AppCompatActivity {
         builder.setTitle("Add category");
         builder.setMessage("Add a category here. A category can be 'Pasta' or 'Main course' for example.");
 
-        builder.setPositiveButton("Add category", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                String inputText = categoryEditText.getText().toString();
-                if(inputText.isEmpty()) {
-                    return;
-                }
-                inputText = RecipeUtility.changeFirstLetterToCapital(inputText);
+        builder.setPositiveButton("Add category", (dialog, id) -> {
+            String inputText = categoryEditText.getText().toString();
+            // only add if it's not empty and it doesn't exist yet
+            if(inputText.isEmpty()) {
+                return;
+            }
+            inputText = RecipeUtility.changeFirstLetterToCapital(inputText);
+            if(!categorySet.contains(inputText)) {
+                categorySet.add(inputText);
                 addCategoryChip(inputText);
+            } else {
+                Toast.makeText(this, "This category already exists", Toast.LENGTH_LONG).show();
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-            }
+        builder.setNegativeButton("Cancel", (dialog, id) -> {
         });
         // create and show the dialog
         final AlertDialog alertDialog = builder.create();

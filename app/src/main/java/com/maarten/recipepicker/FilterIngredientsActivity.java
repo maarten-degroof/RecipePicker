@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.NavigableSet;
 import java.util.TreeSet;
 
+import static com.maarten.recipepicker.RecipeUtility.changeFirstLetterToCapital;
+
 /**
  * Opens the Activity to filter on ingredients.
  * Will list all ingredients. If none, will show a text to add an ingredient.
@@ -91,20 +93,6 @@ public class FilterIngredientsActivity extends AppCompatActivity {
          filterIngredientsRecyclerView.setAdapter(filterIngredientsAdapter);
          filterIngredientsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
      }
-
-    /**
-     * Converts string to a string with a capital and all lowercase characters followed
-     *
-     * @param input the ingredient name to convert
-     * @return returns the converted name
-     */
-    private String changeFirstLetterToCapital(String input) {
-        String convertedValue = "";
-        convertedValue += Character.toUpperCase(input.charAt(0));
-        convertedValue += input.substring(1).toLowerCase();
-
-        return convertedValue;
-    }
 
     @Override
     protected void onResume() {

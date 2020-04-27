@@ -55,22 +55,21 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static com.maarten.recipepicker.MainActivity.recipeList;
 
 public class EditRecipeActivity extends AppCompatActivity {
 
     private Recipe recipe;
-    private IngredientEditAdapter ingredientAdapter;
-
     private TextView recipeTitle, recipeComments, recipeURL;
+    private TextInputLayout recipeTitleLayout;
+
+    private IngredientEditAdapter ingredientAdapter;
     private RecyclerView ingredientListRecyclerView;
     private List<Ingredient> ingredientList;
-
     private EditText ingredientNameField, ingredientQuantityField;
     private Spinner ingredientTypeField;
-
-    private TextInputLayout recipeTitleLayout;
 
     private ChipGroup durationChipGroup, difficultyChipGroup, categoriesChipGroup;
 
@@ -79,7 +78,6 @@ public class EditRecipeActivity extends AppCompatActivity {
 
     private ImageView imageView;
     private String imagePath;
-
     private Button removeImageButton, differentImageButton, addImageButton;
 
     private InstructionEditAdapter instructionAdapter;
@@ -89,6 +87,8 @@ public class EditRecipeActivity extends AppCompatActivity {
     private EditText instructionDescription;
 
     private NumberPicker servesNumberPicker;
+
+    private Set<String> categorySet;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -243,7 +243,8 @@ public class EditRecipeActivity extends AppCompatActivity {
         servesNumberPicker.setValue(recipe.getServes());
 
         categoriesChipGroup = findViewById(R.id.categoriesChipGroup);
-        for (String category : recipe.getCategories()) {
+        categorySet = recipe.getCategories();
+        for (String category : categorySet) {
             addCategoryChip(category);
         }
 
@@ -281,12 +282,6 @@ public class EditRecipeActivity extends AppCompatActivity {
                 difficulty = Difficulty.INTERMEDIATE;
         }
 
-        // Loop through the chipGroup to find all the categories
-        List<String> categoryList = new ArrayList<>();
-        for (int index=0; index < categoriesChipGroup.getChildCount(); index++) {
-            categoryList.add(((Chip)categoriesChipGroup.getChildAt(index)).getText().toString());
-        }
-
         if(tempRecipeName.isEmpty()) {
             recipeTitleLayout.setError("Please fill in a title");
         } else if (ingredientList.isEmpty()) {
@@ -301,7 +296,7 @@ public class EditRecipeActivity extends AppCompatActivity {
             recipeList.get(recipeIndex).setTitle(tempRecipeName);
             recipeList.get(recipeIndex).setIngredientList(ingredientList);
             recipeList.get(recipeIndex).setInstructionList(instructionList);
-            recipeList.get(recipeIndex).setCategories(categoryList);
+            recipeList.get(recipeIndex).setCategories(categorySet);
 
             if(resetCookedCounter) {
                 recipeList.get(recipeIndex).resetAmountCooked();
@@ -342,14 +337,21 @@ public class EditRecipeActivity extends AppCompatActivity {
         builder.setTitle("Add category");
         builder.setMessage("Add a category here. A category can be 'Pasta' or 'Main course' for example.");
 
-        builder.setPositiveButton("Add category", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                addCategoryChip(categoryEditText.getText().toString());
+        builder.setPositiveButton("Add category", (dialog, id) -> {
+            String inputText = categoryEditText.getText().toString();
+            // only add if it's not empty and it doesn't exist yet
+            if(inputText.isEmpty()) {
+                return;
+            }
+            inputText = RecipeUtility.changeFirstLetterToCapital(inputText);
+            if(!categorySet.contains(inputText)) {
+                categorySet.add(inputText);
+                addCategoryChip(inputText);
+            } else {
+                Toast.makeText(this, "This category already exists", Toast.LENGTH_LONG).show();
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-            }
+        builder.setNegativeButton("Cancel", (dialog, id) -> {
         });
         // create and show the dialog
         final AlertDialog alertDialog = builder.create();

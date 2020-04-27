@@ -37,22 +37,12 @@ public class FilteredResultsActivity extends AppCompatActivity {
 
     private RecyclerView listViewFiltered;
 
-    private int filterMin, filterMax;
-    private int ratingMin, ratingMax;
-    private Boolean durationShort, durationMedium, durationLong;
-    private Boolean difficultyBeginner, difficultyIntermediate, difficultyExpert;
-
-    private List<String> categoryList;
-
     private JSONObject filterObject;
 
     private MaterialButton addRecipeButton;
     private TextView noRecipesTextView;
 
     private int amountOfItems;
-
-    private  ChipGroup filteredDurationDifficultyChipGroup;
-    private ChipGroup filteredCategoryChipGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +52,21 @@ public class FilteredResultsActivity extends AppCompatActivity {
 
         boolean shouldFilterAllCategories = false;
 
-        categoryList = new ArrayList<>();
-        filteredCategoryChipGroup = findViewById(R.id.filteredCategoryChipGroup);
+        List<String> categoryList = new ArrayList<>();
+        ChipGroup filteredCategoryChipGroup = findViewById(R.id.filteredCategoryChipGroup);
+
+        int filterMin = 0;
+        int filterMax = 10;
+        int ratingMin = 0;
+        int ratingMax = 10;
+
+        boolean durationShort = false;
+        boolean durationMedium = false;
+        boolean durationLong = false;
+
+        boolean difficultyBeginner = false;
+        boolean difficultyIntermediate = false;
+        boolean difficultyExpert = false;
 
         try {
             Intent intent = getIntent();
@@ -113,7 +116,7 @@ public class FilteredResultsActivity extends AppCompatActivity {
         String description = getString(R.string.filtered_recipe_description, filterMin, filterMax, ratingMin, ratingMax);
         filteredDescriptionTextView.setText(Html.fromHtml(description, FROM_HTML_MODE_LEGACY));
 
-        filteredDurationDifficultyChipGroup = findViewById(R.id.filteredDurationDifficultyChipGroup);
+        ChipGroup filteredDurationDifficultyChipGroup = findViewById(R.id.filteredDurationDifficultyChipGroup);
         if (durationShort) {
             createChip(getString(R.string.duration_short), filteredDurationDifficultyChipGroup);
         } if (durationMedium) {
@@ -128,7 +131,7 @@ public class FilteredResultsActivity extends AppCompatActivity {
             createChip(getString(R.string.expert), filteredDurationDifficultyChipGroup);
         }
 
-        TextView categoryTextView = findViewById(R.id.categoriesSelectedTextView);
+        TextView categoriesSelectedTextView = findViewById(R.id.categoriesSelectedTextView);
         if (!categoryList.isEmpty()) {
             String categoryText;
             if (shouldFilterAllCategories) {
@@ -136,14 +139,14 @@ public class FilteredResultsActivity extends AppCompatActivity {
             } else {
                 categoryText = getString(R.string.filtered_category_description, getString(R.string.some));
             }
-            categoryTextView.setText(Html.fromHtml(categoryText, FROM_HTML_MODE_LEGACY));
+            categoriesSelectedTextView.setText(Html.fromHtml(categoryText, FROM_HTML_MODE_LEGACY));
 
             for (String category : categoryList) {
                 createChip(category, filteredCategoryChipGroup);
             }
         } else {
-            categoryTextView.setVisibility(View.GONE);
-            filteredDurationDifficultyChipGroup.setVisibility(View.GONE);
+            categoriesSelectedTextView.setVisibility(View.GONE);
+            filteredCategoryChipGroup.setVisibility(View.GONE);
         }
 
 

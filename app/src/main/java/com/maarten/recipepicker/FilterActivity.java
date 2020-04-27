@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.maarten.recipepicker.RecipeUtility.changeFirstLetterToCapital;
+
 public class FilterActivity extends AppCompatActivity {
 
     private int minCookedValue = 0;
@@ -145,7 +147,7 @@ public class FilterActivity extends AppCompatActivity {
 
         for (Recipe recipe : MainActivity.recipeList) {
             for (String category : recipe.getCategories()) {
-                String current_category = ChangeFirstLetterToCapital(category);
+                String current_category = changeFirstLetterToCapital(category);
                 if (!categoryList.contains(current_category)) {
                     categoryList.add(current_category);
                 }
@@ -160,20 +162,6 @@ public class FilterActivity extends AppCompatActivity {
             chip.setText(category);
             categoryChipGroup.addView(chip);
         }
-    }
-
-    /**
-     * Converts string to a string with a capital and all lowercase characters followed
-     *
-     * @param input the ingredient name to convert
-     * @return returns the converted name
-     */
-    private String ChangeFirstLetterToCapital(String input) {
-        String convertedValue = "";
-        convertedValue += Character.toUpperCase(input.charAt(0));
-        convertedValue += input.substring(1).toLowerCase();
-
-        return convertedValue;
     }
 
     /**
@@ -222,7 +210,7 @@ public class FilterActivity extends AppCompatActivity {
             intent.putExtra("JSONObject", filter.toString());
             startActivity(intent);
         } catch(Exception e) {
-            Log.d("ERROR", e.getLocalizedMessage());
+            Log.e("ERROR", e.getLocalizedMessage());
         }
     }
 

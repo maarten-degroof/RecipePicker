@@ -1,7 +1,6 @@
 package com.maarten.recipepicker.adapters;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import static com.maarten.recipepicker.RecipeUtility.changeFirstLetterToCapital;
 
 public class FilterIngredientsResultsAdapter extends RecyclerView.Adapter<FilterIngredientsResultsAdapter.CustomViewHolder> {
 
@@ -119,21 +120,6 @@ public class FilterIngredientsResultsAdapter extends RecyclerView.Adapter<Filter
         return returnCount;
     }
 
-    /**
-     * Converts string to a string with a capital and all lowercase characters followed
-     *
-     * @param input the ingredient name to convert
-     * @return returns the converted name
-     */
-    private String ChangeFirstLetterToCapital(String input) {
-        String convertedValue = "";
-        convertedValue += Character.toUpperCase(input.charAt(0));
-        convertedValue += input.substring(1).toLowerCase();
-
-        return convertedValue;
-    }
-
-
     //@Override
     public Filter getFilter() {
 
@@ -165,7 +151,7 @@ public class FilterIngredientsResultsAdapter extends RecyclerView.Adapter<Filter
                         int index = 0;
 
                         while(filterIngredientListToCheckIn.size() > 0 && index < tempRecipe.getIngredientList().size()) {
-                            filterIngredientListToCheckIn.remove(ChangeFirstLetterToCapital(tempRecipe.getIngredientList().get(index).getName()));
+                            filterIngredientListToCheckIn.remove(changeFirstLetterToCapital(tempRecipe.getIngredientList().get(index).getName()));
 
                             index++;
                         }

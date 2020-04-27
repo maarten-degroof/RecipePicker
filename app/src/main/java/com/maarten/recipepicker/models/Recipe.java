@@ -15,6 +15,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 public class Recipe implements Serializable {
     @Expose private String title;
@@ -31,11 +32,11 @@ public class Recipe implements Serializable {
     @Expose private int serves;
     private transient Bitmap image;
     private int rating;
-    @Expose private List<String> categories;
+    @Expose private Set<String> categories;
 
     public Recipe(String title, List<Ingredient> ingredientList, Boolean favorite, CookTime cookTime,
                   String imagePath, String URL, Difficulty difficulty, String comments,
-                  List<Instruction> instructionList, int serves, List<String> categories) {
+                  List<Instruction> instructionList, int serves, Set<String> categories) {
         this.title = title;
         this.ingredientList = ingredientList;
         this.favorite = favorite;
@@ -165,11 +166,11 @@ public class Recipe implements Serializable {
         this.rating = rating;
     }
 
-    public void setCategories(List<String> categories) {
+    public void setCategories(Set<String> categories) {
         this.categories = categories;
     }
 
-    public List<String> getCategories() {
+    public Set<String> getCategories() {
         return categories;
     }
 

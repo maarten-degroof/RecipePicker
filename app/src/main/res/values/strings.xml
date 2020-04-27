@@ -219,4 +219,7 @@
     <string name="filtered_category_description">The following recipes include &lt;b>%1$s&lt;/b> of the following categories:</string>
     <string name="some">some</string>
     <string name="all">all</string>
+    <string name="oh_no_no_recipes">Oh no! We couldn\'t find anything.. Want to add one?</string>
+    <string name="search_fields_description">Showing results of recipes that have the searched string in at least one of the following fields: &lt;b>%1$s&lt;/b>.</string>
+    <string name="searched_category_description">The recipes include &lt;b>%1$s&lt;/b> of the following categories:</string>
 </resources>
