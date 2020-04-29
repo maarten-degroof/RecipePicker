@@ -2,6 +2,7 @@ package com.maarten.recipepicker;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +19,9 @@ import com.maarten.recipepicker.adapters.FilterIngredientsAdapter;
 import com.maarten.recipepicker.models.FilterIngredient;
 import com.maarten.recipepicker.models.Ingredient;
 import com.maarten.recipepicker.models.Recipe;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +68,8 @@ public class FilterIngredientsActivity extends AppCompatActivity {
         addRecipeTextView = findViewById(R.id.noRecipesYetTextView);
         addRecipeButton = findViewById(R.id.addRecipeButton);
         filterIngredientsRecyclerView = findViewById(R.id.filterIngredientsRecyclerView);
+
+        // https://blog.oziomaogbe.com/2017/10/18/android-handling-checkbox-state-in-recycler-views.html
 
         createIngredientListAndRecyclerView();
     }
@@ -133,19 +139,35 @@ public class FilterIngredientsActivity extends AppCompatActivity {
      * @param view The 'Filter your cookbook' button
      */
     public void viewFilterResults(View view) {
-        ArrayList<String> selectedIngredients = new ArrayList<>();
+        ArrayList<String> ingredientsToIncludeList = new ArrayList<>();
+        ArrayList<String> ingredientsNotToIncludeList = new ArrayList<>();
+
         for (FilterIngredient ingredient : ingredientList) {
-            if (ingredient.isChecked()) {
-                selectedIngredients.add(ingredient.getName());
+            if (ingredient.getState()> 0 ) {
+                ingredientsToIncludeList.add(ingredient.getName());
+            } else if (ingredient.getState() < 0) {
+                ingredientsNotToIncludeList.add(ingredient.getName());
             }
         }
-        if (selectedIngredients.isEmpty()) {
+        if (ingredientsToIncludeList.isEmpty() && ingredientsNotToIncludeList.isEmpty()) {
             Toast.makeText(this, "You need to select at least one ingredient", Toast.LENGTH_LONG).show();
         }
         else {
-            Intent intent = new Intent(this, FilteredIngredientsResultsActivity.class);
-            intent.putStringArrayListExtra("ingredientList", selectedIngredients);
-            startActivity(intent);
+            try {
+                JSONObject filterObject = new JSONObject();
+                JSONArray ingredientsToIncludeJsonArray = new JSONArray(ingredientsToIncludeList);
+                JSONArray ingredientsNotToIncludeJsonArray = new JSONArray(ingredientsNotToIncludeList);
+
+                filterObject.put("ingredientsToIncludeList", ingredientsToIncludeJsonArray);
+                filterObject.put("ingredientsNotToIncludeList", ingredientsNotToIncludeJsonArray);
+
+                Intent intent = new Intent(this, FilteredIngredientsResultsActivity.class);
+                intent.putExtra("filterObject", filterObject.toString());
+                startActivity(intent);
+
+            } catch (Exception e) {
+                Log.e("JsonError", e.getMessage());
+            }
         }
     }
 

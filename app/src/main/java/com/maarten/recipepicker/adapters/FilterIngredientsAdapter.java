@@ -1,19 +1,18 @@
 package com.maarten.recipepicker.adapters;
 
 import android.app.Activity;
-import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.card.MaterialCardView;
 import com.maarten.recipepicker.R;
-import com.maarten.recipepicker.RecipePickerApplication;
 import com.maarten.recipepicker.models.FilterIngredient;
 
 import java.util.List;
@@ -34,7 +33,7 @@ public class FilterIngredientsAdapter extends RecyclerView.Adapter<FilterIngredi
         return new CustomViewHolder(
                 LayoutInflater
                         .from(context)
-                        .inflate(R.layout.ingredient_list_item_with_checkbox, parent, false)
+                        .inflate(R.layout.filter_ingredient_list_item, parent, false)
         );
     }
 
@@ -42,14 +41,13 @@ public class FilterIngredientsAdapter extends RecyclerView.Adapter<FilterIngredi
     public void onBindViewHolder(@NonNull final CustomViewHolder holder, final int position) {
         final FilterIngredient ingredient = ingredientList.get(position);
 
-        holder.ingredientCheckBox.setText(ingredient.getName());
-        holder.ingredientCheckBox.setChecked(ingredient.isChecked());
+        holder.ingredientTextView.setText(ingredient.getName());
 
-        holder.ingredientCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                ingredient.toggleIsChecked();
-            }
+        holder.showIngredientState(position);
+
+        holder.cardView.setOnClickListener(view -> {
+            ingredient.setNextState();
+            holder.showIngredientState(position);
         });
     }
 
@@ -64,28 +62,36 @@ public class FilterIngredientsAdapter extends RecyclerView.Adapter<FilterIngredi
     }
 
 
-    class CustomViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class CustomViewHolder extends RecyclerView.ViewHolder {
 
-        private MaterialCheckBox ingredientCheckBox;
+        private TextView ingredientTextView;
         private View parentView;
+        private MaterialCardView cardView;
 
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
             this.parentView = itemView;
-            this.ingredientCheckBox = itemView.findViewById(R.id.ingredientCheckBox);
-            itemView.setOnClickListener(this);
+
+            this.ingredientTextView = itemView.findViewById(R.id.ingredientTextView);
+            this.cardView = itemView.findViewById(R.id.filterIngredientCardView);
         }
 
-        @Override
-        public void onClick(View v) {
-            int adapterPosition = getAdapterPosition();
-            if (ingredientList.get(adapterPosition).isChecked()) {
-                ingredientCheckBox.setChecked(false);
+        private void showIngredientState(int position) {
+            switch (ingredientList.get(position).getState()) {
+                case -1:
+                    this.cardView.setCardBackgroundColor(Color.parseColor("#FFD50000"));
+                    this.ingredientTextView.setTextColor(Color.WHITE);
+                    return;
+
+                case 1:
+                    this.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.primaryLightColor));
+                    this.ingredientTextView.setTextColor(Color.WHITE);
+                    return;
+
+                default:
+                    this.cardView.setCardBackgroundColor(Color.WHITE);
+                    this.ingredientTextView.setTextColor(Color.BLACK);
             }
-            else  {
-                ingredientCheckBox.setChecked(true);
-            }
-            ingredientList.get(adapterPosition).toggleIsChecked();
         }
     }
 }

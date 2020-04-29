@@ -17,6 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.button.MaterialButton;
 import com.maarten.recipepicker.adapters.FilterIngredientsResultsAdapter;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import static androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY;
@@ -27,12 +31,15 @@ public class FilteredIngredientsResultsActivity extends AppCompatActivity {
     private FilterIngredientsResultsAdapter filterIngredientsResultsAdapter;
     private RecyclerView filteredRecyclerView;
 
-    private List<String> ingredientsList;
+    private List<String> ingredientsToIncludeList;
+    private List<String> ingredientsNotToIncludeList;
 
     private MaterialButton addRecipeButton;
     private TextView noRecipesTextView;
 
     private int amountOfItems;
+
+    private JSONObject filterObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,16 +47,29 @@ public class FilteredIngredientsResultsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_filtered_ingredients_results);
 
         amountOfItems = 0;
+
+        filteredRecyclerView = findViewById(R.id.filteredRecyclerView);
+        filterIngredientsResultsAdapter = new FilterIngredientsResultsAdapter(this, recipeList);
+        filteredRecyclerView.setAdapter(filterIngredientsResultsAdapter);
+        filteredRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        ingredientsToIncludeList = new ArrayList<>();
+        ingredientsNotToIncludeList = new ArrayList<>();
+
         try {
             Intent intent = getIntent();
-            ingredientsList = intent.getStringArrayListExtra("ingredientList");
+            filterObject = new JSONObject(intent.getStringExtra("filterObject"));
 
-            filteredRecyclerView = findViewById(R.id.filteredRecyclerView);
-            filterIngredientsResultsAdapter = new FilterIngredientsResultsAdapter(this, recipeList);
-            filteredRecyclerView.setAdapter(filterIngredientsResultsAdapter);
-            filteredRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            JSONArray ingredientsToIncludeJsonArray = filterObject.getJSONArray("ingredientsToIncludeList");
+            for (int i=0; i < ingredientsToIncludeJsonArray.length(); i++) {
+                ingredientsToIncludeList.add(ingredientsToIncludeJsonArray.getString(i));
+            }
+            JSONArray ingredientsNotToIncludeJsonArray = filterObject.getJSONArray("ingredientsNotToIncludeList");
+            for (int i=0; i < ingredientsNotToIncludeJsonArray.length(); i++) {
+                ingredientsNotToIncludeList.add(ingredientsNotToIncludeJsonArray.getString(i));
+            }
 
-            amountOfItems = filterIngredientsResultsAdapter.filterAndReturnAmount(ingredientsList.toString());
+            amountOfItems = filterIngredientsResultsAdapter.filterAndReturnAmount(filterObject.toString());
         }
         catch (Exception e) {
             Log.e("intentError", e.getMessage());
@@ -60,32 +80,51 @@ public class FilteredIngredientsResultsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // back button pressed
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> finish());
 
         // this takes care of the back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // write the text to say for which ingredients you have filtered. FromHtml is used to make the numbers bold
         TextView filteredDescriptionTextView = findViewById(R.id.filteredDescriptionTextField);
-        StringBuilder builder = new StringBuilder();
-        for (String ingredient : ingredientsList) {
-            builder.append(ingredient);
-            builder.append(", ");
+
+        String descriptionString = "";
+
+        if (!ingredientsToIncludeList.isEmpty()) {
+            StringBuilder builder = new StringBuilder();
+            for (String ingredient : ingredientsToIncludeList) {
+                builder.append(ingredient);
+                builder.append(", ");
+            }
+            // remove the last ", "
+            builder.setLength(builder.length() - 2);
+            descriptionString += getString(R.string.filtered_recipe_with_ingredients_description, builder.toString());
+
+            if(!ingredientsNotToIncludeList.isEmpty()) {
+                descriptionString += getString(R.string.filter_ingredients_and_not_following_ingredients, generateNotToIncludeString());
+            }
+
+        } else {
+            descriptionString += getString(R.string.filter_ingredients_only_not_included, generateNotToIncludeString());
         }
-        // remove the last ", "
-        builder.setLength(builder.length() - 2);
-        String description = getString(R.string.filtered_recipe_with_ingredients_description, builder.toString());
-        filteredDescriptionTextView.setText(Html.fromHtml(description, FROM_HTML_MODE_LEGACY));
+
+        filteredDescriptionTextView.setText(Html.fromHtml(descriptionString, FROM_HTML_MODE_LEGACY));
 
         addRecipeButton = findViewById(R.id.addRecipeButton);
         noRecipesTextView = findViewById(R.id.noFoundRecipesTextView);
 
         controlNoRecipeElements();
+    }
+
+    private String generateNotToIncludeString() {
+        StringBuilder builderNotToInclude = new StringBuilder();
+        for (String ingredient : ingredientsNotToIncludeList) {
+            builderNotToInclude.append(ingredient);
+            builderNotToInclude.append(", ");
+        }
+        // remove the last ", "
+        builderNotToInclude.setLength(builderNotToInclude.length() - 2);
+        return builderNotToInclude.toString();
     }
 
     /**
@@ -109,7 +148,7 @@ public class FilteredIngredientsResultsActivity extends AppCompatActivity {
         super.onResume();
         filterIngredientsResultsAdapter = new FilterIngredientsResultsAdapter(this, recipeList);
         filteredRecyclerView.setAdapter(filterIngredientsResultsAdapter);
-        amountOfItems = filterIngredientsResultsAdapter.filterAndReturnAmount(ingredientsList.toString());
+        amountOfItems = filterIngredientsResultsAdapter.filterAndReturnAmount(filterObject.toString());
         Log.d("COUNT", "in onResume: " + amountOfItems);
         controlNoRecipeElements();
     }

@@ -198,7 +198,7 @@
     <string name="rating_with_column">Rating:</string>
     <string name="fact_description">Here there\'ll be a fact or a tip which will change every time you start the app.</string>
     <string name="no_recipes_yet_for_ingredients">You don\'t have any recipes yet, so there aren\'t any ingredients to filter on. Do you want to add one now?</string>
-    <string name="filtered_recipe_with_ingredients_description">Showing all recipes which have the ingredients: &lt;b>%1$s&lt;/b>.</string>
+    <string name="filtered_recipe_with_ingredients_description">Showing all recipes which have the ingredients: &lt;b>%1$s&lt;/b></string>
     <string name="filter_ingredients_description">Here you can choose which ingredients your recipes should have, so you\'ll only get the ones which meet your criteria.</string>
     <string name="no_recipes_yet">You don\'t have any recipes yet. Would you like to add one?</string>
     <string name="no_favorites_yet">You don\'t have a favorite recipe yet. You can favorite one by pressing the heart in the top right corner of the screen when viewing it.</string>
@@ -222,4 +222,6 @@
     <string name="oh_no_no_recipes">Oh no! We couldn\'t find anything.. Want to add one?</string>
     <string name="search_fields_description">Showing results of recipes that have the searched string in at least one of the following fields: &lt;b>%1$s&lt;/b>.</string>
     <string name="searched_category_description">The recipes include &lt;b>%1$s&lt;/b> of the following categories:</string>
+    <string name="filter_ingredients_and_not_following_ingredients">, and which don\'t include the following ingredients: &lt;b>%1$s&lt;/b>.</string>
+    <string name="filter_ingredients_only_not_included">Showing all recipes which don\'t have the following ingredients:  &lt;b>%1$s&lt;/b>.</string>
 </resources>

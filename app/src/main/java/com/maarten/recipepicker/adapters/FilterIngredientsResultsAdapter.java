@@ -16,21 +16,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.maarten.recipepicker.R;
 import com.maarten.recipepicker.ViewRecipeActivity;
+import com.maarten.recipepicker.models.Ingredient;
 import com.maarten.recipepicker.models.Recipe;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import static com.maarten.recipepicker.RecipeUtility.changeFirstLetterToCapital;
 
 public class FilterIngredientsResultsAdapter extends RecyclerView.Adapter<FilterIngredientsResultsAdapter.CustomViewHolder> {
 
     private Activity context;
     private List<Recipe> recipeList;
 
-    private int returnCount;
+    private int returnCount = 0;
 
     public FilterIngredientsResultsAdapter(Activity context, List<Recipe> recipeList){
         this.context = context;
@@ -120,11 +122,27 @@ public class FilterIngredientsResultsAdapter extends RecyclerView.Adapter<Filter
         return returnCount;
     }
 
+    /**
+     * Converts a list of ingredients into a string list of the ingredient names
+     *
+     * @param ingredientList - the list to convert
+     * @return returns a List<String> of all the ingredient names
+     */
+    private List<String> ingredientNameToList(List<Ingredient> ingredientList) {
+        List<String> ingredientNameList = new ArrayList<>();
+
+        for (Ingredient ingredient : ingredientList) {
+            ingredientNameList.add(ingredient.getName());
+        }
+        return ingredientNameList;
+    }
+
     //@Override
     public Filter getFilter() {
 
         return new Filter() {
 
+            @SuppressWarnings("unchecked")
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 recipeList  = (List<Recipe>) results.values;
@@ -138,27 +156,38 @@ public class FilterIngredientsResultsAdapter extends RecyclerView.Adapter<Filter
                 ArrayList<Recipe> filteredArray = new ArrayList<>();
                 returnCount = 0;
 
+                List<String> ingredientsToIncludeList = new ArrayList<>();
+                List<String> ingredientsNotToIncludeList = new ArrayList<>();
+
                 try {
-                    // get the ingredientList and convert it back to an array
-                    String ingredientListString = constraint.toString();
-                    String[] filterIngredientList = ingredientListString.substring(1, ingredientListString.length() - 1).split(", ");
+                    JSONObject jsonObject = new JSONObject(constraint.toString());
 
-                    // Loop through every recipe. Make copy of ingredientList and remove an item from this list if the recipe has this ingredient.
-                    // If list is empty at the end, recipe had all asked ingredients -> add it to the return list
-                    for (Recipe tempRecipe : recipeList) {
-                        ArrayList<String> filterIngredientListToCheckIn = new ArrayList<>(Arrays.asList(filterIngredientList));
+                    JSONArray ingredientsToIncludeJsonArray = jsonObject.getJSONArray("ingredientsToIncludeList");
+                    for (int i=0; i < ingredientsToIncludeJsonArray.length(); i++) {
+                        ingredientsToIncludeList.add(ingredientsToIncludeJsonArray.getString(i));
+                    }
+                    JSONArray ingredientsNotToIncludeJsonArray = jsonObject.getJSONArray("ingredientsNotToIncludeList");
+                    for (int i=0; i < ingredientsNotToIncludeJsonArray.length(); i++) {
+                        ingredientsNotToIncludeList.add(ingredientsNotToIncludeJsonArray.getString(i));
+                    }
 
-                        int index = 0;
+                } catch (Exception e) {
+                    Log.e("JsonError-Adapter", e.getMessage());
+                }
 
-                        while(filterIngredientListToCheckIn.size() > 0 && index < tempRecipe.getIngredientList().size()) {
-                            filterIngredientListToCheckIn.remove(changeFirstLetterToCapital(tempRecipe.getIngredientList().get(index).getName()));
+                try {
 
-                            index++;
-                        }
-                        if(filterIngredientListToCheckIn.size() == 0) {
-                            filteredArray.add(tempRecipe);
+                    for (Recipe recipe : recipeList) {
+
+                        List<String> ingredientList = ingredientNameToList(recipe.getIngredientList());
+
+                        if(ingredientList.containsAll(ingredientsToIncludeList)) {
+                            if (Collections.disjoint(ingredientList, ingredientsNotToIncludeList)) {
+                                filteredArray.add(recipe);
+                            }
                         }
                     }
+
                     results.count = filteredArray.size();
                     results.values = filteredArray;
                     returnCount = filteredArray.size();

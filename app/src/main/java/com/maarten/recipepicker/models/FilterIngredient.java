@@ -1,28 +1,44 @@
 package com.maarten.recipepicker.models;
 
 /**
- * This object is used in FilterIngredientsActivity; contains the name and a boolean saying if it's checked
+ * This object is used in FilterIngredientsActivity;
+ * contains the name and a state. State can be three things:
+ *      - -1: A recipe should not have this ingredient
+ *      -  0: Doesn't care
+ *      -  1: A recipe should have this ingredient
  */
 public class FilterIngredient {
 
     private String name;
-    private boolean isChecked;
+    private int state;
 
     public FilterIngredient(String name) {
         this.name = name;
-        this.isChecked = false;
+        this.state = 0;
     }
 
     public String getName() {
         return name;
     }
 
-    public boolean isChecked() {
-        return isChecked;
+    public int getState() {
+        return state;
     }
 
-    public void toggleIsChecked() {
-        isChecked = !isChecked;
+    /**
+     * Toggles the state. 0 -> 1 -> -1 -> 0
+     */
+    public void setNextState() {
+        switch (this.state) {
+            case 1:
+                this.state = -1;
+                return;
+            case -1:
+                this.state = 0;
+                return;
+            default:
+                this.state = 1;
+        }
     }
 
 }
