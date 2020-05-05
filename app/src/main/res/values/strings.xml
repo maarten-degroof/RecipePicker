@@ -224,4 +224,5 @@
     <string name="searched_category_description">The recipes include &lt;b>%1$s&lt;/b> of the following categories:</string>
     <string name="filter_ingredients_and_not_following_ingredients">, and which don\'t include the following ingredients: &lt;b>%1$s&lt;/b>.</string>
     <string name="filter_ingredients_only_not_included">Showing all recipes which don\'t have the following ingredients:  &lt;b>%1$s&lt;/b>.</string>
+    <string name="welcome_screen">Welcome, this is an app to maintain and filter your own recipes. This app works completely offline, but there are a few recipes to get you started. If you have a suggestion or a problem, you can always contact me!</string>
 </resources>

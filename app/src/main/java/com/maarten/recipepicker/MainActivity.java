@@ -2,6 +2,7 @@ package com.maarten.recipepicker;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -17,6 +18,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,8 +53,6 @@ import java.util.TreeSet;
 
 /**
  ********* BUGS *********
- * Filter on ingredients: tapping an ingredient in the corners changes the checkbox but doesn't put the value on true
- *
  * Something is wrong when asking file permissions
  *
  * When adding an instruction with a timer, if you type the number, the last typed number will not be saved
@@ -218,6 +218,16 @@ public class MainActivity extends AppCompatActivity {
         noRecipesYetTextView = findViewById(R.id.noRecipesYetTextView);
 
         controlNoRecipeElements();
+
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        // check to show the tip. Change the preferences so it won't show again
+        boolean shouldShowWelcomeScreen = sharedPrefs.getBoolean("welcome_screen", true);
+        if(shouldShowWelcomeScreen) {
+            showWelcomeScreen();
+            SharedPreferences.Editor editor = sharedPrefs.edit();
+            editor.putBoolean("welcome_screen", false);
+            editor.apply();
+        }
     }
 
     /**
@@ -266,6 +276,21 @@ public class MainActivity extends AppCompatActivity {
                 orderByButton.setText(R.string.rating);
                 adapter.notifyDataSetChanged();
         }
+    }
+
+    /**
+     * Shows the welcome screen
+     */
+    private void showWelcomeScreen() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Welcome!");
+        builder.setMessage(getString(R.string.welcome_screen));
+
+        builder.setPositiveButton("Let's get started", (dialog, id) -> {
+        });
+        // create and show the dialog
+        builder.create().show();
     }
 
     /**
