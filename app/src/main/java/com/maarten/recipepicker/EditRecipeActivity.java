@@ -53,7 +53,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -62,7 +61,7 @@ import static com.maarten.recipepicker.MainActivity.recipeList;
 public class EditRecipeActivity extends AppCompatActivity {
 
     private Recipe recipe;
-    private TextView recipeTitle, recipeComments, recipeURL;
+    private EditText titleEditText, commentsEditText, urlEditText;
     private TextInputLayout recipeTitleLayout;
 
     private IngredientEditAdapter ingredientAdapter;
@@ -108,8 +107,8 @@ public class EditRecipeActivity extends AppCompatActivity {
         Intent intent = getIntent();
         recipe = (Recipe) intent.getSerializableExtra("Recipe");
 
-        recipeTitle = findViewById(R.id.nameField);
-        recipeTitle.setText(recipe.getTitle());
+        titleEditText = findViewById(R.id.titleEditText);
+        titleEditText.setText(recipe.getTitle());
 
         ingredientList = recipe.getIngredientList();
 
@@ -122,7 +121,7 @@ public class EditRecipeActivity extends AppCompatActivity {
         // make the listview (ingredientList) also scrollable when inserting text
         ViewCompat.setNestedScrollingEnabled(ingredientListRecyclerView, true);
 
-        recipeTitleLayout = findViewById(R.id.nameFieldLayout);
+        recipeTitleLayout = findViewById(R.id.titleLayout);
 
         // hide
         TextView noIngredientTextView = findViewById(R.id.noIngredientsTextView);
@@ -159,11 +158,11 @@ public class EditRecipeActivity extends AppCompatActivity {
             imageView.setVisibility(View.GONE);
         }
 
-        recipeURL = findViewById(R.id.URLField);
-        recipeURL.setText(recipe.getURL());
+        urlEditText = findViewById(R.id.URLEditText);
+        urlEditText.setText(recipe.getURL());
 
-        recipeComments = findViewById(R.id.commentsText);
-        recipeComments.setText(recipe.getComments());
+        commentsEditText = findViewById(R.id.commentsEditText);
+        commentsEditText.setText(recipe.getComments());
 
         // check the current selected chips
         durationChipGroup = findViewById(R.id.durationChipGroup);
@@ -215,10 +214,10 @@ public class EditRecipeActivity extends AppCompatActivity {
         });
 
         // This makes it possible to scroll in the comment field
-        recipeComments.setOnTouchListener(new View.OnTouchListener() {
+        commentsEditText.setOnTouchListener(new View.OnTouchListener() {
 
             public boolean onTouch(View v, MotionEvent event) {
-                if (recipeComments.hasFocus()) {
+                if (commentsEditText.hasFocus()) {
                     v.getParent().requestDisallowInterceptTouchEvent(true);
                     if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_SCROLL){
                         v.getParent().requestDisallowInterceptTouchEvent(false);
@@ -257,7 +256,8 @@ public class EditRecipeActivity extends AppCompatActivity {
      * @param view  needed for the button
      */
     public void updateRecipe(View view) {
-        String tempRecipeName = recipeTitle.getText().toString();
+        removeCursorFromEditText();
+        String tempRecipeName = titleEditText.getText().toString();
 
         // get the current selected chip
         CookTime cookTime;
@@ -307,8 +307,8 @@ public class EditRecipeActivity extends AppCompatActivity {
 
             recipeList.get(recipeIndex).setImagePath(imagePath);
 
-            recipeList.get(recipeIndex).setURL(recipeURL.getText().toString());
-            recipeList.get(recipeIndex).setComments(recipeComments.getText().toString());
+            recipeList.get(recipeIndex).setURL(urlEditText.getText().toString());
+            recipeList.get(recipeIndex).setComments(commentsEditText.getText().toString());
 
             recipeList.get(recipeIndex).setServes(servesNumberPicker.getValue());
 
@@ -321,12 +321,22 @@ public class EditRecipeActivity extends AppCompatActivity {
     }
 
     /**
+     * If one of the EditTextfields is selected, removes the focus from that field
+     * If this doesn't happen, when pressing a button the focus will jump back to that textfield
+     */
+    private void removeCursorFromEditText() {
+        titleEditText.clearFocus();
+        urlEditText.clearFocus();
+        commentsEditText.clearFocus();
+    }
+
+    /**
      * Creates a dialog to add a category
      *
      * @param view - the add category button
      */
     public void createCategoryDialog(View view) {
-
+        removeCursorFromEditText();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         // get the layout
@@ -404,7 +414,7 @@ public class EditRecipeActivity extends AppCompatActivity {
      * @param view  needed for the button-linking
      */
     public void createIngredientDialog(View view) {
-
+        removeCursorFromEditText();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         // get the layout
@@ -519,6 +529,7 @@ public class EditRecipeActivity extends AppCompatActivity {
      * @param view - the pressed button to add an image
      */
     public void showPictureGallery(View view) {
+        removeCursorFromEditText();
         if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             pickFromGallery();
         } else {
@@ -632,6 +643,7 @@ public class EditRecipeActivity extends AppCompatActivity {
      * @param view - the pressed button
      */
     public void removeImage(View view) {
+        removeCursorFromEditText();
         imageView.setImageBitmap(null);
         imagePath = null;
         imageView.setVisibility(View.GONE);
@@ -648,6 +660,7 @@ public class EditRecipeActivity extends AppCompatActivity {
      * @param view - the 'add instruction' button
      */
     public void createInstructionDialog(View view) {
+        removeCursorFromEditText();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         // get the layout

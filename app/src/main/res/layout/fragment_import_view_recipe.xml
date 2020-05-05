@@ -12,7 +12,10 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mainConstraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:focusableInTouchMode="true"
+        android:clickable="true"
+        android:focusable="true">
 
         <View
             android:id="@+id/view10"
@@ -141,7 +144,7 @@
             app:layout_constraintTop_toBottomOf="@+id/instructionButton" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/commentsFieldLayout"
+            android:id="@+id/commentsLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -151,10 +154,10 @@
             android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/URLFieldLayout">
+            app:layout_constraintTop_toBottomOf="@+id/URLLayout">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/commentsText"
+                android:id="@+id/commentsEditText"
                 android:layout_width="match_parent"
                 android:layout_height="179dp"
                 android:ems="10"
@@ -169,7 +172,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/URLFieldLayout"
+            android:id="@+id/URLLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
 
             android:layout_width="match_parent"
@@ -183,7 +186,7 @@
 
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/URLField"
+                android:id="@+id/URLEditText"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:ems="10"
@@ -368,7 +371,7 @@
             android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nameFieldLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/titleLayout" />
 
         <View
             android:id="@+id/view7"
@@ -438,7 +441,7 @@
             app:layout_constraintTop_toBottomOf="@+id/ingredientTextView" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/nameFieldLayout"
+            android:id="@+id/titleLayout"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -451,7 +454,7 @@
 
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/nameField"
+                android:id="@+id/titleEditText"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:ems="10"
@@ -472,7 +475,7 @@
             android:text="@string/add_recipe"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/commentsFieldLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/commentsLayout" />
 
         <TextView
             android:id="@+id/noIngredientsTextView"
@@ -549,7 +552,7 @@
             android:text="@string/back"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/commentsFieldLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/commentsLayout" />
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/imageBarrier"

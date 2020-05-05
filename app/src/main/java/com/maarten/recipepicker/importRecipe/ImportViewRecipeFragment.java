@@ -69,7 +69,7 @@ import static com.maarten.recipepicker.MainActivity.recipeList;
 public class ImportViewRecipeFragment extends Fragment {
 
     private Recipe recipe;
-    private TextView recipeTitle, recipeComments, recipeURL;
+    private EditText titleEditText, commentsEditText, urlEditText;
     private TextInputLayout recipeTitleLayout;
 
     private RecyclerView ingredientListRecyclerView;
@@ -131,11 +131,11 @@ public class ImportViewRecipeFragment extends Fragment {
         recipe.setImagePath(null);
         recipe.resetAmountCooked();
 
-        recipeTitle = view.findViewById(R.id.nameField);
+        titleEditText = view.findViewById(R.id.titleEditText);
         if (recipe.getTitle() == null) {
             recipe.setTitle("");
         }
-        recipeTitle.setText(recipe.getTitle());
+        titleEditText.setText(recipe.getTitle());
 
         MaterialButton addIngredientButton = view.findViewById(R.id.addIngredientButton);
         addIngredientButton.setOnClickListener(new View.OnClickListener() {
@@ -159,7 +159,7 @@ public class ImportViewRecipeFragment extends Fragment {
         // make the listview (ingredientList) also scrollable when inserting text
         ViewCompat.setNestedScrollingEnabled(ingredientListRecyclerView, true);
 
-        recipeTitleLayout = view.findViewById(R.id.nameFieldLayout);
+        recipeTitleLayout = view.findViewById(R.id.titleLayout);
 
         imageView = view.findViewById(R.id.imageView);
         imagePath = null;
@@ -193,17 +193,17 @@ public class ImportViewRecipeFragment extends Fragment {
         removeImageButton.setVisibility(View.GONE);
         imageView.setVisibility(View.GONE);
 
-        recipeURL = view.findViewById(R.id.URLField);
+        urlEditText = view.findViewById(R.id.URLEditText);
         if (recipe.getURL() == null) {
             recipe.setURL("");
         }
-        recipeURL.setText(recipe.getURL());
+        urlEditText.setText(recipe.getURL());
 
-        recipeComments = view.findViewById(R.id.commentsText);
+        commentsEditText = view.findViewById(R.id.commentsEditText);
         if (recipe.getComments() == null) {
             recipe.setComments("");
         }
-        recipeComments.setText(recipe.getComments());
+        commentsEditText.setText(recipe.getComments());
 
         if (recipe.getCookTime() == null) {
             recipe.setCookTime(CookTime.MEDIUM);
@@ -261,9 +261,9 @@ public class ImportViewRecipeFragment extends Fragment {
         });
 
         // This makes it possible to scroll in the comment field
-        recipeComments.setOnTouchListener(new View.OnTouchListener() {
+        commentsEditText.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
-                if (recipeComments.hasFocus()) {
+                if (commentsEditText.hasFocus()) {
                     v.getParent().requestDisallowInterceptTouchEvent(true);
                     if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_SCROLL){
                         v.getParent().requestDisallowInterceptTouchEvent(false);
@@ -341,6 +341,16 @@ public class ImportViewRecipeFragment extends Fragment {
     }
 
     /**
+     * If one of the EditTextfields is selected, removes the focus from that field
+     * If this doesn't happen, when pressing a button the focus will jump back to that textfield
+     */
+    private void removeCursorFromEditText() {
+        titleEditText.clearFocus();
+        urlEditText.clearFocus();
+        commentsEditText.clearFocus();
+    }
+
+    /**
      * Goes back the previous fragment.
      * Important notice, you also need to call 'return' in your other function
      */
@@ -353,7 +363,7 @@ public class ImportViewRecipeFragment extends Fragment {
      * validates input and creates the recipe
      */
     private void createRecipe() {
-        String tempRecipeName = recipeTitle.getText().toString();
+        String tempRecipeName = titleEditText.getText().toString();
 
         // get the current selected chip
         CookTime cookTime;
@@ -398,8 +408,8 @@ public class ImportViewRecipeFragment extends Fragment {
 
             recipe.setImagePath(imagePath);
 
-            recipe.setURL(recipeURL.getText().toString());
-            recipe.setComments(recipeComments.getText().toString());
+            recipe.setURL(urlEditText.getText().toString());
+            recipe.setComments(commentsEditText.getText().toString());
 
             recipe.setServes(servesNumberPicker.getValue());
 
@@ -416,7 +426,7 @@ public class ImportViewRecipeFragment extends Fragment {
      * Creates a dialog to add a category
      */
     private void createCategoryDialog() {
-
+        removeCursorFromEditText();
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
 
         // get the layout
@@ -484,7 +494,7 @@ public class ImportViewRecipeFragment extends Fragment {
      * Creates the recipe dialog to insert an ingredient
      */
     private void createIngredientDialog() {
-
+        removeCursorFromEditText();
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
 
         // get the layout
@@ -594,6 +604,7 @@ public class ImportViewRecipeFragment extends Fragment {
      * if not tries to request the permission again
      */
     private void showPictureGallery() {
+        removeCursorFromEditText();
         if(requireActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             pickFromGallery();
         } else {
@@ -627,6 +638,7 @@ public class ImportViewRecipeFragment extends Fragment {
      * creates intent with the parameters to open an image picker
      */
     private void pickFromGallery(){
+        removeCursorFromEditText();
         //Create an Intent with action as ACTION_PICK
         Intent intent = new Intent(Intent.ACTION_PICK);
         // Sets the type as imagePath/*. This ensures only components of type imagePath are selected
@@ -705,6 +717,7 @@ public class ImportViewRecipeFragment extends Fragment {
      * Happens when a user presses the 'remove image' button
      */
     private void removeImage() {
+        removeCursorFromEditText();
         imageView.setImageBitmap(null);
         imagePath = null;
         imageView.setVisibility(View.GONE);
@@ -716,9 +729,10 @@ public class ImportViewRecipeFragment extends Fragment {
     }
 
     /**
-     * Creates the alertdialog where the user can add an instruction
+     * Creates the alertDialog where the user can add an instruction
      */
     private void createInstructionDialog() {
+        removeCursorFromEditText();
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
 
         // get the layout

@@ -66,6 +66,8 @@ public class AddRecipeActivity extends AppCompatActivity {
     private List<Instruction> instructionList;
     private Set<String> categorySet;
 
+    private EditText titleEditText, urlEditText, commentsEditText;
+
     private IngredientEditAdapter ingredientAdapter;
     private EditText ingredientNameField, ingredientQuantityField;
     private Spinner ingredientTypeField;
@@ -118,7 +120,11 @@ public class AddRecipeActivity extends AppCompatActivity {
             finish();
         });
 
-        recipeTitleLayout = findViewById(R.id.nameFieldLayout);
+        recipeTitleLayout = findViewById(R.id.titleLayout);
+
+        titleEditText = findViewById(R.id.titleEditText);
+        urlEditText = findViewById(R.id.URLEditText);
+        commentsEditText = findViewById(R.id.commentsEditText);
 
         // make the listView (ingredientList) also scrollable when inserting text
         //ViewCompat.setNestedScrollingEnabled(ingredientRecyclerView, true);
@@ -166,7 +172,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         });
 
         // This makes it possible to scroll in the comment field
-        final TextInputEditText commentField = findViewById(R.id.commentsText);
+        final TextInputEditText commentField = findViewById(R.id.commentsEditText);
         commentField.setOnTouchListener((v, event) -> {
             if (commentField.hasFocus()) {
                 v.getParent().requestDisallowInterceptTouchEvent(true);
@@ -192,7 +198,7 @@ public class AddRecipeActivity extends AppCompatActivity {
      * @param view - the 'add ingredient' button which was pressed
      */
     public void createIngredientDialog(View view) {
-
+        removeCursorFromEditText();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         // get the layout
@@ -296,11 +302,22 @@ public class AddRecipeActivity extends AppCompatActivity {
     }
 
     /**
+     * If one of the EditTextfields is selected, removes the focus from that field
+     * If this doesn't happen, when pressing a button the focus will jump back to that textfield
+     */
+    private void removeCursorFromEditText() {
+        titleEditText.clearFocus();
+        urlEditText.clearFocus();
+        commentsEditText.clearFocus();
+    }
+
+    /**
      * Creates the alertdialog where the user can add an instruction
      *
      * @param view - the 'add instruction' button
      */
     public void createInstructionDialog(View view) {
+        removeCursorFromEditText();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         // get the layout
@@ -423,11 +440,11 @@ public class AddRecipeActivity extends AppCompatActivity {
      * @param view  view given by the button
      */
     public void createRecipe(View view) {
-
+        removeCursorFromEditText();
         Boolean favouriteSwitch = ((SwitchMaterial) findViewById(R.id.favoriteSwitch)).isChecked();
-        String recipeName = ((EditText) findViewById(R.id.nameField)).getText().toString();
-        String recipeURL = ((EditText) findViewById(R.id.URLField)).getText().toString();
-        String comments = ((EditText) findViewById(R.id.commentsText)).getText().toString();
+        String recipeName = titleEditText.getText().toString();
+        String recipeURL = urlEditText.getText().toString();
+        String comments = commentsEditText.getText().toString();
         int serves = servesNumberPicker.getValue();
 
         // get the selected cookingTime
@@ -482,6 +499,7 @@ public class AddRecipeActivity extends AppCompatActivity {
      * @param view - the add category button
      */
     public void createCategoryDialog(View view) {
+        removeCursorFromEditText();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         // get the layout
@@ -594,6 +612,7 @@ public class AddRecipeActivity extends AppCompatActivity {
      * @param view - the pressed button to add an image
      */
     public void showPictureGallery(View view) {
+        removeCursorFromEditText();
         if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             pickFromGallery();
         } else {
@@ -709,6 +728,7 @@ public class AddRecipeActivity extends AppCompatActivity {
      * @param view - the pressed button
      */
     public void removeImage(View view) {
+        removeCursorFromEditText();
         imageView.setImageBitmap(null);
         imagePath = null;
 
