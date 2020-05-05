@@ -434,7 +434,7 @@ public class ImportViewRecipeFragment extends Fragment {
             if(inputText.isEmpty()) {
                 return;
             }
-            inputText = RecipeUtility.changeFirstLetterToCapital(inputText);
+            inputText = RecipeUtility.changeFirstLetterToCapital(inputText.trim());
             if(!categorySet.contains(inputText)) {
                 categorySet.add(inputText);
                 addCategoryChip(inputText);
@@ -535,12 +535,13 @@ public class ImportViewRecipeFragment extends Fragment {
             validateIngredient(name, quantity);
 
             Ingredient ingredient;
+            String ingredientName = RecipeUtility.changeFirstLetterToCapital(name.trim());
 
             if(quantity == null) {
-                ingredient = new Ingredient(name, null, ingredientType);
+                ingredient = new Ingredient(ingredientName, null, ingredientType);
             }
             else {
-                ingredient = new Ingredient(name, Double.parseDouble(quantity), ingredientType);
+                ingredient = new Ingredient(ingredientName, Double.parseDouble(quantity), ingredientType);
             }
 
             ingredientList.add(ingredient);
