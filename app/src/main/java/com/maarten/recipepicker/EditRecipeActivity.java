@@ -256,7 +256,7 @@ public class EditRecipeActivity extends AppCompatActivity {
      * @param view  needed for the button
      */
     public void updateRecipe(View view) {
-        removeCursorFromEditText();
+        removeCursorFromWidget();
         String tempRecipeName = titleEditText.getText().toString();
 
         // get the current selected chip
@@ -321,13 +321,15 @@ public class EditRecipeActivity extends AppCompatActivity {
     }
 
     /**
-     * If one of the EditTextfields is selected, removes the focus from that field
-     * If this doesn't happen, when pressing a button the focus will jump back to that textfield
+     * If one of the EditTextFields or the serves numberPicker is selected, removes the focus from that field.
+     * If this doesn't happen, when pressing a button the focus will jump back to that textField.
+     * For the numberPicker, the last filled in number wouldn't be saved.
      */
-    private void removeCursorFromEditText() {
+    private void removeCursorFromWidget() {
         titleEditText.clearFocus();
         urlEditText.clearFocus();
         commentsEditText.clearFocus();
+        servesNumberPicker.clearFocus();
     }
 
     /**
@@ -336,7 +338,7 @@ public class EditRecipeActivity extends AppCompatActivity {
      * @param view - the add category button
      */
     public void createCategoryDialog(View view) {
-        removeCursorFromEditText();
+        removeCursorFromWidget();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         // get the layout
@@ -414,7 +416,7 @@ public class EditRecipeActivity extends AppCompatActivity {
      * @param view  needed for the button-linking
      */
     public void createIngredientDialog(View view) {
-        removeCursorFromEditText();
+        removeCursorFromWidget();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         // get the layout
@@ -529,7 +531,7 @@ public class EditRecipeActivity extends AppCompatActivity {
      * @param view - the pressed button to add an image
      */
     public void showPictureGallery(View view) {
-        removeCursorFromEditText();
+        removeCursorFromWidget();
         if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             pickFromGallery();
         } else {
@@ -642,7 +644,7 @@ public class EditRecipeActivity extends AppCompatActivity {
      * @param view - the pressed button
      */
     public void removeImage(View view) {
-        removeCursorFromEditText();
+        removeCursorFromWidget();
         imageView.setImageBitmap(null);
         imagePath = null;
         imageView.setVisibility(View.GONE);
@@ -659,7 +661,7 @@ public class EditRecipeActivity extends AppCompatActivity {
      * @param view - the 'add instruction' button
      */
     public void createInstructionDialog(View view) {
-        removeCursorFromEditText();
+        removeCursorFromWidget();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         // get the layout
@@ -718,6 +720,8 @@ public class EditRecipeActivity extends AppCompatActivity {
         builder.setPositiveButton("Add Instruction", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 if(timerEnabledSwitch.isChecked()) {
+                    minuteNumberPicker.clearFocus();
+                    secondNumberPicker.clearFocus();
                     long totalMilliSeconds = calcMilliSeconds(minuteNumberPicker.getValue(), secondNumberPicker.getValue());
                     createInstruction(instructionDescription.getText().toString(), totalMilliSeconds);
                 }

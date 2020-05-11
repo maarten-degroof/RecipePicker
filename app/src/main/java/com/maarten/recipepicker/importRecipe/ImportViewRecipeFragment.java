@@ -341,13 +341,15 @@ public class ImportViewRecipeFragment extends Fragment {
     }
 
     /**
-     * If one of the EditTextfields is selected, removes the focus from that field
-     * If this doesn't happen, when pressing a button the focus will jump back to that textfield
+     * If one of the EditTextFields or the serves numberPicker is selected, removes the focus from that field.
+     * If this doesn't happen, when pressing a button the focus will jump back to that textField.
+     * For the numberPicker, the last filled in number wouldn't be saved.
      */
-    private void removeCursorFromEditText() {
+    private void removeCursorFromWidget() {
         titleEditText.clearFocus();
         urlEditText.clearFocus();
         commentsEditText.clearFocus();
+        servesNumberPicker.clearFocus();
     }
 
     /**
@@ -426,7 +428,7 @@ public class ImportViewRecipeFragment extends Fragment {
      * Creates a dialog to add a category
      */
     private void createCategoryDialog() {
-        removeCursorFromEditText();
+        removeCursorFromWidget();
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
 
         // get the layout
@@ -494,7 +496,7 @@ public class ImportViewRecipeFragment extends Fragment {
      * Creates the recipe dialog to insert an ingredient
      */
     private void createIngredientDialog() {
-        removeCursorFromEditText();
+        removeCursorFromWidget();
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
 
         // get the layout
@@ -604,7 +606,7 @@ public class ImportViewRecipeFragment extends Fragment {
      * if not tries to request the permission again
      */
     private void showPictureGallery() {
-        removeCursorFromEditText();
+        removeCursorFromWidget();
         if(requireActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             pickFromGallery();
         } else {
@@ -637,7 +639,7 @@ public class ImportViewRecipeFragment extends Fragment {
      * creates intent with the parameters to open an image picker
      */
     private void pickFromGallery(){
-        removeCursorFromEditText();
+        removeCursorFromWidget();
         //Create an Intent with action as ACTION_PICK
         Intent intent = new Intent(Intent.ACTION_PICK);
         // Sets the type as imagePath/*. This ensures only components of type imagePath are selected
@@ -716,7 +718,7 @@ public class ImportViewRecipeFragment extends Fragment {
      * Happens when a user presses the 'remove image' button
      */
     private void removeImage() {
-        removeCursorFromEditText();
+        removeCursorFromWidget();
         imageView.setImageBitmap(null);
         imagePath = null;
         imageView.setVisibility(View.GONE);
@@ -731,7 +733,7 @@ public class ImportViewRecipeFragment extends Fragment {
      * Creates the alertDialog where the user can add an instruction
      */
     private void createInstructionDialog() {
-        removeCursorFromEditText();
+        removeCursorFromWidget();
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
 
         // get the layout
@@ -790,6 +792,8 @@ public class ImportViewRecipeFragment extends Fragment {
         builder.setPositiveButton("Add Instruction", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 if(timerEnabledSwitch.isChecked()) {
+                    minuteNumberPicker.clearFocus();
+                    secondNumberPicker.clearFocus();
                     long totalMilliSeconds = calcMilliSeconds(minuteNumberPicker.getValue(), secondNumberPicker.getValue());
                     createInstruction(instructionDescription.getText().toString(), totalMilliSeconds);
                 }
