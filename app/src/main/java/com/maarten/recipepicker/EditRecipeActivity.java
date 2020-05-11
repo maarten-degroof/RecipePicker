@@ -534,18 +534,17 @@ public class EditRecipeActivity extends AppCompatActivity {
             pickFromGallery();
         } else {
             // permission hasn't been granted.
-
             if(shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                Toast.makeText(this, "External storage permission is needed to access your images.", Toast.LENGTH_LONG).show();
+                Log.d("Permissions", "Should show extra info for the permission");
+                //Toast.makeText(this, "External storage permission is needed to access your images.", Toast.LENGTH_LONG).show();
             }
 
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},READ_EXTERNAL_PERMISSIONS);
         }
-
     }
 
-    //@Override
-    public void onRequestPermissionResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if(requestCode == READ_EXTERNAL_PERMISSIONS) {
             // check if the required permission is granted
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
