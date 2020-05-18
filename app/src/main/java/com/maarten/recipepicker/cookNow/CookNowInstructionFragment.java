@@ -28,7 +28,6 @@ public class CookNowInstructionFragment extends Fragment {
 
     private MaterialButton startTimerButton;
     private MaterialButton previousInstructionButton, nextInstructionButton;
-    private MaterialButton cancelButton, finishCookingButton;
 
     private Instruction currentInstruction;
     private int currentInstructionNumber;
@@ -77,7 +76,7 @@ public class CookNowInstructionFragment extends Fragment {
 
         timerDescriptionTextView = view.findViewById(R.id.timerDescriptionTextView);
 
-        cancelButton = view.findViewById(R.id.cancelButton);
+        MaterialButton cancelButton = view.findViewById(R.id.cancelButton);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +84,7 @@ public class CookNowInstructionFragment extends Fragment {
             }
         });
 
-        finishCookingButton = view.findViewById(R.id.finishCookingButton);
+        MaterialButton finishCookingButton = view.findViewById(R.id.finishCookingButton);
         finishCookingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

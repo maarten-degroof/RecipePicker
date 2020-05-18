@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.maarten.recipepicker.RecipeUtility.changeFirstLetterToCapital;
+import static com.maarten.recipepicker.RecipeUtility.generateCategoryList;
 
 public class FilterActivity extends AppCompatActivity {
 
@@ -144,16 +145,7 @@ public class FilterActivity extends AppCompatActivity {
 
 
         categoryChipGroup = findViewById(R.id.categoryChipGroup);
-        List<String> categoryList = new ArrayList<>();
-
-        for (Recipe recipe : MainActivity.recipeList) {
-            for (String category : recipe.getCategories()) {
-                String current_category = changeFirstLetterToCapital(category);
-                if (!categoryList.contains(current_category)) {
-                    categoryList.add(current_category);
-                }
-            }
-        }
+        List<String> categoryList = generateCategoryList();
 
         for (String category : categoryList) {
             Chip chip = new Chip(this);

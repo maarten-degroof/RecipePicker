@@ -1,6 +1,9 @@
 package com.maarten.recipepicker;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -15,6 +18,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -35,6 +39,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
+import androidx.fragment.app.FragmentContainerView;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,6 +52,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.maarten.recipepicker.importRecipe.ImportActivity;
+import com.maarten.recipepicker.importRecipe.ImportTextRecipeFragment;
 import com.maarten.recipepicker.models.Ingredient;
 import com.maarten.recipepicker.models.Instruction;
 import com.maarten.recipepicker.models.Recipe;
@@ -67,6 +75,13 @@ public class AddRecipeActivity extends AppCompatActivity {
     private Set<String> categorySet;
 
     private EditText titleEditText, urlEditText, commentsEditText;
+
+    private Toolbar toolbar;
+    private FragmentContainerView ingredientFragmentContainerView;
+    private NestedScrollView addRecipeNestedScrollView;
+    private boolean isAddingAnIngredient;
+    private AddIngredientFragment addIngredientFragment;
+
 
     private IngredientEditAdapter ingredientAdapter;
     private EditText ingredientNameField, ingredientQuantityField;
@@ -108,7 +123,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         ingredientRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         ingredientRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Add Recipe");
         setSupportActionBar(toolbar);
 
@@ -119,6 +134,16 @@ public class AddRecipeActivity extends AppCompatActivity {
             // back button pressed
             finish();
         });
+
+        isAddingAnIngredient = false;
+        ingredientFragmentContainerView = findViewById(R.id.ingredientFragmentContainerView);
+        addRecipeNestedScrollView = findViewById(R.id.addRecipeNestedScrollView);
+        addIngredientFragment = new AddIngredientFragment();
+
+        FragmentTransaction fragmentTransaction = this
+                .getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.ingredientFragmentContainerView, addIngredientFragment);
+        fragmentTransaction.commit();
 
         recipeTitleLayout = findViewById(R.id.titleLayout);
 
@@ -150,14 +175,11 @@ public class AddRecipeActivity extends AppCompatActivity {
 
         // this makes sure that there's always one chip selected
         final ChipGroup chipGroupDuration = findViewById(R.id.durationChipGroup);
-        chipGroupDuration.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(ChipGroup group, int checkedId) {
-                for (int i = 0; i < chipGroupDuration.getChildCount(); i++) {
-                    Chip chip = (Chip) chipGroupDuration.getChildAt(i);
-                    if (chip != null) {
-                        chip.setClickable(!(chip.getId() == chipGroupDuration.getCheckedChipId()));
-                    }
+        chipGroupDuration.setOnCheckedChangeListener((group, checkedId) -> {
+            for (int i = 0; i < chipGroupDuration.getChildCount(); i++) {
+                Chip chip = (Chip) chipGroupDuration.getChildAt(i);
+                if (chip != null) {
+                    chip.setClickable(!(chip.getId() == chipGroupDuration.getCheckedChipId()));
                 }
             }
         });
@@ -172,9 +194,8 @@ public class AddRecipeActivity extends AppCompatActivity {
         });
 
         // This makes it possible to scroll in the comment field
-        final TextInputEditText commentField = findViewById(R.id.commentsEditText);
-        commentField.setOnTouchListener((v, event) -> {
-            if (commentField.hasFocus()) {
+        commentsEditText.setOnTouchListener((v, event) -> {
+            if (commentsEditText.hasFocus()) {
                 v.getParent().requestDisallowInterceptTouchEvent(true);
                 if ((event.getAction() & MotionEvent.ACTION_MASK) == MotionEvent.ACTION_SCROLL){
                     v.getParent().requestDisallowInterceptTouchEvent(false);
@@ -192,6 +213,53 @@ public class AddRecipeActivity extends AppCompatActivity {
         categoriesChipGroup = findViewById(R.id.categoriesChipGroup);
     }
 
+    public void toggleShowingAddIngredientFragment(boolean shouldShowIngredientScreen) {
+        // TODO: add animation
+        isAddingAnIngredient = shouldShowIngredientScreen;
+        if (isAddingAnIngredient) {
+            addIngredientFragment.resetFields();
+
+//            ObjectAnimator animation = ObjectAnimator.ofFloat(ingredientFragmentContainerView, "translationX", 100f);
+//            animation.setDuration(2000);
+//            animation.start();
+
+
+//            ingredientFragmentContainerView.animate()
+//                    .translationY(ingredientFragmentContainerView.getHeight())
+//                    .alpha(1.0f)
+//                    .setDuration(6000)
+//                    .setListener(new AnimatorListenerAdapter() {
+//                        @Override
+//                        public void onAnimationEnd(Animator animation) {
+//                            super.onAnimationEnd(animation);
+//                            ingredientFragmentContainerView.setVisibility(View.VISIBLE);
+//                            addRecipeNestedScrollView.setVisibility(View.GONE);
+//                            toolbar.setVisibility(View.GONE);
+//                        }
+//                    });
+
+            ingredientFragmentContainerView.setVisibility(View.VISIBLE);
+            addRecipeNestedScrollView.setVisibility(View.GONE);
+            toolbar.setVisibility(View.GONE);
+
+        } else {
+            ingredientFragmentContainerView.setVisibility(View.GONE);
+            addRecipeNestedScrollView.setVisibility(View.VISIBLE);
+            toolbar.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (keyCode == KeyEvent.KEYCODE_BACK && isAddingAnIngredient) {
+            Toast.makeText(AddRecipeActivity.this, "back button", Toast.LENGTH_LONG).show();
+            toggleShowingAddIngredientFragment(false);
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+
     /**
      * Creates the AlertDialog where the user adds ingredients
      *
@@ -199,6 +267,10 @@ public class AddRecipeActivity extends AppCompatActivity {
      */
     public void createIngredientDialog(View view) {
         removeCursorFromWidget();
+        toggleShowingAddIngredientFragment(true);
+
+        /*
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         // get the layout
@@ -207,7 +279,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         // Create the text field in the alert dialog.
         ingredientNameField = dialog_layout.findViewById(R.id.ingredientNameField);
         ingredientQuantityField = dialog_layout.findViewById(R.id.quantityField);
-        ingredientTypeField = dialog_layout.findViewById(R.id.ingredientTypeSpinner);
+        ingredientTypeField = dialog_layout.findViewById(R.id.ingredientQuantityTypeSpinner);
 
         // create the spinner adapter with the choices + the standard views of how it should look like
         ArrayAdapter<CharSequence> ingredientTypeAdapter = ArrayAdapter.createFromResource(this, R.array.ingredient_types_array_items, android.R.layout.simple_spinner_item);
@@ -219,12 +291,12 @@ public class AddRecipeActivity extends AppCompatActivity {
 
         builder.setPositiveButton("Add ingredient", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                Ingredient.type ingredientType = Ingredient.type.valueOf(ingredientTypeField.getSelectedItem().toString());
+                Ingredient.QuantityType ingredientQuantityType = Ingredient.QuantityType.valueOf(ingredientTypeField.getSelectedItem().toString());
                 if(ingredientQuantityField.getText().toString().isEmpty()) {
-                    createIngredient(ingredientNameField.getText().toString(), null, ingredientType);
+                    createIngredient(ingredientNameField.getText().toString(), null, ingredientQuantityType);
                 }
                 else {
-                    createIngredient(ingredientNameField.getText().toString(), ingredientQuantityField.getText().toString(), ingredientType);
+                    createIngredient(ingredientNameField.getText().toString(), ingredientQuantityField.getText().toString(), ingredientQuantityType);
                 }
 
             }
@@ -237,6 +309,14 @@ public class AddRecipeActivity extends AppCompatActivity {
         final AlertDialog alertDialog = builder.create();
         alertDialog.setView(dialog_layout);
         alertDialog.show();
+
+         */
+    }
+
+    public void addIngredientToList(Ingredient ingredient) {
+        ingredientList.add(ingredient);
+        // notify the ingredientAdapter to update the list
+        ingredientAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -245,7 +325,7 @@ public class AddRecipeActivity extends AppCompatActivity {
      * @param name      name of the ingredient
      * @param quantity  quantity of the ingredient
      */
-    private void createIngredient(String name, String quantity, Ingredient.type ingredientType) {
+    /*public void createIngredient(String name, Ingredient.IngredientType ingredientType, String quantity, Ingredient.QuantityType ingredientQuantityType) {
         try {
             validateIngredient(name, quantity);
 
@@ -253,10 +333,10 @@ public class AddRecipeActivity extends AppCompatActivity {
             String ingredientName = RecipeUtility.changeFirstLetterToCapital(name.trim());
 
             if(quantity == null) {
-                 ingredient = new Ingredient(ingredientName, null, ingredientType);
+                 ingredient = new Ingredient(ingredientName, null, ingredientQuantityType, ingredientType);
             }
             else {
-                 ingredient = new Ingredient(ingredientName, Double.parseDouble(quantity), ingredientType);
+                 ingredient = new Ingredient(ingredientName, Double.parseDouble(quantity), ingredientQuantityType, ingredientType);
             }
 
             ingredientList.add(ingredient);
@@ -266,40 +346,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         } catch (IllegalArgumentException e) {
             Toast.makeText(AddRecipeActivity.this, "Oops, something went wrong with that ingredient, try again", Toast.LENGTH_LONG).show();
         }
-    }
-
-    /**
-     * Validates parameters for ingredient
-     *
-     * @param name      value should not be empty
-     * @param quantity  value should be a [Double] number (and not be empty)
-     * @throws IllegalArgumentException if parameters not correct
-     */
-    private void validateIngredient(String name, String quantity) {
-        if(quantity != null) {
-            if( !isDouble(quantity)) {
-                throw new IllegalArgumentException();
-            }
-        }
-        if(name.isEmpty()) {
-            throw new IllegalArgumentException();
-        }
-    }
-
-    /**
-     * Checks if a string is a double
-     *
-     * @param str the string to test
-     * @return true if parsable as double, false if not
-     */
-    private boolean isDouble(String str) {
-        try {
-            Double.parseDouble(str);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
+    }*/
 
     /**
      * If one of the EditTextFields or the serves numberPicker is selected, removes the focus from that field.
@@ -507,7 +554,7 @@ public class AddRecipeActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         // get the layout
-        View dialog_layout = getLayoutInflater().inflate(R.layout.add_category_dialog, null);
+        View dialog_layout = View.inflate(this, R.layout.add_category_dialog, null);
 
         // Create the text field in the alert dialog.
         final EditText categoryEditText = dialog_layout.findViewById(R.id.categoryEditText);
@@ -670,31 +717,30 @@ public class AddRecipeActivity extends AppCompatActivity {
      */
     public void onActivityResult(int requestCode,int resultCode,Intent data) {
         // Result code is RESULT_OK only if the user selects an Image
-        if (resultCode == Activity.RESULT_OK)
-            switch (requestCode) {
-                case GALLERY_REQUEST_CODE:
-                    //data.getData returns the content URI for the selected Image
-                    try {
-                        Uri selectedImage = data.getData();
-                        imagePath = getRealPathFromURI(this, selectedImage);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == GALLERY_REQUEST_CODE) {
+                //data.getData returns the content URI for the selected Image
+                try {
+                    Uri selectedImage = data.getData();
+                    imagePath = getRealPathFromURI(this, selectedImage);
 
-                        // generate a bitmap, to put in the imageView
-                        Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-                        imageView.setImageBitmap(bitmap);
+                    // generate a bitmap, to put in the imageView
+                    Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+                    imageView.setImageBitmap(bitmap);
 
-                        imageView.setVisibility(View.VISIBLE);
+                    imageView.setVisibility(View.VISIBLE);
 
-                        // show & hide appropriate buttons
-                        addImageButton.setVisibility(View.GONE);
-                        differentImageButton.setVisibility(View.VISIBLE);
-                        removeImageButton.setVisibility(View.VISIBLE);
+                    // show & hide appropriate buttons
+                    addImageButton.setVisibility(View.GONE);
+                    differentImageButton.setVisibility(View.VISIBLE);
+                    removeImageButton.setVisibility(View.VISIBLE);
 
-                    } catch (Exception e) {
-                        e.getMessage();
-                    }
-                    break;
+                } catch (Exception e) {
+                    Log.e("galery error", e.getMessage());
+                }
             } else {
-            super.onActivityResult(requestCode, resultCode, data);
+                super.onActivityResult(requestCode, resultCode, data);
+            }
         }
     }
 

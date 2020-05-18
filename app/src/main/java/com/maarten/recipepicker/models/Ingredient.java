@@ -3,6 +3,9 @@ package com.maarten.recipepicker.models;
 import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.Expose;
+import com.maarten.recipepicker.RecipeUtility;
+import com.maarten.recipepicker.enums.IngredientType;
+import com.maarten.recipepicker.enums.QuantityType;
 
 import java.io.Serializable;
 
@@ -10,27 +13,28 @@ public class Ingredient implements Serializable, Comparable<Ingredient> {
 
     @Expose private String name;
     @Expose private Double quantity;
-    @Expose private type ingredientType;
-
-    public enum type {
-        grams,
-        kilograms,
-        millimetres,
-        centilitres,
-        litres,
-        empty
-    }
+    @Expose private QuantityType ingredientQuantityType;
+    @Expose private IngredientType ingredientType;
+    @Expose private String otherIngredientTypeName;
 
     public Ingredient(Ingredient ingredient){
         this.name = ingredient.getName();
         this.quantity = ingredient.getQuantity();
+        this.ingredientQuantityType = ingredient.getIngredientQuantityType();
         this.ingredientType = ingredient.getIngredientType();
+        this.otherIngredientTypeName = ingredient.getOtherIngredientTypeName();
     }
 
-    public Ingredient(String name, Double quantity, type ingredientType) {
+    public Ingredient(String name, Double quantity, QuantityType ingredientQuantityType, IngredientType ingredientType, String otherIngredientTypeName) {
         this.name = name;
         this.quantity = quantity;
+        this.ingredientQuantityType = ingredientQuantityType;
         this.ingredientType = ingredientType;
+        this.otherIngredientTypeName = otherIngredientTypeName;
+    }
+
+    public IngredientType getIngredientType() {
+        return ingredientType;
     }
 
     public String getName() {
@@ -49,14 +53,18 @@ public class Ingredient implements Serializable, Comparable<Ingredient> {
         this.quantity = quantity;
     }
 
-    public type getIngredientType() {
-        return ingredientType;
+    public QuantityType getIngredientQuantityType() {
+        return ingredientQuantityType;
+    }
+
+    public String getOtherIngredientTypeName() {
+        return otherIngredientTypeName;
     }
 
     @NonNull
     @Override
     public String toString() {
-        return (printQuantity() + " " + printType() + " " + name).trim();
+        return (printQuantity() + " " + printType() + " " + name + " ("+ printIngredientType() + ")").trim();
     }
 
     /**
@@ -73,17 +81,21 @@ public class Ingredient implements Serializable, Comparable<Ingredient> {
         }
     }
 
+    private String printIngredientType() {
+        return RecipeUtility.changeFirstLetterToCapital(ingredientType.name());
+    }
+
     /**
      * Makes it possible for quantity to be 'null'
      *
      * @return returns "" if null or the quantity if not null
      */
     private String printType() {
-        if (ingredientType.equals(type.empty) ) {
-            return "";
+        if (ingredientQuantityType.equals(QuantityType.OTHER) ) {
+            return otherIngredientTypeName;
         }
         else {
-            return ingredientType.name();
+            return ingredientQuantityType.name().toLowerCase();
         }
     }
 

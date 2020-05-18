@@ -12,6 +12,8 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputLayout;
+import com.maarten.recipepicker.enums.IngredientType;
+import com.maarten.recipepicker.enums.QuantityType;
 import com.maarten.recipepicker.models.Ingredient;
 import com.maarten.recipepicker.models.Instruction;
 import com.maarten.recipepicker.models.Recipe;
@@ -425,7 +427,7 @@ public class EditRecipeActivity extends AppCompatActivity {
         // Create the text field in the alert dialog.
         ingredientNameField = dialog_layout.findViewById(R.id.ingredientNameField);
         ingredientQuantityField = dialog_layout.findViewById(R.id.quantityField);
-        ingredientTypeField = dialog_layout.findViewById(R.id.ingredientTypeSpinner);
+        ingredientTypeField = dialog_layout.findViewById(R.id.ingredientQuantityTypeSpinner);
 
         // create the spinner ingredientAdapter with the choices + the standard views of how it should look like
         ArrayAdapter<CharSequence> ingredientTypeAdapter = ArrayAdapter.createFromResource(this, R.array.ingredient_types_array_items, android.R.layout.simple_spinner_item);
@@ -437,12 +439,12 @@ public class EditRecipeActivity extends AppCompatActivity {
 
         builder.setPositiveButton("Add ingredient", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                Ingredient.type ingredientType = Ingredient.type.valueOf(ingredientTypeField.getSelectedItem().toString());
+                QuantityType ingredientQuantityType = QuantityType.valueOf(ingredientTypeField.getSelectedItem().toString());
                 if(ingredientQuantityField.getText().toString().isEmpty()) {
-                    createIngredient(ingredientNameField.getText().toString(), null, ingredientType);
+                    createIngredient(ingredientNameField.getText().toString(), null, ingredientQuantityType);
                 }
                 else {
-                    createIngredient(ingredientNameField.getText().toString(), ingredientQuantityField.getText().toString(), ingredientType);
+                    createIngredient(ingredientNameField.getText().toString(), ingredientQuantityField.getText().toString(), ingredientQuantityType);
                 }
             }
         });
@@ -462,7 +464,7 @@ public class EditRecipeActivity extends AppCompatActivity {
      * @param name      name of the ingredient
      * @param quantity  quantity of the ingredient
      */
-    private void createIngredient(String name, String quantity, Ingredient.type ingredientType) {
+    private void createIngredient(String name, String quantity, QuantityType ingredientQuantityType) {
         try {
             validateIngredient(name, quantity);
 
@@ -470,10 +472,10 @@ public class EditRecipeActivity extends AppCompatActivity {
             String ingredientName = RecipeUtility.changeFirstLetterToCapital(name.trim());
 
             if(quantity == null) {
-                ingredient = new Ingredient(ingredientName, null, ingredientType);
+                ingredient = new Ingredient(ingredientName, null, ingredientQuantityType, IngredientType.OTHER, "");
             }
             else {
-                ingredient = new Ingredient(ingredientName, Double.parseDouble(quantity), ingredientType);
+                ingredient = new Ingredient(ingredientName, Double.parseDouble(quantity), ingredientQuantityType, IngredientType.OTHER, "");
             }
 
             ingredientList.add(ingredient);

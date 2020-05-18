@@ -27,6 +27,8 @@ import com.google.android.material.navigation.NavigationView;
 import com.maarten.recipepicker.adapters.RecipeAdapter;
 import com.maarten.recipepicker.enums.CookTime;
 import com.maarten.recipepicker.enums.Difficulty;
+import com.maarten.recipepicker.enums.IngredientType;
+import com.maarten.recipepicker.enums.QuantityType;
 import com.maarten.recipepicker.listSorters.AmountCookedSorter;
 import com.maarten.recipepicker.listSorters.DateSorter;
 import com.maarten.recipepicker.listSorters.RatingSorter;
@@ -53,10 +55,6 @@ import java.util.TreeSet;
 
 /**
  ********* BUGS *********
- * Something is wrong when asking file permissions
- *
- * When adding an instruction with a timer, if you type the number, the last typed number will not be saved
- *
  * Improve manifest
  *
  * Check portrait mode everywhere
@@ -330,12 +328,12 @@ public class MainActivity extends AppCompatActivity {
     public static void insertDummyRecipes() {
         // Spaghetti Bolognese
         List<Ingredient> SPIngredientList = new ArrayList<>();
-        SPIngredientList.add(new Ingredient("Spaghetti",500.0,Ingredient.type.grams));
-        SPIngredientList.add(new Ingredient("Minced meat",350.0,Ingredient.type.grams));
-        SPIngredientList.add(new Ingredient("Tomatoes",3.0,Ingredient.type.empty));
-        SPIngredientList.add(new Ingredient("Paprika's",3.0,Ingredient.type.empty));
-        SPIngredientList.add(new Ingredient("Water",100.0,Ingredient.type.millimetres));
-        SPIngredientList.add(new Ingredient("A bit of salt and pepper",null,Ingredient.type.empty));
+        SPIngredientList.add(new Ingredient("Spaghetti",500.0, QuantityType.GRAMS, IngredientType.OTHER, ""));
+        SPIngredientList.add(new Ingredient("Minced meat",350.0, QuantityType.GRAMS, IngredientType.OTHER, ""));
+        SPIngredientList.add(new Ingredient("Tomatoes",3.0, QuantityType.OTHER, IngredientType.OTHER, ""));
+        SPIngredientList.add(new Ingredient("Paprika's",3.0, QuantityType.OTHER, IngredientType.OTHER, ""));
+        SPIngredientList.add(new Ingredient("Water",100.0, QuantityType.MILLILITRES, IngredientType.OTHER, ""));
+        SPIngredientList.add(new Ingredient("A bit of salt and pepper",null, QuantityType.OTHER, IngredientType.OTHER, ""));
 
         String SPImage =  String.valueOf(R.drawable.spaghetti_bolognese);
         String SPURL = "https://www.jamieoliver.com/recipes/beef-recipes/spaghetti-bolognese/";
