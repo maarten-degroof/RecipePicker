@@ -27,6 +27,7 @@ import java.util.Set;
 import static com.maarten.recipepicker.MainActivity.recipeList;
 import static com.maarten.recipepicker.enums.FillInRecipeFragmentType.ADD_INGREDIENT;
 import static com.maarten.recipepicker.enums.FillInRecipeFragmentType.ADD_INSTRUCTION;
+import static com.maarten.recipepicker.enums.FillInRecipeFragmentType.IMPORT;
 import static com.maarten.recipepicker.enums.FillInRecipeFragmentType.MAIN;
 
 public class EditRecipeActivity extends AppCompatActivity implements AddRecipeInterface {
@@ -73,13 +74,16 @@ public class EditRecipeActivity extends AppCompatActivity implements AddRecipeIn
 
         viewModel = new ViewModelProvider(this).get(FillInRecipeViewModel.class);
 
+        if (viewModel.getCurrentFragmentType() == IMPORT) {
+            viewModel.setCurrentFragmentType(MAIN);
+        }
+
         // initialise the viewModel with the recipe
         viewModel.setRecipe(recipe);
 
-        FillInRecipeFragmentType currentFragmentType = viewModel.getCurrentFragmentType();
-        toggleCurrentFragment(currentFragmentType);
+        toggleCurrentFragment(viewModel.getCurrentFragmentType());
     }
-    
+
     /**
      * This decides what fragment to load and show; also decides which toolbar to show
      *

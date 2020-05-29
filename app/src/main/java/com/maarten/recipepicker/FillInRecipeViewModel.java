@@ -17,7 +17,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class FillInRecipeViewModel extends ViewModel {
-    private FillInRecipeFragmentType currentFragmentType = FillInRecipeFragmentType.MAIN;
+
+    private FillInRecipeFragmentType currentFragmentType = FillInRecipeFragmentType.IMPORT;
 
     private List<Ingredient> ingredientList = new ArrayList<>();
     private List<Instruction> instructionList = new ArrayList<>();
@@ -49,29 +50,133 @@ public class FillInRecipeViewModel extends ViewModel {
     private int instructionTimerMin = 6;
     private int instructionTimerSec = 30;
 
+    private String inputJson = "";
+
+    /**
+     * With a given recipe, fills in all the fields of the recipe
+     * as good as possible, while checking on null values
+     * Only fills the values in if this.recipe == null
+     *
+     * @param recipe - the recipe to fill in
+     */
     public void setRecipe(Recipe recipe) {
-        if (this.recipe == null) {
-            this.recipe = recipe;
-        }
-        if (this.recipe == null) {
+        if (this.recipe != null || recipe == null) {
             return;
         }
+
         // Initialise all the fields with the given recipe
+        if (recipe.getTitle() == null) {
+            recipe.setTitle("");
+        }
         setRecipeTitle(recipe.getTitle());
-        setRecipeCookTime(recipe.getCookTime());
-        setRecipeDifficulty(recipe.getDifficulty());
 
-        setIngredientList(recipe.getIngredientList());
-        setInstructionList(recipe.getInstructionList());
-        setCategorySet(recipe.getCategories());
+        if (recipe.getIngredientList() == null) {
+            recipe.setIngredientList(new ArrayList<>());
+        }
+        // Make sure there are no null values in the ingredients
+        List<Ingredient> tempIngredientList = new ArrayList<>();
+        for (Ingredient ingredient : recipe.getIngredientList()) {
+            if (ingredient.getIngredientType() == null) {
+                ingredient.setIngredientType(IngredientType.OTHER);
+            }
+            if (ingredient.getName() == null) {
+                ingredient.setName("");
+            }
+            if (ingredient.getIngredientQuantityType() == null) {
+                ingredient.setIngredientQuantityType(QuantityType.OTHER);
+            }
+            if (ingredient.getOtherIngredientTypeName() == null) {
+                ingredient.setOtherIngredientTypeName("");
+            }
+            tempIngredientList.add(ingredient);
+        }
+        setIngredientList(tempIngredientList);
 
+        if (recipe.getInstructionList() == null) {
+            recipe.setInstructionList(new ArrayList<>());
+        }
+        // Make sure there are no null values in the instructions
+        List<Instruction> tempInstructionList = new ArrayList<>();
+        for (Instruction instruction : recipe.getInstructionList()) {
+            if (instruction.getDescription() == null) {
+                instruction.setDescription("");
+            }
+            tempInstructionList.add(instruction);
+        }
+        setInstructionList(tempInstructionList);
+
+        if (getCurrentFragmentType() == FillInRecipeFragmentType.IMPORT) {
+            recipe.setImagePath(null);
+            recipe.setFavorite(false);
+        }
         setRecipeImagePath(recipe.getImagePath());
-        setServeCount(recipe.getServes());
-        setRecipeComments(recipe.getComments());
-        setRecipeURL(recipe.getURL());
         setRecipeFavorite(recipe.getFavorite());
 
-        // TODO: add the checks from import recipe here and initialise the fields
+        if (recipe.getURL() == null) {
+            recipe.setURL("");
+        }
+        setRecipeURL(recipe.getURL());
+
+        if (recipe.getComments() == null) {
+            recipe.setComments("");
+        }
+        setRecipeComments(recipe.getComments());
+
+        if (recipe.getCookTime() == null) {
+            recipe.setCookTime(CookTime.MEDIUM);
+        }
+        setRecipeCookTime(recipe.getCookTime());
+
+        if (recipe.getDifficulty() == null) {
+            recipe.setDifficulty(Difficulty.INTERMEDIATE);
+        }
+        setRecipeDifficulty(recipe.getDifficulty());
+
+        if (recipe.getServes() <= 0) {
+            recipe.setServes(4);
+        } else if (recipe.getServes() >= 50) {
+            recipe.setServes(50);
+        }
+        setServeCount(recipe.getServes());
+
+        if (recipe.getCategories() == null) {
+            recipe.setCategories(new TreeSet<>());
+        }
+        setCategorySet(recipe.getCategories());
+
+        this.recipe = recipe;
+    }
+
+    /**
+     * Sets all the values back into the default values
+     */
+    public void reset() {
+        currentFragmentType = FillInRecipeFragmentType.IMPORT;
+
+        ingredientList = new ArrayList<>();
+        instructionList = new ArrayList<>();
+
+        categorySet = new TreeSet<>();
+
+        recipeTitle = "";
+        recipeURL = "";
+        recipeComments = "";
+        recipeImagePath = "";
+
+        recipeFavorite = false;
+        serveCount = 4;
+
+        recipeDifficulty = Difficulty.INTERMEDIATE;
+        recipeCookTime = CookTime.MEDIUM;
+
+        recipe = null;
+
+        resetInstructionFields();
+        resetIngredientFields();
+    }
+
+    public void removeRecipe() {
+        this.recipe = null;
     }
 
     public FillInRecipeFragmentType getCurrentFragmentType() {
@@ -254,6 +359,14 @@ public class FillInRecipeViewModel extends ViewModel {
 
     public Set<String> getCategorySet() {
         return categorySet;
+    }
+
+    public String getInputJson() {
+        return inputJson;
+    }
+
+    public void setInputJson(String inputJson) {
+        this.inputJson = inputJson;
     }
 
     /**

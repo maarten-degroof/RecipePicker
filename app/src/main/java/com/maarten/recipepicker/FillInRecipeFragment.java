@@ -45,6 +45,7 @@ import com.maarten.recipepicker.enums.FillInRecipeFragmentType;
 import com.maarten.recipepicker.models.Ingredient;
 import com.maarten.recipepicker.models.Instruction;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -52,6 +53,9 @@ import java.util.TreeSet;
 public class FillInRecipeFragment extends Fragment {
 
     private RecyclerView ingredientRecyclerView, instructionRecyclerView;
+
+    private List<Ingredient> ingredientList;
+    private List<Instruction> instructionList;
 
     private EditText titleEditText, urlEditText, commentsEditText;
 
@@ -181,12 +185,12 @@ public class FillInRecipeFragment extends Fragment {
 
         viewModel = new ViewModelProvider(requireActivity()).get(FillInRecipeViewModel.class);
 
-        List<Ingredient> ingredientList = viewModel.getIngredientList();
+        ingredientList = viewModel.getIngredientList();
         IngredientEditAdapter ingredientAdapter = new IngredientEditAdapter(requireActivity(), ingredientList);
         ingredientAdapter.notifyDataSetChanged();
         ingredientRecyclerView.setAdapter(ingredientAdapter);
 
-        List<Instruction> instructionList = viewModel.getInstructionList();
+        instructionList = viewModel.getInstructionList();
         InstructionEditAdapter instructionAdapter = new InstructionEditAdapter(requireActivity(), instructionList);
         instructionAdapter.notifyDataSetChanged();
         instructionRecyclerView.setAdapter(instructionAdapter);
@@ -210,6 +214,31 @@ public class FillInRecipeFragment extends Fragment {
         for (String category : viewModel.getCategorySet()) {
             addCategoryChip(category);
         }
+    }
+
+    /**
+     * Resets all the fields and triggers the reset of the viewModel
+     */
+    public void resetFragment() {
+        ingredientList = new ArrayList<>();
+        instructionList = new ArrayList<>();
+
+        categoriesChipGroup.removeAllViews();
+
+        titleEditText.setText("");
+        recipeTitleLayout.setError(null);
+
+        urlEditText.setText("");
+        commentsEditText.setText("");
+
+        favoriteSwitch.setChecked(false);
+        servesNumberPicker.setValue(4);
+
+        imagePath = "";
+        setCookTime(CookTime.MEDIUM);
+        setDifficulty(Difficulty.INTERMEDIATE);
+
+        viewModel.reset();
     }
 
     /**

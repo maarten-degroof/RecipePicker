@@ -44,6 +44,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -113,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
 
     private MaterialButton addRecipeButton;
     private TextView noRecipesYetTextView;
+
+    public static DecimalFormat decimalFormat = new DecimalFormat("0.###");
 
     /**
      * Creates the activity and initialises all UI-fields
@@ -209,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         random = new Random();
+        decimalFormat.setRoundingMode(RoundingMode.HALF_UP);
 
         setFact();
 

@@ -13,6 +13,10 @@ public class Instruction implements Serializable {
         this.milliseconds = milliseconds;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getDescription() {
         return description;
     }

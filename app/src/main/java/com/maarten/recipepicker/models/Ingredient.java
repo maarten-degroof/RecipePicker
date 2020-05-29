@@ -9,6 +9,8 @@ import com.maarten.recipepicker.enums.QuantityType;
 
 import java.io.Serializable;
 
+import static com.maarten.recipepicker.MainActivity.decimalFormat;
+
 public class Ingredient implements Serializable, Comparable<Ingredient> {
 
     @Expose private String name;
@@ -61,6 +63,18 @@ public class Ingredient implements Serializable, Comparable<Ingredient> {
         return otherIngredientTypeName;
     }
 
+    public void setIngredientQuantityType(QuantityType ingredientQuantityType) {
+        this.ingredientQuantityType = ingredientQuantityType;
+    }
+
+    public void setIngredientType(IngredientType ingredientType) {
+        this.ingredientType = ingredientType;
+    }
+
+    public void setOtherIngredientTypeName(String otherIngredientTypeName) {
+        this.otherIngredientTypeName = otherIngredientTypeName;
+    }
+
     @NonNull
     @Override
     public String toString() {
@@ -77,7 +91,7 @@ public class Ingredient implements Serializable, Comparable<Ingredient> {
             return "";
         }
         else {
-            return quantity.toString();
+            return decimalFormat.format(quantity);
         }
     }
 
