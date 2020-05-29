@@ -20,6 +20,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputLayout;
 import com.maarten.recipepicker.enums.FillInRecipeFragmentType;
 import com.maarten.recipepicker.models.Instruction;
+import com.maarten.recipepicker.viewModels.FillInRecipeViewModel;
 
 public class AddInstructionFragment extends Fragment {
 

@@ -18,7 +18,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.maarten.recipepicker.AddRecipeInterface;
-import com.maarten.recipepicker.FillInRecipeViewModel;
+import com.maarten.recipepicker.viewModels.FillInRecipeViewModel;
 import com.maarten.recipepicker.R;
 import com.maarten.recipepicker.enums.FillInRecipeFragmentType;
 import com.maarten.recipepicker.models.Recipe;

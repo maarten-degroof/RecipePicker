@@ -175,31 +175,29 @@ public class Recipe implements Serializable {
     }
 
     /*
-     * returns (and creates) a bitmap to use
+     * Returns (and creates) a bitmap to use
      */
     public Bitmap getImage() {
         if(image != null) {
             return image;
         }
-        else {
-            Bitmap bitmap;
-            // no image given
-            if(imagePath == null) {
-                bitmap = BitmapFactory.decodeResource(RecipePickerApplication.getAppContext().getResources(), R.drawable.no_image_available);
-            }
-            // image is a drawable
-            else if(Character.isDigit(imagePath.charAt(0))) {
-                bitmap = BitmapFactory.decodeResource(RecipePickerApplication.getAppContext().getResources(), Integer.decode(imagePath));
-            } else {
-                bitmap = BitmapFactory.decodeFile(imagePath);
-            }
-            image = bitmap;
-            return bitmap;
+        Bitmap bitmap;
+        // No image given
+        if(imagePath == null) {
+            bitmap = BitmapFactory.decodeResource(RecipePickerApplication.getAppContext().getResources(), R.drawable.no_image_available);
         }
+        // Image is a drawable
+        else if(Character.isDigit(imagePath.charAt(0))) {
+            bitmap = BitmapFactory.decodeResource(RecipePickerApplication.getAppContext().getResources(), Integer.decode(imagePath));
+        } else {
+            bitmap = BitmapFactory.decodeFile(imagePath);
+        }
+        image = bitmap;
+        return bitmap;
     }
 
     /**
-     * compares an object to itself. returns true if they're the same
+     * Compares an object to itself. returns true if they're the same
      *
      * @param obj object to compare, should be of type recipe
      * @return returns true if object is the same as this object
@@ -216,7 +214,7 @@ public class Recipe implements Serializable {
     /**
      * Generates the ingredient list ordered by quantity
      *
-     * @return - string of the ingredient list
+     * @return string of the ingredient list
      */
     public String getOrderedIngredientString() {
         if(ingredientList == null) {
@@ -233,7 +231,7 @@ public class Recipe implements Serializable {
             builder.append(ingredient.getName());
             builder.append(", ");
         }
-        // remove the last separator ', '
+        // Remove the last separator ', '
         if(builder.length() >= 2) {
             builder.delete(builder.length() - 2, builder.length() - 1) ;
         }

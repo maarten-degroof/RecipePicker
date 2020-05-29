@@ -28,6 +28,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -46,6 +47,7 @@ import com.maarten.recipepicker.models.Instruction;
 import com.maarten.recipepicker.models.Recipe;
 import com.maarten.recipepicker.adapters.IngredientAdapter;
 import com.maarten.recipepicker.adapters.InstructionAdapter;
+import com.maarten.recipepicker.viewModels.viewRecipeViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,12 +63,13 @@ public class ViewRecipeActivity extends AppCompatActivity {
     private MenuItem favoriteItemFull;
 
     private TextView amountCookedField;
-    private int amountCookedValue;
 
     private float currentRating;
     private Chip ratingChip;
 
     private Gson gson;
+
+    private viewRecipeViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +91,6 @@ public class ViewRecipeActivity extends AppCompatActivity {
             // back button pressed
             supportFinishAfterTransition();
         });
-
 
         TextView recipeTitle = findViewById(R.id.textViewTitle);
         amountCookedField = findViewById(R.id.amountCookedField);
@@ -114,14 +116,16 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         recipeTitle.setText(span);
 
-        amountCookedValue = recipe.getAmountCooked();
-        amountCookedField.setText(String.valueOf(amountCookedValue));
+        // The index is used to update the favorite status
+        recipeIndex = MainActivity.recipeList.indexOf(recipe);
+
+        viewModel = new ViewModelProvider(this).get(viewRecipeViewModel.class);
 
         ImageView recipeImageView = findViewById(R.id.recipeImageView);
 
         recipeImageView.setImageBitmap(recipe.getImage());
 
-        // hide the appropriate elements
+        // Hide the appropriate elements
         TextView noWebsiteTextView = findViewById(R.id.noWebsiteTextView);
         MaterialButton copyWebsiteButton = findViewById(R.id.copyURLButton);
         MaterialButton browseWebsiteButton = findViewById(R.id.BrowseURLButton);
@@ -133,20 +137,20 @@ public class ViewRecipeActivity extends AppCompatActivity {
             browseWebsiteButton.setVisibility(View.INVISIBLE);
         }
 
-        // get the ingredientlist and add it to the listview
+        // Get the ingredientlist and add it to the listview
         RecyclerView ingredientListRecyclerView = findViewById(R.id.viewRecipeIngredientList);
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         int servesCount = Integer.parseInt(sharedPrefs.getString("serves_value", "4"));
 
-        // create a new ingredientList, and create all the ingredients again, otherwise it'd be the same object and you'd change the wrong values
+        // Create a new ingredientList, and create all the ingredients again, otherwise it'd be the same object and you'd change the wrong values
         List<Ingredient> calculatedIngredientList = new ArrayList<>();
 
         for (Ingredient ingredient : recipe.getIngredientList()) {
             calculatedIngredientList.add(new Ingredient(ingredient));
         }
-        // now update the values
+        // Now update the values
         for (Ingredient ingredient : calculatedIngredientList) {
             if(ingredient.getQuantity()!= null) {
                 ingredient.setQuantity(ingredient.getQuantity() / recipe.getServes() * servesCount);
@@ -159,12 +163,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
         ingredientListRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         ingredientListRecyclerView.setHasFixedSize(true);
 
-        // make the listview also scrollable
+        // Make the recyclerView also scrollable
         ViewCompat.setNestedScrollingEnabled(ingredientListRecyclerView, true);
-
-        // the index is used to update the favorite status
-        recipeIndex = MainActivity.recipeList.indexOf(recipe);
-
 
         Chip difficultyChip = findViewById(R.id.difficultyChip);
 
@@ -196,12 +196,12 @@ public class ViewRecipeActivity extends AppCompatActivity {
         instructionRecyclerView.setAdapter(instructionAdapter);
         instructionRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // fill the string in so it says 'ingredients needed for [4] persons:
+        // Fill the string in so it says 'ingredients needed for [4] persons:
         String ingredientString = getString(R.string.needed_ingredients, servesCount);
         TextView neededIngredients = findViewById(R.id.neededIngredients);
         neededIngredients.setText(Html.fromHtml(ingredientString, FROM_HTML_MODE_LEGACY));
 
-        // check to show the tip. Change the preferences so it won't show again
+        // Check to show the tip. Change the preferences so it won't show again
         boolean shouldShowServesTip = sharedPrefs.getBoolean("tip_serves", true);
         if(shouldShowServesTip) {
             showServeTip();
@@ -244,6 +244,9 @@ public class ViewRecipeActivity extends AppCompatActivity {
         if (!MainActivity.recipeList.contains(recipe)) {
             createRecipeDeletedDialog();
         }
+
+        viewModel.setAmountCooked(MainActivity.recipeList.get(recipeIndex).getAmountCooked());
+        amountCookedField.setText(String.valueOf(viewModel.getAmountCooked()));
     }
 
     /**
@@ -280,33 +283,29 @@ public class ViewRecipeActivity extends AppCompatActivity {
         builder.setTitle("Choose rating");
         builder.setMessage("Tap or drag the stars to set a rating.");
 
-        builder.setPositiveButton("Rate", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                currentRating = recipeRatingBar.getRating();
-                MainActivity.recipeList.get(recipeIndex).setRating((int)currentRating);
-                MainActivity.saveRecipes();
+        builder.setPositiveButton("Rate", (dialog, id) -> {
+            currentRating = recipeRatingBar.getRating();
+            MainActivity.recipeList.get(recipeIndex).setRating((int)currentRating);
+            MainActivity.saveRecipes();
 
-                ratingChip.setText(String.valueOf((int) currentRating));
-                ratingChip.setChipIconResource(R.drawable.ic_star_green_24dp);
+            ratingChip.setText(String.valueOf((int) currentRating));
+            ratingChip.setChipIconResource(R.drawable.ic_star_green_24dp);
 
-                if (currentRating == 0) {
-                    ratingChip.setText(getString(R.string.no_rating));
-                    ratingChip.setChipIconResource(R.drawable.ic_star_border_green_24dp);
-                }
-
-            }
-        });
-        builder.setNegativeButton("Remove rating", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                currentRating = 0;
-                MainActivity.recipeList.get(recipeIndex).setRating(0);
-                MainActivity.saveRecipes();
-
+            if (currentRating == 0) {
                 ratingChip.setText(getString(R.string.no_rating));
                 ratingChip.setChipIconResource(R.drawable.ic_star_border_green_24dp);
             }
+
         });
-        // create and show the dialog
+        builder.setNegativeButton("Remove rating", (dialog, id) -> {
+            currentRating = 0;
+            MainActivity.recipeList.get(recipeIndex).setRating(0);
+            MainActivity.saveRecipes();
+
+            ratingChip.setText(getString(R.string.no_rating));
+            ratingChip.setChipIconResource(R.drawable.ic_star_border_green_24dp);
+        });
+        // Create and show the dialog
         final AlertDialog alertDialog = builder.create();
         alertDialog.setView(dialog_layout);
         alertDialog.show();
@@ -339,7 +338,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
     /**
      * This function will be called when a menu item is selected
-     * this has the favorites, edit, delete, share and reset amount cooked buttons
+     * This has the favorites, edit, delete, share and reset amount cooked buttons
      *
      * @param item the clicked menu item object
      * @return returns true if the clicked item is found
@@ -403,8 +402,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
         builder.setPositiveButton("Reset", (dialog, id) -> {
             MainActivity.recipeList.get(recipeIndex).resetAmountCooked();
             MainActivity.saveRecipes();
-            amountCookedValue = 0;
-            amountCookedField.setText(String.valueOf(amountCookedValue));
+            viewModel.setAmountCooked(0);
+            amountCookedField.setText(String.valueOf(viewModel.getAmountCooked()));
 
             Toast.makeText(this, "Amount of times cooked is reset for this recipe", Toast.LENGTH_LONG).show();
         });
@@ -505,12 +504,12 @@ public class ViewRecipeActivity extends AppCompatActivity {
     public void addToCookedCounter(View view) {
         MainActivity.recipeList.get(recipeIndex).addOneAmountCooked();
         MainActivity.saveRecipes();
-        amountCookedValue++;
-        amountCookedField.setText(String.valueOf(amountCookedValue));
+        viewModel.addOneAmountCooked();
+        amountCookedField.setText(String.valueOf(viewModel.getAmountCooked()));
 
         Snackbar.make(view, "You cooked this", Snackbar.LENGTH_LONG).setAction("Undo", v -> {
-            amountCookedValue--;
-            amountCookedField.setText(String.valueOf(amountCookedValue));
+            viewModel.removeOneAmountCooked();
+            amountCookedField.setText(String.valueOf(viewModel.getAmountCooked()));
             MainActivity.recipeList.get(recipeIndex).removeOneAmountCooked();
             MainActivity.saveRecipes();
         }).show();

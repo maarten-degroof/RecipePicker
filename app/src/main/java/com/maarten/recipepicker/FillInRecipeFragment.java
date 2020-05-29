@@ -44,6 +44,7 @@ import com.maarten.recipepicker.enums.Difficulty;
 import com.maarten.recipepicker.enums.FillInRecipeFragmentType;
 import com.maarten.recipepicker.models.Ingredient;
 import com.maarten.recipepicker.models.Instruction;
+import com.maarten.recipepicker.viewModels.FillInRecipeViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

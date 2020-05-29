@@ -23,6 +23,7 @@ import com.maarten.recipepicker.enums.FillInRecipeFragmentType;
 import com.maarten.recipepicker.enums.IngredientType;
 import com.maarten.recipepicker.enums.QuantityType;
 import com.maarten.recipepicker.models.Ingredient;
+import com.maarten.recipepicker.viewModels.FillInRecipeViewModel;
 
 import static com.maarten.recipepicker.RecipeUtility.changeFirstLetterToCapital;
 

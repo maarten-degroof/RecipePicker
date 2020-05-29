@@ -20,6 +20,7 @@ import com.maarten.recipepicker.enums.FillInRecipeFragmentType;
 import com.maarten.recipepicker.models.Ingredient;
 import com.maarten.recipepicker.models.Instruction;
 import com.maarten.recipepicker.models.Recipe;
+import com.maarten.recipepicker.viewModels.FillInRecipeViewModel;
 
 import java.util.List;
 import java.util.Set;

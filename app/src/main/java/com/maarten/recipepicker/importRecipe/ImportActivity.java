@@ -18,7 +18,7 @@ import com.maarten.recipepicker.AddIngredientFragment;
 import com.maarten.recipepicker.AddInstructionFragment;
 import com.maarten.recipepicker.AddRecipeInterface;
 import com.maarten.recipepicker.FillInRecipeFragment;
-import com.maarten.recipepicker.FillInRecipeViewModel;
+import com.maarten.recipepicker.viewModels.FillInRecipeViewModel;
 import com.maarten.recipepicker.MainActivity;
 import com.maarten.recipepicker.R;
 import com.maarten.recipepicker.enums.CookTime;
