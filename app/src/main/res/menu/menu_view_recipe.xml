@@ -25,8 +25,15 @@
     <item
         android:id="@+id/action_share"
         android:icon="@drawable/ic_share_white_24dp"
-        android:orderInCategory="800"
+        android:orderInCategory="700"
         android:title="@string/share"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_reset_cook_counter"
+        android:icon="@drawable/ic_reset_white_24dp"
+        android:orderInCategory="800"
+        android:title="@string/reset_amount_cooked"
         app:showAsAction="never" />
 
     <item

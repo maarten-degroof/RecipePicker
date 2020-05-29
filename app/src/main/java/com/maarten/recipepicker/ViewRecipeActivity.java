@@ -339,7 +339,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
     /**
      * This function will be called when a menu item is selected
-     * this has the favorites, edit and delete button
+     * this has the favorites, edit, delete, share and reset amount cooked buttons
      *
      * @param item the clicked menu item object
      * @return returns true if the clicked item is found
@@ -381,10 +381,39 @@ public class ViewRecipeActivity extends AppCompatActivity {
                 shareRecipe();
                 return true;
 
+            case R.id.action_reset_cook_counter:
+                createResetAmountCookedDialog();
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+
+    /**
+     * Creates the dialog to reset the amount cooked counter
+     */
+    private void createResetAmountCookedDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Reset amount cooked");
+        builder.setMessage("Are you sure you want to reset the amount of times you have cooked this recipe?");
+
+        builder.setPositiveButton("Reset", (dialog, id) -> {
+            MainActivity.recipeList.get(recipeIndex).resetAmountCooked();
+            MainActivity.saveRecipes();
+            amountCookedValue = 0;
+            amountCookedField.setText(String.valueOf(amountCookedValue));
+
+            Toast.makeText(this, "Amount of times cooked is reset for this recipe", Toast.LENGTH_LONG).show();
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, id) -> {
+        });
+        // create and show the dialog
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     /**
@@ -479,14 +508,11 @@ public class ViewRecipeActivity extends AppCompatActivity {
         amountCookedValue++;
         amountCookedField.setText(String.valueOf(amountCookedValue));
 
-        Snackbar.make(view, "You cooked this", Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                amountCookedValue--;
-                amountCookedField.setText(String.valueOf(amountCookedValue));
-                MainActivity.recipeList.get(recipeIndex).removeOneAmountCooked();
-                MainActivity.saveRecipes();
-            }
+        Snackbar.make(view, "You cooked this", Snackbar.LENGTH_LONG).setAction("Undo", v -> {
+            amountCookedValue--;
+            amountCookedField.setText(String.valueOf(amountCookedValue));
+            MainActivity.recipeList.get(recipeIndex).removeOneAmountCooked();
+            MainActivity.saveRecipes();
         }).show();
     }
 
@@ -566,14 +592,10 @@ public class ViewRecipeActivity extends AppCompatActivity {
      * @param view - the pressed difficulty chip
      */
     public void startDifficultyFilteredActivity(View view) {
-        try{
-            Intent intent = new Intent(this, TypeFilteredActivity.class);
-            intent.putExtra("filterType", "Difficulty");
-            intent.putExtra("difficulty", recipe.getDifficulty());
-            startActivity(intent);
-        } catch (Exception e) {
-            Log.d("ERROR", e.getLocalizedMessage());
-        }
+        Intent intent = new Intent(this, TypeFilteredActivity.class);
+        intent.putExtra("filterType", "Difficulty");
+        intent.putExtra("difficulty", recipe.getDifficulty());
+        startActivity(intent);
     }
 
     /**
@@ -582,14 +604,10 @@ public class ViewRecipeActivity extends AppCompatActivity {
      * @param category - the category that was pressed - a String
      */
     public void startCategoryFilteredActivity(String category) {
-        try{
-            Intent intent = new Intent(this, TypeFilteredActivity.class);
-            intent.putExtra("filterType", "Category");
-            intent.putExtra("category", category);
-            startActivity(intent);
-        } catch (Exception e) {
-            Log.d("ERROR", e.getLocalizedMessage());
-        }
+        Intent intent = new Intent(this, TypeFilteredActivity.class);
+        intent.putExtra("filterType", "Category");
+        intent.putExtra("category", category);
+        startActivity(intent);
     }
 
     /**

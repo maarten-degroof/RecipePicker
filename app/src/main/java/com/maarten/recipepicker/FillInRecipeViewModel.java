@@ -19,8 +19,8 @@ import java.util.TreeSet;
 public class FillInRecipeViewModel extends ViewModel {
     private FillInRecipeFragmentType currentFragmentType = FillInRecipeFragmentType.MAIN;
 
-    private final List<Ingredient> ingredientList = new ArrayList<>();
-    private final List<Instruction> instructionList = new ArrayList<>();
+    private List<Ingredient> ingredientList = new ArrayList<>();
+    private List<Instruction> instructionList = new ArrayList<>();
 
     private Set<String> categorySet = new TreeSet<>();
 
@@ -56,6 +56,21 @@ public class FillInRecipeViewModel extends ViewModel {
         if (this.recipe == null) {
             return;
         }
+        // Initialise all the fields with the given recipe
+        setRecipeTitle(recipe.getTitle());
+        setRecipeCookTime(recipe.getCookTime());
+        setRecipeDifficulty(recipe.getDifficulty());
+
+        setIngredientList(recipe.getIngredientList());
+        setInstructionList(recipe.getInstructionList());
+        setCategorySet(recipe.getCategories());
+
+        setRecipeImagePath(recipe.getImagePath());
+        setServeCount(recipe.getServes());
+        setRecipeComments(recipe.getComments());
+        setRecipeURL(recipe.getURL());
+        setRecipeFavorite(recipe.getFavorite());
+
         // TODO: add the checks from import recipe here and initialise the fields
     }
 
@@ -87,12 +102,20 @@ public class FillInRecipeViewModel extends ViewModel {
         ingredientList.add(ingredient);
     }
 
+    public void setIngredientList(List<Ingredient> ingredientList) {
+        this.ingredientList = ingredientList;
+    }
+
     public List<Ingredient> getIngredientList() {
         return ingredientList;
     }
 
     public void addInstruction(Instruction instruction) {
         instructionList.add(instruction);
+    }
+
+    public void setInstructionList(List<Instruction> instructionList) {
+        this.instructionList = instructionList;
     }
 
     public List<Instruction> getInstructionList() {

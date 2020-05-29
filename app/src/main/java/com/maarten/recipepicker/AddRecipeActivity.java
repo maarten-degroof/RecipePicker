@@ -1,6 +1,5 @@
 package com.maarten.recipepicker;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -44,7 +43,6 @@ public class AddRecipeActivity extends AppCompatActivity implements AddRecipeInt
 
     private FillInRecipeViewModel viewModel;
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
