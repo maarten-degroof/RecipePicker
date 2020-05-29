@@ -65,11 +65,9 @@ public class IngredientEditAdapter extends RecyclerView.Adapter<IngredientEditAd
 
         private TextView ingredientListTextView;
         private ImageButton removeIngredientButton;
-        private View parentView;
 
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.parentView = itemView;
             this.ingredientListTextView = itemView.findViewById(R.id.ingredientListTextView);
             this.removeIngredientButton = itemView.findViewById(R.id.removeIngredientButton);
         }

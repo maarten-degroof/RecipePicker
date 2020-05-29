@@ -1,7 +1,6 @@
 package com.maarten.recipepicker;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +8,10 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import androidx.appcompat.widget.Toolbar;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
@@ -18,61 +19,94 @@ import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.maarten.recipepicker.enums.FillInRecipeFragmentType;
 import com.maarten.recipepicker.enums.IngredientType;
 import com.maarten.recipepicker.enums.QuantityType;
 import com.maarten.recipepicker.models.Ingredient;
 
+import static com.maarten.recipepicker.RecipeUtility.changeFirstLetterToCapital;
+
 public class AddIngredientFragment extends Fragment {
 
-    private Toolbar toolbar;
-
     private EditText ingredientNameEditText, ingredientQuantityEditText, ingredientTypeOtherEditText;
-    private TextInputLayout ingredientNameLayout, ingredientQuantityLayout, ingredientTypeOtherLayout;
+    private TextInputLayout ingredientNameLayout;
 
     private ChipGroup ingredientTypeChipGroup;
-
     private RadioGroup ingredientQuantityTypeRadioGroup;
 
+    private FillInRecipeViewModel viewModel;
 
     public AddIngredientFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment AddIngredientFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AddIngredientFragment newInstance() {
-        AddIngredientFragment fragment = new AddIngredientFragment();
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_add_ingredient, container, false);
 
-        return fragment;
+        ingredientNameEditText = view.findViewById(R.id.ingredientNameEditText);
+        ingredientNameLayout = view.findViewById(R.id.ingredientNameLayout);
+
+        ingredientQuantityEditText = view.findViewById(R.id.ingredientQuantityEditText);
+
+        ingredientTypeOtherEditText = view.findViewById(R.id.ingredientTypeOtherEditText);
+
+        MaterialButton cancelButton = view.findViewById(R.id.cancelButton);
+        cancelButton.setOnClickListener(view2 -> goBack());
+
+        MaterialButton createIngredientButton = view.findViewById(R.id.addIngredientButton);
+        createIngredientButton.setOnClickListener(view12 -> createIngredient());
+
+        ingredientTypeChipGroup = view.findViewById(R.id.ingredientTypeChipGroup);
+        for (String type : RecipeUtility.convertEnumToStringList("IngredientType")) {
+            generateIngredientTypeChip(type);
+        }
+
+        ingredientQuantityTypeRadioGroup = view.findViewById(R.id.ingredientQuantityTypeRadioGroup);
+        for (String type : RecipeUtility.convertEnumToStringList("QuantityType")) {
+            generateQuantityTypeRadioButton(type);
+        }
+
+        return view;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.d("fragment", "in on create");
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        viewModel = new ViewModelProvider(requireActivity()).get(FillInRecipeViewModel.class);
+
+        ingredientNameEditText.setText(viewModel.getIngredientName());
+        Double ingredientQuantity = viewModel.getIngredientQuantity();
+        if (ingredientQuantity == 0.0) {
+            ingredientQuantityEditText.setText("");
+        }
+        else {
+            ingredientQuantityEditText.setText(String.valueOf(ingredientQuantity));
+        }
+        ingredientTypeOtherEditText.setText(viewModel.getIngredientOtherQuantity());
+
+        setSelectedQuantityType(viewModel.getQuantityType());
+        setSelectedIngredientType(viewModel.getIngredientType());
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStop() {
+        super.onStop();
+        viewModel.setIngredientName(ingredientNameEditText.getText().toString());
+        viewModel.setIngredientOtherQuantity(ingredientTypeOtherEditText.getText().toString());
 
-        Log.d("fragment", "in on resume");
-    }
+        viewModel.setQuantityType(getSelectedQuantityType());
 
-    /**
-     * Clears all the previously filled in fields
-     */
-    public void resetFields() {
-        ingredientQuantityTypeRadioGroup.check(ingredientQuantityTypeRadioGroup.getChildAt(0).getId());
-        ingredientTypeOtherEditText.setText("");
-        ingredientQuantityEditText.setText("");
-        ingredientNameEditText.setText("");
-        ingredientTypeChipGroup.clearCheck();
+        String ingredientQuantity = ingredientQuantityEditText.getText().toString();
+        if (ingredientQuantity.isEmpty() || checkQuantityNotValid(ingredientQuantity)) {
+            viewModel.setIngredientQuantity(null);
+        }
+        else {
+            viewModel.setIngredientQuantity(Double.parseDouble(ingredientQuantity));
+        }
+        viewModel.setIngredientType(getSelectedIngredientType());
     }
 
     /**
@@ -97,39 +131,44 @@ public class AddIngredientFragment extends Fragment {
         return QuantityType.valueOf(name);
     }
 
-    private void createIngredient() {
-        // TODO: check for valid ingredient
-
-        String ingredientName = ingredientNameEditText.getText().toString();
-        String ingredientQuantity = ingredientQuantityEditText.getText().toString();
-
-        if (ingredientQuantity.isEmpty()) {
-            ingredientQuantity = null;
-        }
-
-        if (ingredientName.isEmpty()) {
-            Toast.makeText(requireActivity(), "You need to fill in a name for the ingredient.", Toast.LENGTH_LONG).show();
-            ingredientNameLayout.setError("Please fill in a name.");
-            return;
-        }
-
-        // The Quantity type
+    /**
+     * Checks all the quantityType radioButtons and returns the selected type
+     *
+     * @return - the selected quantityType
+     */
+    private QuantityType getSelectedQuantityType() {
         QuantityType quantityType;
-        String otherIngredientTypeName = "";
         try {
             MaterialRadioButton selectedRadioButton = requireView().findViewById(ingredientQuantityTypeRadioGroup.getCheckedRadioButtonId());
             String name = selectedRadioButton.getText().toString();
             quantityType = stringToQuantityType(name);
         } catch (NullPointerException exception) {
-            Toast.makeText(requireActivity(), "Something went wrong when selecting the quantity type.", Toast.LENGTH_LONG).show();
-            return;
+            return QuantityType.CENTILITRES;
         }
+        return quantityType;
+    }
 
-        if (quantityType == QuantityType.OTHER) {
-            otherIngredientTypeName = ingredientTypeOtherEditText.getText().toString();
+    /**
+     * Sets the correct radioButton with the given quantityType
+     *
+     * @param type - the type to set the radio button with
+     */
+    private void setSelectedQuantityType(QuantityType type) {
+        String name = changeFirstLetterToCapital(type.toString());
+        for (int index=0; index<ingredientQuantityTypeRadioGroup.getChildCount(); index++) {
+            MaterialRadioButton button = (MaterialRadioButton) ingredientQuantityTypeRadioGroup.getChildAt(index);
+            if (button.getText().equals(name)) {
+                ingredientQuantityTypeRadioGroup.check(button.getId());
+            }
         }
+    }
 
-
+    /**
+     * Checks all the ingredientType chips and returns the selected type
+     *
+     * @return - the selected ingredientType; null if no ingredientType was selected
+     */
+    private IngredientType getSelectedIngredientType() {
         String ingredientTypeName = null;
         if(ingredientTypeChipGroup.getChildCount() > 0) {
             for (int i=0; i < ingredientTypeChipGroup.getChildCount(); i++) {
@@ -140,55 +179,97 @@ public class AddIngredientFragment extends Fragment {
             }
         }
         if (ingredientTypeName == null) {
+            return null;
+        }
+
+        return stringToIngredientType(ingredientTypeName);
+    }
+
+    /**
+     * Sets a given ingredientType to the chipGroup.
+     * If null is given, no chip is set.
+     *
+     * @param type - the type item to check
+     */
+    private void setSelectedIngredientType(IngredientType type) {
+        if (type == null) {
+            return;
+        }
+        String convertedType = changeFirstLetterToCapital(type.name()).replace("_", " ");
+        if(ingredientTypeChipGroup.getChildCount() > 0) {
+            for (int i=0; i < ingredientTypeChipGroup.getChildCount(); i++) {
+                Chip chip = (Chip) ingredientTypeChipGroup.getChildAt(i);
+                if (chip.getText().equals(convertedType)) {
+                    ingredientTypeChipGroup.check(chip.getId());
+                }
+            }
+        }
+    }
+
+    /**
+     * Checks if each field is filled in and creates the ingredient
+     */
+    private void createIngredient() {
+        String ingredientName = ingredientNameEditText.getText().toString();
+        String ingredientQuantity = ingredientQuantityEditText.getText().toString();
+
+        if (ingredientQuantity.isEmpty()) {
+            ingredientQuantity = null;
+        }
+
+        if (checkQuantityNotValid(ingredientQuantity)) {
+            Toast.makeText(requireActivity(), "Oopsie, something went wrong with that quantity, please try again.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (ingredientName.isEmpty()) {
+            Toast.makeText(requireActivity(), "You need to fill in a name for the ingredient.", Toast.LENGTH_LONG).show();
+            ingredientNameLayout.setError("Please fill in a name.");
+            return;
+        }
+
+        QuantityType quantityType = getSelectedQuantityType();
+        if (quantityType == null) {
+            Toast.makeText(requireActivity(), "Something went wrong when selecting the quantity type.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        String otherIngredientTypeName = "";
+        if (quantityType == QuantityType.OTHER) {
+            otherIngredientTypeName = ingredientTypeOtherEditText.getText().toString();
+        }
+
+        IngredientType ingredientTypeName = getSelectedIngredientType();
+        if (ingredientTypeName == null) {
             Toast.makeText(requireActivity(), "Oh no! Please select an ingredient type.", Toast.LENGTH_LONG).show();
             return;
         }
 
-        // TODO: pasting text doesn't show up in the textscreen but does show up when creating the ingredient
-        // TODO: add ingredient name recommendation
-        // TODO: change add recipe activity into a fragment so it can be used on the other places as well
-        // TODO: add some way to fix the switching mode
-        // TODO: add pop up animation
+        Ingredient ingredient;
+        ingredientName = changeFirstLetterToCapital(ingredientName.trim());
 
-        try {
-            validateIngredient(ingredientName, ingredientQuantity);
-
-            Ingredient ingredient;
-            ingredientName = RecipeUtility.changeFirstLetterToCapital(ingredientName.trim());
-
-            if(ingredientQuantity == null) {
-                ingredient = new Ingredient(ingredientName, null, quantityType, stringToIngredientType(ingredientTypeName), otherIngredientTypeName);
-            }
-            else {
-                ingredient = new Ingredient(ingredientName, Double.parseDouble(ingredientQuantity), quantityType, stringToIngredientType(ingredientTypeName), otherIngredientTypeName);
-            }
-
-
-            ((AddRecipeActivity)requireActivity()).addIngredientToList(ingredient);
-            goBack();
-
-        } catch (IllegalArgumentException e) {
-            Toast.makeText(requireActivity(), "Oops, something went wrong with that ingredient, try again", Toast.LENGTH_LONG).show();
+        if(ingredientQuantity == null) {
+            ingredient = new Ingredient(ingredientName, null, quantityType, ingredientTypeName, otherIngredientTypeName);
+        }
+        else {
+            ingredient = new Ingredient(ingredientName, Double.parseDouble(ingredientQuantity), quantityType, ingredientTypeName, otherIngredientTypeName);
         }
 
+        viewModel.addIngredient(ingredient);
+        goBack();
     }
 
     /**
-     * Validates parameters for ingredient
+     * Validates if the quantity is actually a double
      *
-     * @param name      value should not be empty
-     * @param quantity  value should be a [Double] number (and not be empty)
-     * @throws IllegalArgumentException if parameters not correct
+     * @param quantity - value should be a Double or be null
+     * @return - returns true if the quantity is not a Double, false if it is
      */
-    private void validateIngredient(String name, String quantity) {
+    private boolean checkQuantityNotValid(String quantity) {
         if(quantity != null) {
-            if( !isDouble(quantity)) {
-                throw new IllegalArgumentException();
-            }
+            return !isDouble(quantity);
         }
-        if(name.isEmpty()) {
-            throw new IllegalArgumentException();
-        }
+        return false;
     }
 
     /**
@@ -206,10 +287,19 @@ public class AddIngredientFragment extends Fragment {
         }
     }
 
+    /**
+     * Closes this fragment window and shows the FillInRecipeFragment again
+     */
     private void goBack() {
-        ((AddRecipeActivity)requireActivity()).toggleShowingAddIngredientFragment(false);
+        resetFields();
+        ((AddRecipeInterface)requireActivity()).toggleCurrentFragment(FillInRecipeFragmentType.MAIN);
     }
 
+    /**
+     * Creates an ingredientType chip and adds it to the chipGroup
+     *
+     * @param name - the name to give to the chip
+     */
     private void generateIngredientTypeChip(String name) {
         Chip chip = new Chip(requireContext());
         ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(requireContext(), null, 0, R.style.Widget_MaterialComponents_Chip_Choice);
@@ -218,53 +308,30 @@ public class AddIngredientFragment extends Fragment {
         ingredientTypeChipGroup.addView(chip);
     }
 
+    /**
+     * Creates a quantity radioButton and adds it to the radioGroup
+     *
+     * @param name - the name of the radioButton
+     */
     private void generateQuantityTypeRadioButton(String name) {
         MaterialRadioButton radioButton = new MaterialRadioButton(requireActivity());
         radioButton.setText(name);
         ingredientQuantityTypeRadioGroup.addView(radioButton);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_add_ingredient, container, false);
-        toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setTitle("Add Ingredient");
-        toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
-
-        toolbar.setNavigationOnClickListener(view1 -> goBack());
-
-        ingredientNameEditText = view.findViewById(R.id.ingredientNameEditText);
-        ingredientNameLayout = view.findViewById(R.id.ingredientNameLayout);
-
-        ingredientQuantityEditText = view.findViewById(R.id.ingredientQuantityEditText);
-        ingredientQuantityLayout = view.findViewById(R.id.ingredientQuantityLayout);
-
-        ingredientTypeOtherEditText = view.findViewById(R.id.ingredientTypeOtherEditText);
-        ingredientTypeOtherLayout = view.findViewById(R.id.ingredientTypeOtherLayout);
-
-        MaterialButton cancelButton = view.findViewById(R.id.cancelButton);
-        cancelButton.setOnClickListener(view2 ->
-                goBack());
-
-        MaterialButton createIngredientButton = view.findViewById(R.id.addIngredientButton);
-        createIngredientButton.setOnClickListener(view12 -> createIngredient());
-
-        ingredientTypeChipGroup = view.findViewById(R.id.ingredientTypeChipGroup);
-        for (String type : RecipeUtility.convertEnumToStringList("IngredientType")) {
-            generateIngredientTypeChip(type);
-        }
-
-        ingredientQuantityTypeRadioGroup = view.findViewById(R.id.ingredientQuantityTypeRadioGroup);
-        for (String type : RecipeUtility.convertEnumToStringList("QuantityType")) {
-            generateQuantityTypeRadioButton(type);
-        }
-        // Check the first item in the radio group
+    /**
+     * Clears all the previously filled in fields
+     */
+    public void resetFields() {
         ingredientQuantityTypeRadioGroup.check(ingredientQuantityTypeRadioGroup.getChildAt(0).getId());
 
+        ingredientQuantityEditText.setText("");
+        ingredientTypeOtherEditText.setText("");
+        ingredientNameEditText.setText("");
+        ingredientNameLayout.setError(null);
 
-
-        return view;
+        ingredientTypeChipGroup.clearCheck();
+        viewModel.resetIngredientFields();
     }
+
 }
