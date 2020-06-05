@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel;
 
 public class viewRecipeViewModel extends ViewModel {
     private int amountCooked = 0;
+    private int rating = 0;
 
     public void addOneAmountCooked() {
         amountCooked += 1;
@@ -20,5 +21,12 @@ public class viewRecipeViewModel extends ViewModel {
     public void setAmountCooked(int amountCooked) {
         this.amountCooked = amountCooked;
     }
-    
+
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
 }

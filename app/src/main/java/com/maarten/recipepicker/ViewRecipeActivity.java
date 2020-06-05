@@ -64,7 +64,6 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
     private TextView amountCookedField;
 
-    private float currentRating;
     private Chip ratingChip;
 
     private Gson gson;
@@ -210,17 +209,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
             editor.apply();
         }
 
-        currentRating = recipe.getRating();
-
         ratingChip = findViewById(R.id.ratingChip);
-        if (currentRating == 0) {
-            ratingChip.setText(getString(R.string.no_rating));
-            ratingChip.setChipIconResource(R.drawable.ic_star_border_green_24dp);
-        }
-        else {
-            ratingChip.setText(String.valueOf((int) currentRating));
-            ratingChip.setChipIconResource(R.drawable.ic_star_green_24dp);
-        }
 
         ChipGroup categoriesChipGroup = findViewById(R.id.categoriesChipGroup);
         for (final String category : recipe.getCategories()) {
@@ -247,6 +236,25 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         viewModel.setAmountCooked(MainActivity.recipeList.get(recipeIndex).getAmountCooked());
         amountCookedField.setText(String.valueOf(viewModel.getAmountCooked()));
+
+        viewModel.setRating(MainActivity.recipeList.get(recipeIndex).getRating());
+        setRatingChip(viewModel.getRating());
+    }
+
+    /**
+     * Sets the rating chip to the correct rating. If there is no rating, it will show "no rating".
+     *
+     * @param rating - the rating or 0 if there is no rating
+     */
+    private void setRatingChip(int rating) {
+        if (rating == 0) {
+            ratingChip.setText(getString(R.string.no_rating));
+            ratingChip.setChipIconResource(R.drawable.ic_star_border_green_24dp);
+        }
+        else {
+            ratingChip.setText(String.valueOf((int) rating));
+            ratingChip.setChipIconResource(R.drawable.ic_star_green_24dp);
+        }
     }
 
     /**
@@ -255,14 +263,15 @@ public class ViewRecipeActivity extends AppCompatActivity {
      * @param view - the 'add' and 'edit' rating
      */
     public void createRatingDialog(View view) {
-
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         // get the layout
         View dialog_layout = getLayoutInflater().inflate(R.layout.rating_dialog, null);
 
+        int currentRating = viewModel.getRating();
+
         final TextView currentRatingTextView = dialog_layout.findViewById(R.id.currentRatingTextView);
-        currentRatingTextView.setText(String.valueOf((int)currentRating));
+        currentRatingTextView.setText(String.valueOf(currentRating));
         if(currentRating == 0) {
             currentRatingTextView.setText(getString(R.string.no_rating));
         }
@@ -284,26 +293,19 @@ public class ViewRecipeActivity extends AppCompatActivity {
         builder.setMessage("Tap or drag the stars to set a rating.");
 
         builder.setPositiveButton("Rate", (dialog, id) -> {
-            currentRating = recipeRatingBar.getRating();
-            MainActivity.recipeList.get(recipeIndex).setRating((int)currentRating);
+            int newRating = (int)recipeRatingBar.getRating();
+            MainActivity.recipeList.get(recipeIndex).setRating(newRating);
             MainActivity.saveRecipes();
 
-            ratingChip.setText(String.valueOf((int) currentRating));
-            ratingChip.setChipIconResource(R.drawable.ic_star_green_24dp);
-
-            if (currentRating == 0) {
-                ratingChip.setText(getString(R.string.no_rating));
-                ratingChip.setChipIconResource(R.drawable.ic_star_border_green_24dp);
-            }
-
+            setRatingChip(newRating);
+            viewModel.setRating(newRating);
         });
         builder.setNegativeButton("Remove rating", (dialog, id) -> {
-            currentRating = 0;
             MainActivity.recipeList.get(recipeIndex).setRating(0);
             MainActivity.saveRecipes();
 
-            ratingChip.setText(getString(R.string.no_rating));
-            ratingChip.setChipIconResource(R.drawable.ic_star_border_green_24dp);
+            setRatingChip(0);
+            viewModel.setRating(0);
         });
         // Create and show the dialog
         final AlertDialog alertDialog = builder.create();
