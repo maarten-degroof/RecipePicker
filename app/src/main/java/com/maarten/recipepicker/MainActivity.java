@@ -450,6 +450,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Resets the times cooked of each recipe to 0 and saves the recipeList
+     */
+    public static void clearAllAmountCooked() {
+        for (Recipe recipe : recipeList) {
+            recipe.resetAmountCooked();
+        }
+        saveRecipes();
+    }
+
     @Override
     public void onStop() {
         super.onStop();

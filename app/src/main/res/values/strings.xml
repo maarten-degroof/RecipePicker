@@ -232,4 +232,6 @@
     <string name="statistics">Statistics</string>
     <string name="statistics_total_recipes_found">You have: &lt;b>%1$d&lt;/b> recipes.</string>
     <string name="statistics_total_ingredients_found">Wow you have a total of &lt;b>%1$d&lt;/b> ingredients spread over your recipes.</string>
+    <string name="remove_all_times_cooked_description">Remove all the times you\'ve cooked the Recipes. Be careful</string>
+    <string name="reset_times_cooked">Reset the times cooked</string>
 </resources>

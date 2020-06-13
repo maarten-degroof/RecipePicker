@@ -41,6 +41,14 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
             });
         }
 
+        Preference removeAllTimesCookedPreference =  getPreferenceManager().findPreference("remove_all_times_cooked_button");
+        if (removeAllTimesCookedPreference != null) {
+            removeAllTimesCookedPreference.setOnPreferenceClickListener(preference -> {
+                createDeleteAmountCookedDialog();
+                return true;
+            });
+        }
+
         Preference importRecipeButton =  getPreferenceManager().findPreference("import_button");
         if(importRecipeButton != null) {
             importRecipeButton.setOnPreferenceClickListener(preference -> {
@@ -73,7 +81,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
         servesPreference = getPreferenceManager().findPreference("serves_value");
 
         if(servesPreference != null) {
-            // takes care of inputType="Number"
+            // Takes care of inputType="Number"
             servesPreference.setOnBindEditTextListener(
                     editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER));
         }
@@ -111,7 +119,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
     private void createDeleteDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
 
-        // get the layout
+        // Get the layout
         View dialog_layout = View.inflate(requireContext(), R.layout.remove_all_dialog, null);
         final MaterialCheckBox resetListCheckbox = dialog_layout.findViewById(R.id.resetListCheckBox);
 
@@ -120,7 +128,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
 
         builder.setPositiveButton("Remove all", (dialog, id) -> {
             removeRecipe();
-            // if it's checked, restock the list
+            // If it's checked, restock the list
             if(resetListCheckbox.isChecked()) {
                 MainActivity.insertDummyRecipes();
                 MainActivity.saveRecipes();
@@ -128,14 +136,33 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
         });
         builder.setNegativeButton("Keep", (dialog, id) -> {
         });
-        // create and show the dialog
+        // Create and show the dialog
         final AlertDialog alertDialog = builder.create();
         alertDialog.setView(dialog_layout);
         alertDialog.show();
     }
 
     /**
-     * Clears the recipelist
+     * Creates the confirm dialog to clear the amount cooked for each recipe
+     */
+    private void createDeleteAmountCookedDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+
+        builder.setTitle("Remove ALL times cooked");
+        builder.setMessage("Are you sure you want to reset ALL the times you've cooked your recipes back to 0? This cannot be undone.");
+
+        builder.setPositiveButton("Reset all", (dialog, id) -> {
+            removeAllTimesCooked();
+        });
+        builder.setNegativeButton("Cancel", (dialog, id) -> {
+        });
+        // Create and show the dialog
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    /**
+     * Clears the recipeList
      */
     private void removeRecipe() {
         MainActivity.recipeList.clear();
@@ -144,7 +171,15 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
     }
 
     /**
-     * opens the GitHub page
+     * Sets the times cooked of each recipe to 0
+     */
+    private void removeAllTimesCooked() {
+        MainActivity.clearAllAmountCooked();
+        Toast.makeText(getActivity(), "Reset all recipes to 0 times cooked.", Toast.LENGTH_LONG).show();
+    }
+
+    /**
+     * Opens the GitHub page
      */
     private void goToGithub() {
         String url = "https://github.com/maarten-degroof/RecipePicker";

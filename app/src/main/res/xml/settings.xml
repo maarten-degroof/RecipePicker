@@ -55,6 +55,13 @@
             android:key="remove_all_button"
             android:summary="@string/remove_all_description"
             android:title="@string/reset_everything" />
+
+        <Preference
+            android:id="@+id/resetTimesCookedPreference"
+            android:icon="@drawable/ic_close_black_24dp"
+            android:key="remove_all_times_cooked_button"
+            android:summary="@string/remove_all_times_cooked_description"
+            android:title="@string/reset_times_cooked" />
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>
