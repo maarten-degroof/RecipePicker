@@ -1,7 +1,6 @@
 package com.maarten.recipepicker.adapters;
 
 import android.app.Activity;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.maarten.recipepicker.models.Instruction;
 import com.maarten.recipepicker.R;
+import com.maarten.recipepicker.models.Instruction;
 
 import java.util.List;
 
@@ -43,13 +42,10 @@ public class InstructionEditAdapter extends RecyclerView.Adapter<InstructionEdit
         holder.instructionNumberTextView.setText(String.valueOf(position+1));
         holder.instructionDescriptionTextView.setText(instruction.getDescription());
 
-        holder.removeInstructionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                instructionList.remove(position);
-                notifyItemRemoved(position);
-                notifyDataSetChanged();
-            }
+        holder.removeInstructionButton.setOnClickListener(v -> {
+            instructionList.remove(position);
+            notifyItemRemoved(position);
+            notifyDataSetChanged();
         });
 
         if(instruction.getMilliseconds() != null) {
@@ -81,16 +77,13 @@ public class InstructionEditAdapter extends RecyclerView.Adapter<InstructionEdit
         private TextView instructionDescriptionTextView;
         private TextView instructionTimerTextView;
         private ImageButton removeInstructionButton;
-        private View parentView;
 
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.parentView = itemView;
             this.instructionNumberTextView = itemView.findViewById(R.id.instructionNumberTextView);
             this.instructionDescriptionTextView = itemView.findViewById(R.id.instructionDescriptionTextView);
             this.instructionTimerTextView = itemView.findViewById(R.id.instructionTimerTextView);
             this.removeInstructionButton = itemView.findViewById(R.id.removeInstructionButton);
-
         }
     }
 }

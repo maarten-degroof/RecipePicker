@@ -1,7 +1,6 @@
 package com.maarten.recipepicker.adapters;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,10 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.maarten.recipepicker.models.Recipe;
 import com.maarten.recipepicker.R;
 import com.maarten.recipepicker.ViewRecipeActivity;
 import com.maarten.recipepicker.enums.Difficulty;
+import com.maarten.recipepicker.models.Recipe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +75,6 @@ public class DifficultyFilteredAdapter extends RecyclerView.Adapter<DifficultyFi
         return recipeList.size();
     }
 
-
     @Override
     public long getItemId(int position) {
         return position;
@@ -102,10 +100,9 @@ public class DifficultyFilteredAdapter extends RecyclerView.Adapter<DifficultyFi
     }
 
     /**
-     * runs the filter, pauses for 20 milliseconds and then returns the amount of items which succeeded the filter
-     *
-     * @param difficulty - the difficulty to filter on
-     * @return - an int saying the amount of items that are shown
+     * Runs the filter, pauses for 20 milliseconds and then returns the amount of items which succeeded the filter
+     * @param difficulty the difficulty to filter on
+     * @return an int saying the amount of items that are shown
      */
     public int filterAndReturnAmount(String difficulty) {
         getFilter().filter(difficulty);
@@ -113,9 +110,8 @@ public class DifficultyFilteredAdapter extends RecyclerView.Adapter<DifficultyFi
         try {
             TimeUnit.MILLISECONDS.sleep(20);
         } catch (Exception e) {
-            Log.e("SleepError", e.getMessage());
+            Log.e("SleepError", "" + e.getMessage());
         }
-        //Log.d("COUNT", "returning: "+returnCount);
         return returnCount;
     }
 

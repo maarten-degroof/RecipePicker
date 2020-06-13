@@ -1,13 +1,13 @@
 package com.maarten.recipepicker;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +24,13 @@ public class StatisticsActivity extends AppCompatActivity {
         toolbar.setTitle("Statistics");
         setSupportActionBar(toolbar);
 
-        // this takes care of the back button
+        // This takes care of the back button
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
         toolbar.setNavigationOnClickListener(v -> {
-            // back button pressed
+            // Back button pressed
             supportFinishAfterTransition();
         });
 
@@ -47,7 +47,6 @@ public class StatisticsActivity extends AppCompatActivity {
 
     /**
      * Inflates the menu into the toolbar
-     *
      * @param menu the menu
      * @return should return true
      */
@@ -59,9 +58,8 @@ public class StatisticsActivity extends AppCompatActivity {
 
     /**
      * checks if the clicked menu item the home icon is
-     *
-     * @param item  the clicked menu item
-     * @return  should return true when item found
+     * @param item the clicked menu item
+     * @return should return true when item found
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

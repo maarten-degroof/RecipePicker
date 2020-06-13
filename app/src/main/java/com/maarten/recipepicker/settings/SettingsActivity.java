@@ -1,13 +1,13 @@
 package com.maarten.recipepicker.settings;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.preference.PreferenceManager;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 
 import com.maarten.recipepicker.MainActivity;
 import com.maarten.recipepicker.R;
@@ -23,8 +23,10 @@ public class SettingsActivity extends AppCompatActivity {
         toolbar.setTitle("Settings");
         setSupportActionBar(toolbar);
 
-        // takes care of the back button
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // this takes care of the back button
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         toolbar.setNavigationOnClickListener(v -> {
             finish();
@@ -41,7 +43,6 @@ public class SettingsActivity extends AppCompatActivity {
 
     /**
      * Inflates the menu into the toolbar
-     *
      * @param menu the menu
      * @return should return true
      */
@@ -52,9 +53,9 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     /**
-     * checks if the clicked menu item the home icon is
-     * @param item  the clicked menu item
-     * @return  should return true when item found
+     * Checks if the clicked menu item the home icon is
+     * @param item the clicked menu item
+     * @return should return true when item found
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

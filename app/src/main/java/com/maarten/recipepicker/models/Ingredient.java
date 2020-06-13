@@ -83,7 +83,6 @@ public class Ingredient implements Serializable, Comparable<Ingredient> {
 
     /**
      * Makes it possible for quantity to be 'null'
-     *
      * @return returns "" if null or the quantity if not null
      */
     private String printQuantity() {
@@ -101,7 +100,6 @@ public class Ingredient implements Serializable, Comparable<Ingredient> {
 
     /**
      * Makes it possible for quantity to be 'null'
-     *
      * @return returns "" if null or the quantity if not null
      */
     private String printType() {
@@ -114,14 +112,13 @@ public class Ingredient implements Serializable, Comparable<Ingredient> {
     }
 
     /**
-     * this orders the ingredient list on the quantity
-     *
-     * @param o - the other ingredient to compare to
-     * @return returns -1,0,1 depending on the other ingredient
+     * This orders the ingredient list on the quantity
+     * @param o the other ingredient to compare to
+     * @return returns -1, 0 or 1 depending on the other ingredient
      */
     @Override
     public int compareTo(Ingredient o) {
-        // different null checks
+        // Different null checks
         if(getQuantity()  == null && o.getQuantity() == null) {
             return 0;
         }

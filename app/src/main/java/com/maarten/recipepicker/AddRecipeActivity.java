@@ -56,8 +56,10 @@ public class AddRecipeActivity extends AppCompatActivity implements AddRecipeInt
         toolbar.setTitle("Add Recipe");
         setSupportActionBar(toolbar);
 
-        // this takes care of the back button
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // This takes care of the back button
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         fillInRecipeFragment = new FillInRecipeFragment();
         addIngredientFragment = new AddIngredientFragment();
@@ -76,8 +78,7 @@ public class AddRecipeActivity extends AppCompatActivity implements AddRecipeInt
 
     /**
      * This decides what fragment to load and show; also decides which toolbar to show
-     *
-     * @param newFragmentType - defines the type of the fragment which should be shown
+     * @param newFragmentType defines the type of the fragment which should be shown
      */
     @Override
     public void toggleCurrentFragment(FillInRecipeFragmentType newFragmentType) {
@@ -124,10 +125,9 @@ public class AddRecipeActivity extends AppCompatActivity implements AddRecipeInt
 
     /**
      * This gets called when the user pressed the 'physical' back button.
-     *
-     * @param keyCode - the physical that was pressed
-     * @param event - the event that caused it
-     * @return returns true if the event was catched
+     * @param keyCode the physical that was pressed
+     * @param event the event that caused it
+     * @return returns true if the event was handled
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
@@ -147,7 +147,6 @@ public class AddRecipeActivity extends AppCompatActivity implements AddRecipeInt
 
     /**
      * Inflates the menu into the toolbar
-     *
      * @param menu the menu
      * @return should return true
      */
@@ -158,10 +157,9 @@ public class AddRecipeActivity extends AppCompatActivity implements AddRecipeInt
     }
 
     /**
-     * checks if the clicked menu item the home icon is
-     *
-     * @param item  the clicked menu item
-     * @return  should return true when item found
+     * Checks if the clicked menu item the home icon is
+     * @param item the clicked menu item
+     * @return should return true when item found
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -196,8 +194,7 @@ public class AddRecipeActivity extends AppCompatActivity implements AddRecipeInt
 
     /**
      * this toggles the cancel and add recipe button on the bottom of the window
-     *
-     * @param shouldShowButtons - if true, shows the buttons
+     * @param shouldShowButtons if true, shows the buttons
      */
     @Override
     public void toggleEndButtons(boolean shouldShowButtons) {

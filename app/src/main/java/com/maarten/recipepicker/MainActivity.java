@@ -86,7 +86,7 @@ import java.util.TreeSet;
  *      - remove all recipes
  * times cooked + able to reset counter
  * reordering by times cooked & by date
- * snackbar when adding a cooked time, so it can be undone
+ * snackBar when adding a cooked time, so it can be undone
  * filtering:
  *      - a slider to choose how many times you have to have cooked it minimum&maximum
  *      - add cooking time with 'chips' so you can filter them
@@ -121,8 +121,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Creates the activity and initialises all UI-fields
      * Loads the list from memory or creates a new one
-     *
-     * @param savedInstanceState - A previously saved instance, gets passed onto the super class
+     * @param savedInstanceState A previously saved instance, gets passed onto the super class
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,16 +129,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // get listView object
         RecyclerView listViewRecipes = findViewById(R.id.mainRecyclerView);
 
-        // initialise recipeList
+        // Initialise recipeList
         recipeList = new ArrayList<>();
 
-        // look for the recipeList file
+        // Look for the recipeList file
         File file = new File(getFilesDir(), "recipeList.ser");
 
-        // check if the file exists
+        // Check if the file exists
         if(file.canRead()) {
             try (FileInputStream fileStream = new FileInputStream(file);
                  ObjectInputStream in = new ObjectInputStream(fileStream)) {
@@ -153,12 +151,12 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-        // if the file doesn't exist, create an arrayList with dummy value
+        // If the file doesn't exist, create an arrayList with dummy value
         else {
             insertDummyRecipes();
         }
 
-        // initialise the images for each recipe so the adapter won't have to do the calculations again
+        // Initialise the images for each recipe so the adapter won't have to do the calculations again
         for(Recipe recipe : recipeList) {
             recipe.getImage();
         }
@@ -175,41 +173,41 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Home");
         setSupportActionBar(toolbar);
-        getSupportActionBar().getThemedContext();
 
-        // all the navigation drawer stuff
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().getThemedContext();
+        }
+
+        // All the navigation drawer stuff
         drawerLayout = findViewById(R.id.dl);
         abdt = new ActionBarDrawerToggle(this, drawerLayout,R.string.Open, R.string.Close);
         abdt.setDrawerIndicatorEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // make the recyclerView also scrollable
+        // Make the recyclerView also scrollable
         ViewCompat.setNestedScrollingEnabled(listViewRecipes, true);
 
         drawerLayout.addDrawerListener(abdt);
         abdt.syncState();
 
         NavigationView nav_view = findViewById(R.id.nav_view);
-        nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                int id = menuItem.getItemId();
+        nav_view.setNavigationItemSelectedListener(menuItem -> {
+            int id = menuItem.getItemId();
 
-                if (id == R.id.addRecipe) {
-                    addRecipe(null);
-                } else if (id == R.id.favorites) {
-                    viewFavorites();
-                } else if (id == R.id.settings) {
-                    viewSettings();
-                } else if (id == R.id.filter) {
-                    viewFilters();
-                } else if (id == R.id.search) {
-                    viewSearch();
-                } else if (id == R.id.random) {
-                    openRandomRecipe();
-                }
-                return true;
+            if (id == R.id.addRecipe) {
+                addRecipe(null);
+            } else if (id == R.id.favorites) {
+                viewFavorites();
+            } else if (id == R.id.settings) {
+                viewSettings();
+            } else if (id == R.id.filter) {
+                viewFilters();
+            } else if (id == R.id.search) {
+                viewSearch();
+            } else if (id == R.id.random) {
+                openRandomRecipe();
             }
+            return true;
         });
 
         random = new Random();
@@ -223,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
         controlNoRecipeElements();
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        // check to show the tip. Change the preferences so it won't show again
+        // Check to show the tip. Change the preferences so it won't show again
         boolean shouldShowWelcomeScreen = sharedPrefs.getBoolean("welcome_screen", true);
         if(shouldShowWelcomeScreen) {
             showWelcomeScreen();
@@ -235,19 +233,15 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Creates the dialog to choose which type of ordering is applied
-     *
-     * @param view - the order button
+     * @param view the order button
      */
     public void openOrderDialog(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.order_by)
-                .setSingleChoiceItems(R.array.order_types_array_items, currentOrderBySetting, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int index) {
-                        currentOrderBySetting = index;
-                        setOrdering(index);
-                        orderByDialog.dismiss();
-                    }
+                .setSingleChoiceItems(R.array.order_types_array_items, currentOrderBySetting, (dialogInterface, index) -> {
+                    currentOrderBySetting = index;
+                    setOrdering(index);
+                    orderByDialog.dismiss();
                 });
         orderByDialog = builder.create();
         orderByDialog.show();
@@ -259,8 +253,7 @@ public class MainActivity extends AppCompatActivity {
      *      - Chronological (0)
      *      - Times cooked  (1)
      *      - Rating (2)
-     *
-     * @param orderNumber - the number saying which order the user chose
+     * @param orderNumber the number saying which order the user chose
      */
     private void setOrdering(int orderNumber) {
         switch (orderNumber) {
@@ -292,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
 
         builder.setPositiveButton("Let's get started", (dialog, id) -> {
         });
-        // create and show the dialog
+        // Create and show the dialog
         builder.create().show();
     }
 
@@ -310,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * loads the fact- and tips-file into an arraylist and chooses a random item
+     * loads the fact- and tips-file into an arrayList and chooses a random item
      * from that list which it loads into the TextView in the drawer
      */
     private void setFact() {
@@ -328,7 +321,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * inserts the dummy recipe into the recipeList
+     * Inserts the dummy recipe into the recipeList
      */
     public static void insertDummyRecipes() {
         // Spaghetti Bolognese
@@ -362,10 +355,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * this connects the hamburger icon to the navigation drawer
-     *
-     * @param item - The hamburger icon
-     * @return Returns a boolean
+     * This connects the hamburger icon to the navigation drawer
+     * @param item The hamburger icon
+     * @return returns a boolean
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -373,7 +365,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     *  Starts AddRecipeActivity
+     * Starts AddRecipeActivity
      */
     public void addRecipe(View view) {
         Intent intent = new Intent (this, AddRecipeActivity.class);
@@ -381,7 +373,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     *  Opens a random recipe in the recipeList
+     * Opens a random recipe in the recipeList
      */
     public void openRandomRecipe() {
         Intent intent = new Intent (this, ViewRecipeActivity.class);
@@ -439,11 +431,6 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout.closeDrawer(GravityCompat.START);
 
         setOrdering(currentOrderBySetting);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
     }
 
     /**

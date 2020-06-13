@@ -3,7 +3,6 @@ package com.maarten.recipepicker;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
@@ -14,7 +13,6 @@ import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,12 +39,12 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.maarten.recipepicker.adapters.IngredientAdapter;
+import com.maarten.recipepicker.adapters.InstructionAdapter;
 import com.maarten.recipepicker.cookNow.CookNowActivity;
 import com.maarten.recipepicker.models.Ingredient;
 import com.maarten.recipepicker.models.Instruction;
 import com.maarten.recipepicker.models.Recipe;
-import com.maarten.recipepicker.adapters.IngredientAdapter;
-import com.maarten.recipepicker.adapters.InstructionAdapter;
 import com.maarten.recipepicker.viewModels.viewRecipeViewModel;
 
 import java.util.ArrayList;
@@ -83,11 +81,13 @@ public class ViewRecipeActivity extends AppCompatActivity {
         toolbar.setTitle(recipe.getTitle());
         setSupportActionBar(toolbar);
 
-        // this takes care of the back button
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // This takes care of the back button
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         toolbar.setNavigationOnClickListener(v -> {
-            // back button pressed
+            // Back button pressed
             supportFinishAfterTransition();
         });
 
@@ -136,7 +136,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
             browseWebsiteButton.setVisibility(View.INVISIBLE);
         }
 
-        // Get the ingredientlist and add it to the listview
+        // Get the ingredientList and add it to the recyclerView
         RecyclerView ingredientListRecyclerView = findViewById(R.id.viewRecipeIngredientList);
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -243,8 +243,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
     /**
      * Sets the rating chip to the correct rating. If there is no rating, it will show "no rating".
-     *
-     * @param rating - the rating or 0 if there is no rating
+     * @param rating the rating or 0 if there is no rating
      */
     private void setRatingChip(int rating) {
         if (rating == 0) {
@@ -252,21 +251,20 @@ public class ViewRecipeActivity extends AppCompatActivity {
             ratingChip.setChipIconResource(R.drawable.ic_star_border_green_24dp);
         }
         else {
-            ratingChip.setText(String.valueOf((int) rating));
+            ratingChip.setText(String.valueOf(rating));
             ratingChip.setChipIconResource(R.drawable.ic_star_green_24dp);
         }
     }
 
     /**
      * Creates the AlertDialog where the user can choose the rating
-     *
-     * @param view - the 'add' and 'edit' rating
+     * @param view the 'add' and 'edit' rating
      */
     public void createRatingDialog(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        // get the layout
-        View dialog_layout = getLayoutInflater().inflate(R.layout.rating_dialog, null);
+        // Get the layout
+        View dialog_layout = View.inflate(this, R.layout.rating_dialog, null);
 
         int currentRating = viewModel.getRating();
 
@@ -279,13 +277,10 @@ public class ViewRecipeActivity extends AppCompatActivity {
         final RatingBar recipeRatingBar = dialog_layout.findViewById(R.id.recipeRatingBar);
         recipeRatingBar.setRating(currentRating);
 
-        recipeRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                currentRatingTextView.setText(String.valueOf((int)rating));
-                if (rating == 0) {
-                    currentRatingTextView.setText(getString(R.string.no_rating));
-                }
+        recipeRatingBar.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
+            currentRatingTextView.setText(String.valueOf((int)rating));
+            if (rating == 0) {
+                currentRatingTextView.setText(getString(R.string.no_rating));
             }
         });
 
@@ -316,7 +311,6 @@ public class ViewRecipeActivity extends AppCompatActivity {
     /**
      * Inflates the menu into the toolbar
      * Also checks the recipe and changes the favorite value to update it
-     *
      * @param menu the menu
      * @return should return true
      */
@@ -341,7 +335,6 @@ public class ViewRecipeActivity extends AppCompatActivity {
     /**
      * This function will be called when a menu item is selected
      * This has the favorites, edit, delete, share and reset amount cooked buttons
-     *
      * @param item the clicked menu item object
      * @return returns true if the clicked item is found
      */
@@ -412,7 +405,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         builder.setNegativeButton("Cancel", (dialog, id) -> {
         });
-        // create and show the dialog
+        // Create and show the dialog
         final AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
@@ -430,7 +423,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         builder.setNegativeButton("Keep", (dialog, id) -> {
         });
-        // create and show the dialog
+        // Create and show the dialog
         final AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
@@ -447,7 +440,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
         builder.setCancelable(false);
 
         builder.setPositiveButton("OK I understand", (dialog, id) -> finish());
-        // create and show the dialog
+        // Create and show the dialog
         final AlertDialog alertDialog = builder.create();
         alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.show();
@@ -478,11 +471,9 @@ public class ViewRecipeActivity extends AppCompatActivity {
         builder.setTitle("Tip!");
         builder.setMessage("In the settings you can change the serve amount. All the recipes will then be recalculated for that amount of serves!");
 
-        builder.setPositiveButton("OK I understand", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-            }
+        builder.setPositiveButton("OK I understand", (dialog, id) -> {
         });
-        // create and show the dialog
+        // Create and show the dialog
         final AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
@@ -499,9 +490,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
     /**
      * Add one to the cooked counter
-     * Displays a snackbar with an undo option
-     *
-     * @param view - the add button
+     * Displays a snackBar with an undo option
+     * @param view the add button
      */
     public void addToCookedCounter(View view) {
         MainActivity.recipeList.get(recipeIndex).addOneAmountCooked();
@@ -528,20 +518,22 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
     /**
      * Copies the recipe URL to the clipboard
-     *
-     * @param view - the copy button
+     * @param view the copy button
      */
     public void copyURLToClipboard(View view) {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("Recipe URL", recipe.getURL());
-        clipboard.setPrimaryClip(clip);
-        Toast.makeText(this, "website copied:\n" + recipe.getURL(), Toast.LENGTH_LONG).show();
+        if (clipboard != null) {
+            clipboard.setPrimaryClip(clip);
+            Toast.makeText(this, "website copied:\n" + recipe.getURL(), Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "A problem occurred, please try again.", Toast.LENGTH_LONG).show();
+        }
     }
 
     /**
      * Copies all the ingredients to the clipboard
-     *
-     * @param view - the copy ingredients button
+     * @param view the copy ingredients button
      */
     public void copyIngredientsToClipboard(View view) {
         StringBuilder builder = new StringBuilder();
@@ -555,16 +547,19 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("Ingredients", builder.toString());
-        clipboard.setPrimaryClip(clip);
 
-        Toast.makeText(this, "Ingredients are copied", Toast.LENGTH_SHORT).show();
+        if (clipboard != null) {
+            clipboard.setPrimaryClip(clip);
+            Toast.makeText(this, "Ingredients are copied", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "A problem occurred, please try again.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
-     * Opens the webpage with the URL in the recipe
+     * Opens the web page with the URL in the recipe
      * Works with and without http(s) in the given URL
-     *
-     * @param view - the open webpage button
+     * @param view the open web page button
      */
     public void openURL(View view) {
         String url;
@@ -589,8 +584,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
     /**
      * When the difficulty button is pressed, open TypeFilteredActivity
-     *
-     * @param view - the pressed difficulty chip
+     * @param view the pressed difficulty chip
      */
     public void startDifficultyFilteredActivity(View view) {
         Intent intent = new Intent(this, TypeFilteredActivity.class);
@@ -601,8 +595,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
     /**
      * When a category chip is pressed, open TypeFilteredActivity
-     *
-     * @param category - the category that was pressed - a String
+     * @param category the category that was pressed - a String
      */
     public void startCategoryFilteredActivity(String category) {
         Intent intent = new Intent(this, TypeFilteredActivity.class);
@@ -613,8 +606,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
     /**
      * Open the Cook now activity
-     *
-     * @param view - the cook now button
+     * @param view the cook now button
      */
     public void startCookNow(View view) {
         Intent intent = new Intent(this, CookNowActivity.class);

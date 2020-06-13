@@ -1,7 +1,6 @@
 package com.maarten.recipepicker.adapters;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -80,6 +79,7 @@ public class CategoryFilteredAdapter extends RecyclerView.Adapter<CategoryFilter
         return position;
     }
 
+
     static class CustomViewHolder extends RecyclerView.ViewHolder {
 
         private TextView recipeTitleTextView;
@@ -99,10 +99,9 @@ public class CategoryFilteredAdapter extends RecyclerView.Adapter<CategoryFilter
     }
 
     /**
-     * runs the filter, pauses for 20 milliseconds and then returns the amount of items which succeeded the filter
-     *
-     * @param category - the category to filter on
-     * @return - an int saying the amount of items that are shown
+     * Runs the filter, pauses for 20 milliseconds and then returns the amount of items which succeeded the filter
+     * @param category the category to filter on
+     * @return an int saying the amount of items that are shown
      */
     public int filterAndReturnAmount(String category) {
         getFilter().filter(category);
@@ -110,9 +109,8 @@ public class CategoryFilteredAdapter extends RecyclerView.Adapter<CategoryFilter
         try {
             TimeUnit.MILLISECONDS.sleep(20);
         } catch (Exception e) {
-            Log.e("SleepError", e.getMessage());
+            Log.e("SleepError", "" + e.getMessage());
         }
-        //Log.d("COUNT", "returning: "+returnCount);
         return returnCount;
     }
 

@@ -16,7 +16,6 @@ import com.appyvet.materialrangebar.RangeBar;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
-import com.maarten.recipepicker.models.Recipe;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.maarten.recipepicker.RecipeUtility.changeFirstLetterToCapital;
 import static com.maarten.recipepicker.RecipeUtility.generateCategoryList;
 
 public class FilterActivity extends AppCompatActivity {
@@ -38,7 +36,7 @@ public class FilterActivity extends AppCompatActivity {
 
     private ChipGroup categoryChipGroup;
 
-    // keeps track of which chips are ticked. Duration: [short, medium = default, long]
+    // Keeps track of which chips are ticked. Duration: [short, medium = default, long]
     //  Difficulty: [beginner, intermediate = default, expert]
     Boolean[] durationArray = {false, true, false};
     Boolean[] difficultyArray = {false, true, false};
@@ -53,18 +51,19 @@ public class FilterActivity extends AppCompatActivity {
         toolbar.setTitle("Filter");
         setSupportActionBar(toolbar);
 
-        // this takes care of the back button
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        // This takes care of the back button
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         RangeBar amountCookedRangeBar = findViewById(R.id.amountCookedRangeBar);
         final TextView minAmountCooked = findViewById(R.id.minAmountCooked);
         final TextView maxAmountCooked = findViewById(R.id.maxAmountCooked);
 
         if(MainActivity.recipeList != null && MainActivity.recipeList.size() > 0) {
-            // get the max and minimum values to default the slider to
+            // Get the max and minimum values to default the slider to
             int tempAmount = Collections.max(MainActivity.recipeList, new AmountCookedComparator()).getAmountCooked();
-            // only change the max if it's bigger than 2, if lower there won't be enough ticks and it will crash!
+            // Only change the max if it's bigger than 2, if lower there won't be enough ticks and it will crash!
             if (tempAmount > 2) {
                 maxCookedValue = tempAmount;
             }
@@ -74,7 +73,7 @@ public class FilterActivity extends AppCompatActivity {
         amountCookedRangeBar.setTickStart(minCookedValue);
         amountCookedRangeBar.setTickEnd(maxCookedValue);
 
-        // change listener so the textViews on the sides update with the current values
+        // Change listener so the textViews on the sides update with the current values
         amountCookedRangeBar.setOnRangeBarChangeListener(new RangeBar.OnRangeBarChangeListener() {
             @Override
             public void onRangeChangeListener(RangeBar rangeBar, int leftPinIndex, int rightPinIndex, String leftPinValue, String rightPinValue) {
@@ -123,8 +122,8 @@ public class FilterActivity extends AppCompatActivity {
             }
         });
 
-        // change listener for each chip, so it will update the durationArray which keeps track which buttons
-        // are checked. Has to be this ugly since you can't ask the chipgroup which ones are ticked
+        // Change listener for each chip, so it will update the durationArray which keeps track which buttons
+        // are checked. Has to be this ugly since you can't ask the chipGroup which ones are ticked
         Chip shortDurationChip = findViewById(R.id.shortDurationChip);
         shortDurationChip.setOnCheckedChangeListener((buttonView, isChecked) -> durationArray[0] = isChecked);
 
@@ -158,12 +157,11 @@ public class FilterActivity extends AppCompatActivity {
     }
 
     /**
-     * when the filter button is pressed, create a json object with all the filter requirements
+     * When the filter button is pressed, create a json object with all the filter requirements
      * then send the json object in an intent to the FilteredResultsActivity
-     * @param view - the button which is pressed
+     * @param view the button which is pressed
      */
     public void viewFilteredResults(View view) {
-
         boolean shouldFilterAllCategories = false;
         RadioGroup categoriesRadioGroup = findViewById(R.id.categoryRadioGroup);
         if (categoriesRadioGroup.getCheckedRadioButtonId() == R.id.allCategoriesRadioButton) {
@@ -203,13 +201,12 @@ public class FilterActivity extends AppCompatActivity {
             intent.putExtra("JSONObject", filter.toString());
             startActivity(intent);
         } catch(Exception e) {
-            Log.e("ERROR", e.getLocalizedMessage());
+            Log.e("ERROR", "" + e.getLocalizedMessage());
         }
     }
 
     /**
      * Inflates the menu into the toolbar
-     *
      * @param menu the menu
      * @return should return true
      */
@@ -220,9 +217,9 @@ public class FilterActivity extends AppCompatActivity {
     }
 
     /**
-     * checks if the clicked menu item the home icon is
-     * @param item  the clicked menu item
-     * @return  should return true when item found
+     * Checks if the clicked menu item the home icon is
+     * @param item the clicked menu item
+     * @return should return true when item found
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -245,8 +242,7 @@ public class FilterActivity extends AppCompatActivity {
 
     /**
      * Opens the FilterIngredientsActivity
-     *
-     * @param view - the 'filter on ingredients' button
+     * @param view the 'filter on ingredients' button
      */
     public void openFilterIngredientsActivity(View view) {
         Intent intent = new Intent(this, FilterIngredientsActivity.class);

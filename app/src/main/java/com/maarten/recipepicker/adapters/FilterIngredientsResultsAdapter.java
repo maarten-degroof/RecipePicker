@@ -79,7 +79,6 @@ public class FilterIngredientsResultsAdapter extends RecyclerView.Adapter<Filter
         return recipeList.size();
     }
 
-
     @Override
     public long getItemId(int position) {
         return position;
@@ -105,10 +104,9 @@ public class FilterIngredientsResultsAdapter extends RecyclerView.Adapter<Filter
     }
 
     /**
-     * runs the filter, pauses for 20 milliseconds and then returns the amount of items which succeeded the filter
-     *
-     * @param filterString - the json string on which will be filtered
-     * @return - an int saying the amount of items that are shown
+     * Runs the filter, pauses for 20 milliseconds and then returns the amount of items which succeeded the filter
+     * @param filterString the json string on which will be filtered
+     * @return an int saying the amount of items that are shown
      */
     public int filterAndReturnAmount(String filterString) {
         getFilter().filter(filterString);
@@ -116,16 +114,14 @@ public class FilterIngredientsResultsAdapter extends RecyclerView.Adapter<Filter
         try {
             TimeUnit.MILLISECONDS.sleep(20);
         } catch (Exception e) {
-            Log.e("SleepError", e.getMessage());
+            Log.e("SleepError", "" + e.getMessage());
         }
-        Log.d("COUNT", "returning: "+returnCount);
         return returnCount;
     }
 
     /**
      * Converts a list of ingredients into a string list of the ingredient names
-     *
-     * @param ingredientList - the list to convert
+     * @param ingredientList the list to convert
      * @return returns a List<String> of all the ingredient names
      */
     private List<String> ingredientNameToList(List<Ingredient> ingredientList) {
@@ -137,7 +133,6 @@ public class FilterIngredientsResultsAdapter extends RecyclerView.Adapter<Filter
         return ingredientNameList;
     }
 
-    //@Override
     public Filter getFilter() {
 
         return new Filter() {
@@ -172,7 +167,7 @@ public class FilterIngredientsResultsAdapter extends RecyclerView.Adapter<Filter
                     }
 
                 } catch (Exception e) {
-                    Log.e("JsonError-Adapter", e.getMessage());
+                    Log.e("JsonError-Adapter", "" + e.getMessage());
                 }
 
                 try {
@@ -192,7 +187,7 @@ public class FilterIngredientsResultsAdapter extends RecyclerView.Adapter<Filter
                     results.values = filteredArray;
                     returnCount = filteredArray.size();
                 } catch (Exception e) {
-                    Log.e("filterError", e.getMessage());
+                    Log.e("filterError", "" + e.getMessage());
                 }
                 return results;
             }

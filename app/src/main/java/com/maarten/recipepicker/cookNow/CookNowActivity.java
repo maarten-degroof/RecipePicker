@@ -6,7 +6,6 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -50,16 +49,13 @@ public class CookNowActivity extends AppCompatActivity {
         toolbar.setTitle("Cooking now");
         setSupportActionBar(toolbar);
 
-        // this takes care of the back button
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // This takes care of the back button
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
-        // back button pressed
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        // Back button pressed
+        toolbar.setNavigationOnClickListener(v -> finish());
 
         Intent intent = getIntent();
         recipe = (Recipe) intent.getSerializableExtra("Recipe");
@@ -93,9 +89,8 @@ public class CookNowActivity extends AppCompatActivity {
 
     /**
      * Call the function in the timerFragment to add a new timer
-     *
-     * @param step - the step to which the timer belongs
-     * @param duration - the duration of the timer, noted in milliseconds
+     * @param step the step to which the timer belongs
+     * @param duration the duration of the timer, noted in milliseconds
      */
     public void addTimer(int step, long duration) {
         timerFragment.setTimer(step, duration);
@@ -110,8 +105,7 @@ public class CookNowActivity extends AppCompatActivity {
 
     /**
      * Get the CookNowTimerFragment
-     *
-     * @return - returns the instance of the CookNowTimerFragment
+     * @return returns the instance of the CookNowTimerFragment
      */
     public CookNowTimerFragment getTimerFragment() {
         return timerFragment;
@@ -134,14 +128,16 @@ public class CookNowActivity extends AppCompatActivity {
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
+
         }
     }
 
     /**
      * Create a notification saying that the timer of an instruction is finished
-     *
-     * @param instructionNumber - the instruction number of the finished timer
+     * @param instructionNumber the instruction number of the finished timer
      */
     public void createInstructionFinishedNotification(int instructionNumber) {
         Intent openThisIntent = new Intent(RecipePickerApplication.getAppContext(), CookNowActivity.class);
@@ -160,8 +156,7 @@ public class CookNowActivity extends AppCompatActivity {
 
     /**
      * Remove a notification
-     *
-     * @param step - the instruction number of the notification
+     * @param step the instruction number of the notification
      */
     public void removeNotification(int step) {
         notificationManager.cancel(step);

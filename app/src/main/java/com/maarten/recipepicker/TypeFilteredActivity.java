@@ -100,8 +100,10 @@ public class TypeFilteredActivity extends AppCompatActivity {
         filteredDifficultyDescriptionTextField.setText(Html.fromHtml(description, FROM_HTML_MODE_LEGACY));
 
         setSupportActionBar(toolbar);
-        // this takes care of the back button
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // This takes care of the back button
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         controlNoRecipeElements();
     }
@@ -142,7 +144,6 @@ public class TypeFilteredActivity extends AppCompatActivity {
 
     /**
      * Inflates the menu into the toolbar
-     *
      * @param menu the menu
      * @return should return true
      */
@@ -153,9 +154,9 @@ public class TypeFilteredActivity extends AppCompatActivity {
     }
 
     /**
-     * checks if the clicked menu item the home icon is
-     * @param item  the clicked menu item
-     * @return  should return true when item found
+     * Checks if the clicked menu item the home icon is
+     * @param item the clicked menu item
+     * @return should return true when item found
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -177,7 +178,7 @@ public class TypeFilteredActivity extends AppCompatActivity {
     }
 
     /**
-     *  Starts AddRecipeActivity
+     * Starts AddRecipeActivity
      */
     public void addRecipe(View view) {
         Intent intent = new Intent (this, AddRecipeActivity.class);

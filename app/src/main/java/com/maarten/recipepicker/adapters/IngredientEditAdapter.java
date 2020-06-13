@@ -1,7 +1,6 @@
 package com.maarten.recipepicker.adapters;
 
 import android.app.Activity;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.maarten.recipepicker.models.Ingredient;
 import com.maarten.recipepicker.R;
+import com.maarten.recipepicker.models.Ingredient;
 
 import java.util.List;
 
@@ -42,12 +41,9 @@ public class IngredientEditAdapter extends RecyclerView.Adapter<IngredientEditAd
         final Ingredient ingredient = ingredientList.get(position);
         holder.ingredientListTextView.setText(ingredient.toString());
 
-        holder.removeIngredientButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ingredientList.remove(position);
-                notifyDataSetChanged();
-            }
+        holder.removeIngredientButton.setOnClickListener(v -> {
+            ingredientList.remove(position);
+            notifyDataSetChanged();
         });
     }
 
@@ -60,6 +56,7 @@ public class IngredientEditAdapter extends RecyclerView.Adapter<IngredientEditAd
     public int getItemCount() {
         return ingredientList.size();
     }
+
 
     static class CustomViewHolder extends RecyclerView.ViewHolder {
 

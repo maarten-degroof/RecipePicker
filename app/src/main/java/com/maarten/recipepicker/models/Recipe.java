@@ -198,7 +198,6 @@ public class Recipe implements Serializable {
 
     /**
      * Compares an object to itself. returns true if they're the same
-     *
      * @param obj object to compare, should be of type recipe
      * @return returns true if object is the same as this object
      */
@@ -213,7 +212,6 @@ public class Recipe implements Serializable {
 
     /**
      * Generates the ingredient list ordered by quantity
-     *
      * @return string of the ingredient list
      */
     public String getOrderedIngredientString() {

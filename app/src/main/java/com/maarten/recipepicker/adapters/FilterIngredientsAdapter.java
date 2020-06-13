@@ -65,12 +65,10 @@ public class FilterIngredientsAdapter extends RecyclerView.Adapter<FilterIngredi
     class CustomViewHolder extends RecyclerView.ViewHolder {
 
         private TextView ingredientTextView;
-        private View parentView;
         private MaterialCardView cardView;
 
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.parentView = itemView;
 
             this.ingredientTextView = itemView.findViewById(R.id.ingredientTextView);
             this.cardView = itemView.findViewById(R.id.filterIngredientCardView);

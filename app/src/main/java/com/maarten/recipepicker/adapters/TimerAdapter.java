@@ -1,6 +1,5 @@
 package com.maarten.recipepicker.adapters;
 
-import android.app.Activity;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.maarten.recipepicker.cookNow.CookNowActivity;
 import com.maarten.recipepicker.R;
+import com.maarten.recipepicker.cookNow.CookNowActivity;
 import com.maarten.recipepicker.models.TimerListItem;
 
 import java.util.ArrayList;
@@ -109,6 +108,7 @@ public class TimerAdapter extends RecyclerView.Adapter<TimerAdapter.CustomViewHo
 
         holderList.clear();
     }
+
 
     class CustomViewHolder extends RecyclerView.ViewHolder {
 

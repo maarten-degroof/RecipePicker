@@ -1,11 +1,5 @@
 package com.maarten.recipepicker;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -17,6 +11,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -25,8 +25,6 @@ import com.maarten.recipepicker.adapters.SearchAdapter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -55,9 +53,8 @@ public class SearchResultsActivity extends AppCompatActivity {
         toolbar.setTitle("Search Results");
         setSupportActionBar(toolbar);
 
-        toolbar.setNavigationOnClickListener(v -> {
-            finish();
-        });
+        toolbar.setNavigationOnClickListener(v -> finish());
+
         String searchString = "";
         boolean searchTitle = true;
         boolean searchIngredients = true;
@@ -86,17 +83,11 @@ public class SearchResultsActivity extends AppCompatActivity {
                 categoryList.add(categoryJsonArray.getString(i));
             }
 
-
             amountOfItems = adapter.filterAndReturnAmount(filterObject.toString());
 
         } catch (Exception e) {
-            Log.e("intentError", e.getMessage());
+            Log.e("intentError", "" + e.getMessage());
         }
-
-        // Todo: show all you searched for
-
-
-
 
         recyclerViewSearched = findViewById(R.id.listViewSearched);
 
@@ -108,7 +99,7 @@ public class SearchResultsActivity extends AppCompatActivity {
             searchString += ", only searching favorites";
         }
 
-        // write the text to say for which times cooked you have filtered. FromHtml is used to make the searched string bold
+        // Write the text to say for which times cooked you have filtered. FromHtml is used to make the searched string bold
         TextView searchedDescriptionTextView = findViewById(R.id.searchedDescriptionTextField);
         String description = getString(R.string.searched_recipe_description, searchString);
         searchedDescriptionTextView.setText(Html.fromHtml(description, FROM_HTML_MODE_LEGACY));
@@ -126,7 +117,7 @@ public class SearchResultsActivity extends AppCompatActivity {
         if (searchComments) {
             builder.append("the comments, ");
         }
-        // if at least one of the boxes was checked, remove the last ', '
+        // If at least one of the boxes was checked, remove the last ', '
         if (builder.length() > 2) {
             builder.setLength(builder.length() - 2);
         } else {
@@ -171,8 +162,7 @@ public class SearchResultsActivity extends AppCompatActivity {
 
     /**
      * Creates a chip and adds it to the chipGroup
-     *
-     * @param name - the name of the chip
+     * @param name the name of the chip
      */
     private void createChip(String name, ChipGroup chipGroup) {
         Chip chip = new Chip(this);
@@ -206,7 +196,6 @@ public class SearchResultsActivity extends AppCompatActivity {
 
     /**
      * Inflates the menu into the toolbar
-     *
      * @param menu the menu
      * @return should return true
      */
@@ -217,9 +206,9 @@ public class SearchResultsActivity extends AppCompatActivity {
     }
 
     /**
-     * checks if the clicked menu item the home icon is
-     * @param item  the clicked menu item
-     * @return  should return true when item found
+     * Checks if the clicked menu item the home icon is
+     * @param item the clicked menu item
+     * @return should return true when item found
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -232,7 +221,7 @@ public class SearchResultsActivity extends AppCompatActivity {
     }
 
     /**
-     *  opens the AddRecipeActivity
+     * Opens the AddRecipeActivity
      */
     public void addRecipe(View view) {
         Intent intent = new Intent (this, AddRecipeActivity.class);

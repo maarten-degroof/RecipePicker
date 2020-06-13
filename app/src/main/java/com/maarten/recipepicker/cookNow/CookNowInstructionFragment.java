@@ -1,6 +1,5 @@
 package com.maarten.recipepicker.cookNow;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,8 +38,7 @@ public class CookNowInstructionFragment extends Fragment {
     /**
      * Static function, returns a CookNowInstructionFragment with a given recipe bundled.
      * This method should be used when initialising a CookNowInstructionFragment.
-     *
-     * @param recipe - the recipe to load
+     * @param recipe the recipe to load
      * @return returns a CookNowInstructionFragment with a recipe bundled
      */
     static CookNowInstructionFragment newInstance(Recipe recipe) {
@@ -77,45 +75,20 @@ public class CookNowInstructionFragment extends Fragment {
         timerDescriptionTextView = view.findViewById(R.id.timerDescriptionTextView);
 
         MaterialButton cancelButton = view.findViewById(R.id.cancelButton);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancelCookNow();
-            }
-        });
+        cancelButton.setOnClickListener(v -> cancelCookNow());
 
         MaterialButton finishCookingButton = view.findViewById(R.id.finishCookingButton);
-        finishCookingButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createFinishCookingDialog();
-            }
-        });
+        finishCookingButton.setOnClickListener(v -> createFinishCookingDialog());
 
         previousInstructionButton = view.findViewById(R.id.previousInstructionButton);
         previousInstructionButton.setEnabled(false);
-        previousInstructionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                previousInstruction();
-            }
-        });
+        previousInstructionButton.setOnClickListener(v -> previousInstruction());
 
         nextInstructionButton = view.findViewById(R.id.nextInstructionButton);
-        nextInstructionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                nextInstruction();
-            }
-        });
+        nextInstructionButton.setOnClickListener(v -> nextInstruction());
 
         startTimerButton = view.findViewById(R.id.startTimerButton);
-        startTimerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setTimer();
-            }
-        });
+        startTimerButton.setOnClickListener(v -> setTimer());
 
         if(currentInstruction.getMilliseconds() == null) {
             startTimerButton.setEnabled(false);
@@ -128,7 +101,7 @@ public class CookNowInstructionFragment extends Fragment {
             timerDescriptionTextView.setText(getString(R.string.timer_duration_text, calcMinutes, calcSeconds));
         }
 
-        // there's only one instruction
+        // There's only one instruction
         if(currentInstructionNumber >= recipe.getInstructionList().size()) {
             nextInstructionButton.setEnabled(false);
         }
@@ -168,7 +141,7 @@ public class CookNowInstructionFragment extends Fragment {
                 timerDescriptionTextView.setText(getString(R.string.timer_duration_text, calcMinutes, calcSeconds));
             }
 
-            // we're at the last instruction
+            // We're at the last instruction
             if(currentInstructionNumber+1 > recipe.getInstructionList().size()) {
                 nextInstructionButton.setEnabled(false);
             }
@@ -199,7 +172,7 @@ public class CookNowInstructionFragment extends Fragment {
             timerDescriptionTextView.setText(getString(R.string.timer_duration_text, calcMinutes, calcSeconds));
         }
 
-        // we're at the first step
+        // We're at the first step
         if(currentInstructionNumber <= 1) {
             previousInstructionButton.setEnabled(false);
         }
@@ -215,16 +188,10 @@ public class CookNowInstructionFragment extends Fragment {
             builder.setMessage("This was the last step. You finished cooking this! Press finish to close this, or you can go back to view a previous step.\n" +
                     "Pressing finish will stop all running timers.");
 
-            builder.setPositiveButton("Finish", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    cancelCookNow();
-                }
+            builder.setPositiveButton("Finish", (dialog, id) -> cancelCookNow());
+            builder.setNegativeButton("Go back", (dialog, id) -> {
             });
-            builder.setNegativeButton("Go back", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                }
-            });
-            // create and show the dialog
+            // Create and show the dialog
             final AlertDialog alertDialog = builder.create();
             alertDialog.show();
         }

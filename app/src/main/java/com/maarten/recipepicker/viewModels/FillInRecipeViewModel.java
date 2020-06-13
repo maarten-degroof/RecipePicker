@@ -56,8 +56,7 @@ public class FillInRecipeViewModel extends ViewModel {
      * With a given recipe, fills in all the fields of the recipe
      * as good as possible, while checking on null values
      * Only fills the values in if this.recipe == null
-     *
-     * @param recipe - the recipe to fill in
+     * @param recipe the recipe to fill in
      */
     public void setRecipe(Recipe recipe) {
         if (this.recipe != null || recipe == null) {

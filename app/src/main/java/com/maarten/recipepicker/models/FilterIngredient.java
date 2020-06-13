@@ -1,7 +1,7 @@
 package com.maarten.recipepicker.models;
 
 /**
- * This object is used in FilterIngredientsActivity;
+ * This class is used in FilterIngredientsActivity;
  * contains the name and a state. State can be three things:
  *      - -1: A recipe should not have this ingredient
  *      -  0: Doesn't care

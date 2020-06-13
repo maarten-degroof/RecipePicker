@@ -20,8 +20,6 @@ public class ViewFavoritesActivity extends AppCompatActivity {
 
     private FavoriteAdapter adapter;
 
-    private RecyclerView favoritesRecyclerView;
-
     private TextView noFavoritesYetTextView;
     private int amountOfFavorites;
 
@@ -31,7 +29,7 @@ public class ViewFavoritesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_favorites);
 
-        favoritesRecyclerView = findViewById(R.id.listViewFavorites);
+        RecyclerView favoritesRecyclerView = findViewById(R.id.listViewFavorites);
 
         adapter = new FavoriteAdapter(this, recipeList);
 
@@ -72,7 +70,6 @@ public class ViewFavoritesActivity extends AppCompatActivity {
 
     /**
      * Inflates the menu into the toolbar
-     *
      * @param menu the menu
      * @return should return true
      */
@@ -83,9 +80,9 @@ public class ViewFavoritesActivity extends AppCompatActivity {
     }
 
     /**
-     * checks if the clicked menu item the home icon is
-     * @param item  the clicked menu item
-     * @return  should return true when item found
+     * Checks if the clicked menu item the home icon is
+     * @param item the clicked menu item
+     * @return should return true when item found
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

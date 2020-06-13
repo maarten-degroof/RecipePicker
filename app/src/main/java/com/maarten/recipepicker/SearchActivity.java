@@ -1,8 +1,5 @@
 package com.maarten.recipepicker;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +8,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.chip.Chip;
@@ -22,8 +22,6 @@ import com.maarten.recipepicker.models.Recipe;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -43,13 +41,14 @@ public class SearchActivity extends AppCompatActivity {
         toolbar.setTitle("Search");
         setSupportActionBar(toolbar);
 
-        // this takes care of the back button
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // This takes care of the back button
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         toolbar.setNavigationOnClickListener(v -> {
             finish();
         });
-
 
         categoryChipGroup = findViewById(R.id.categoryChipGroup);
         Set<String> categorySet = new TreeSet<>();
@@ -74,7 +73,6 @@ public class SearchActivity extends AppCompatActivity {
 
     /**
      * Inflates the menu into the toolbar
-     *
      * @param menu the menu
      * @return should return true
      */
@@ -85,9 +83,9 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     /**
-     * checks if the clicked menu item the home icon is
-     * @param item  the clicked menu item
-     * @return  should return true when item found
+     * Checks if the clicked menu item the home icon is
+     * @param item the clicked menu item
+     * @return should return true when item found
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -100,9 +98,9 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     /**
-     * when the search button is pressed, create a json object with the search string
+     * When the search button is pressed, create a json object with the search string
      * then send the json object in an intent to the SearchResultsActivity
-     * @param view - the button which is pressed
+     * @param view the button which is pressed
      */
     public void viewSearchResults(View view) {
         String searchString = ((EditText)findViewById(R.id.searchField)).getText().toString();
@@ -146,10 +144,8 @@ public class SearchActivity extends AppCompatActivity {
             intent.putExtra("JSONObject", filter.toString());
             startActivity(intent);
         } catch (Exception e) {
-            Log.e("ERROR", e.getLocalizedMessage());
+            Log.e("ERROR", "" + e.getLocalizedMessage());
         }
-
-
 
     }
 

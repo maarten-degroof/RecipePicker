@@ -1,7 +1,6 @@
 package com.maarten.recipepicker.adapters;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,9 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.maarten.recipepicker.models.Recipe;
 import com.maarten.recipepicker.R;
 import com.maarten.recipepicker.ViewRecipeActivity;
+import com.maarten.recipepicker.models.Recipe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +79,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Custom
         return recipeList.size();
     }
 
+
     static class CustomViewHolder extends RecyclerView.ViewHolder {
 
         private TextView recipeTitleTextView;
@@ -99,9 +99,8 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Custom
     }
 
     /**
-     * runs the filter, pauses for 20 milliseconds and then returns the amount of items which succeeded the filter
-     *
-     * @return - an int saying the amount of items that are shown
+     * Runs the filter, pauses for 20 milliseconds and then returns the amount of items which succeeded the filter
+     * @return an int saying the amount of items that are shown
      */
     public int filterAndReturnAmount() {
         getFilter().filter("");
@@ -109,9 +108,8 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Custom
         try {
             TimeUnit.MILLISECONDS.sleep(20);
         } catch (Exception e) {
-            Log.e("SleepError", e.getMessage());
+            Log.e("SleepError", "" + e.getMessage());
         }
-        //Log.d("COUNT", "returning: "+returnCount);
         return returnCount;
     }
 

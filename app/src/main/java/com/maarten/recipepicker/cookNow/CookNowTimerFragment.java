@@ -1,6 +1,5 @@
 package com.maarten.recipepicker.cookNow;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,9 +55,8 @@ public class CookNowTimerFragment extends Fragment {
     /**
      * Add a timer to the list. Checks if a timer is already running.
      * If so, will show a dialog with an option to restart it.
-     *
-     * @param step - the step to which the timer belongs
-     * @param durationTime - the duration of the timer, in milliseconds
+     * @param step the step to which the timer belongs
+     * @param durationTime the duration of the timer, in milliseconds
      */
     public void setTimer(int step, long durationTime) {
         if(checkIfTimerAlreadyRunning(step)) {
@@ -73,9 +71,8 @@ public class CookNowTimerFragment extends Fragment {
 
     /**
      * Restart a timer
-     *
-     * @param step - the step to which the timer belongs
-     * @param durationTime - the duration of the timer, in milliseconds
+     * @param step the step to which the timer belongs
+     * @param durationTime the duration of the timer, in milliseconds
      */
     private void restartTimer(int step, long durationTime) {
         removeTimer(step, false);
@@ -87,9 +84,8 @@ public class CookNowTimerFragment extends Fragment {
 
     /**
      * Remove a given timer
-     *
-     * @param step - the step to which the timer belongs
-     * @param showCanceledToast - if true shows a toast that it's canceled.
+     * @param step the step to which the timer belongs
+     * @param showCanceledToast if true shows a toast that it's canceled.
      */
     public void removeTimer(int step, boolean showCanceledToast) {
         TimerListItem timerToRemove = null;
@@ -111,9 +107,8 @@ public class CookNowTimerFragment extends Fragment {
 
     /**
      * Check if the step is already running
-     *
-     * @param step - the instruction number
-     * @return - returns true if the timer for the given step is already running
+     * @param step the instruction number
+     * @return returns true if the timer for the given step is already running
      */
     private boolean checkIfTimerAlreadyRunning(int step) {
         for (TimerListItem timer : timerList) {
@@ -126,9 +121,8 @@ public class CookNowTimerFragment extends Fragment {
 
     /**
      * Show a dialog when a timer is already running, with the option to restart the timer
-     *
-     * @param step - the instruction number
-     * @param durationTime - the duration of the timer, noted in milliseconds
+     * @param step the instruction number
+     * @param durationTime the duration of the timer, noted in milliseconds
      */
     private void showAlreadyRunningDialog(final int step, final long durationTime) {
 
@@ -137,16 +131,10 @@ public class CookNowTimerFragment extends Fragment {
         builder.setTitle("Timer already running");
         builder.setMessage("Are you sure you want to start this timer? It's already running. Do you want to restart it?");
 
-        builder.setPositiveButton("Restart", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                restartTimer(step, durationTime);
-            }
+        builder.setPositiveButton("Restart", (dialog, id) -> restartTimer(step, durationTime));
+        builder.setNegativeButton("Cancel", (dialog, id) -> {
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-            }
-        });
-        // create and show the dialog
+        // Create and show the dialog
         final AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
@@ -159,8 +147,7 @@ public class CookNowTimerFragment extends Fragment {
 
     /**
      * Remove a notification
-     *
-     * @param step - the instruction number of the notification
+     * @param step the instruction number of the notification
      */
     private void removeNotification(int step) {
         ((CookNowActivity)requireActivity()).removeNotification(step);

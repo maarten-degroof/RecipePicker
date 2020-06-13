@@ -14,7 +14,6 @@ public final class RecipeUtility {
 
     /**
      * Converts string to a string with a capital and all lowercase characters followed
-     *
      * @param input the ingredient name to convert
      * @return returns the converted name
      */
@@ -32,7 +31,6 @@ public final class RecipeUtility {
 
     /**
      * Generates a list of categories, compiled from all the recipes
-     *
      * @return returns the generated list
      */
     public static List<String> generateCategoryList() {
@@ -51,7 +49,6 @@ public final class RecipeUtility {
     /**
      * Generates a list of all the unique ingredients from all of the recipes.
      * This will sort the recipes alphabetically, and change the first letter to a capital.
-     *
      * @return returns an ArrayList containing the names of the ingredients, sorted alphabetically.
      */
     public static List<String> generateIngredientList() {
@@ -67,7 +64,6 @@ public final class RecipeUtility {
 
     /**
      * converts all the items of an enum to a better readable format (with spaces and not in full caps)
-     *
      * @param which which enum to use. Options are:
      *              - "QuantityType"
      *              - "IngredientType"

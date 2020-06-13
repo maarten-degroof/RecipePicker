@@ -1,7 +1,6 @@
 package com.maarten.recipepicker.adapters;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,11 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.maarten.recipepicker.models.Ingredient;
-import com.maarten.recipepicker.models.Instruction;
-import com.maarten.recipepicker.models.Recipe;
 import com.maarten.recipepicker.R;
 import com.maarten.recipepicker.ViewRecipeActivity;
+import com.maarten.recipepicker.models.Recipe;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -87,6 +84,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.CustomView
         return recipeList.size();
     }
 
+
     static class CustomViewHolder extends RecyclerView.ViewHolder {
 
         private TextView recipeTitleTextView;
@@ -106,10 +104,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.CustomView
     }
 
     /**
-     * runs the filter, pauses for 20 milliseconds and then returns the amount of items which succeeded the filter
-     *
-     * @param filterString - the json string on which will be filtered
-     * @return - an int saying the amount of items that are shown
+     * Runs the filter, pauses for 20 milliseconds and then returns the amount of items which succeeded the filter
+     * @param filterString the json string on which will be filtered
+     * @return an int saying the amount of items that are shown
      */
     public int filterAndReturnAmount(String filterString) {
         getFilter().filter(filterString);
@@ -117,9 +114,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.CustomView
         try {
             TimeUnit.MILLISECONDS.sleep(20);
         } catch (Exception e) {
-            Log.e("SleepError", e.getMessage());
+            Log.e("SleepError", "" + e.getMessage());
         }
-        Log.d("COUNT", "returning: "+returnCount);
         return returnCount;
     }
 
@@ -164,17 +160,17 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.CustomView
                         categorySet.add(categoryJsonArray.getString(i));
                     }
 
-                    // checks if part of the title is the same as the searchstring
-                    // if that fails checks each ingredient
-                    // if that fails check each instruction
-                    // if that fails check the comments
-                    // then check if all the found recipes have the required categories
+                    // Checks if part of the title is the same as the searchString
+                    // If that fails checks each ingredient
+                    // If that fails check each instruction
+                    // If that fails check the comments
+                    // Then check if all the found recipes have the required categories
                     List<Recipe> tempSearchedList = new ArrayList<>();
 
                     for (Recipe recipe : recipeList) {
                         boolean shouldSearchRecipe = true;
 
-                        // if should only search for favorites and this one isn't a favorite, just skip all the checks
+                        // If should only search for favorites and this one isn't a favorite, just skip all the checks
                         if (searchOnlyFavorites && !recipe.getFavorite()) {
                             shouldSearchRecipe = false;
                         }
@@ -228,7 +224,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.CustomView
                     returnCount = filteredArray.size();
                 }
                 catch(Exception e){
-                    Log.e("filterError", e.getMessage());
+                    Log.e("filterError", "" + e.getMessage());
                 }
                 return results;
             }
@@ -238,10 +234,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.CustomView
 
     /**
      * Checks if the checkList contains an item of the testList
-     *
-     * @param checkList - the list of Strings to check against
-     * @param testList - the list of String to use to check
-     * @return - returns true if an item is found
+     * @param checkList the list of Strings to check against
+     * @param testList the list of String to use to check
+     * @return returns true if an item is found
      */
     private boolean listContainsItem(Set<String> checkList, Set<String> testList) {
         for (String item : testList) {

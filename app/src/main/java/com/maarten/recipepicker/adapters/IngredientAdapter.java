@@ -1,7 +1,6 @@
 package com.maarten.recipepicker.adapters;
 
 import android.app.Activity;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.maarten.recipepicker.models.Ingredient;
 import com.maarten.recipepicker.R;
+import com.maarten.recipepicker.models.Ingredient;
 
 import java.util.List;
 
@@ -56,11 +55,9 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Cu
     static class CustomViewHolder extends RecyclerView.ViewHolder {
 
         private TextView ingredientListTextView;
-        private View parentView;
 
         public CustomViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.parentView = itemView;
             this.ingredientListTextView = itemView.findViewById(R.id.ingredientListTextView);
         }
     }

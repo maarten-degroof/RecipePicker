@@ -48,17 +48,17 @@ public class FilterIngredientsActivity extends AppCompatActivity {
         toolbar.setTitle("Filter on ingredients");
         setSupportActionBar(toolbar);
 
-        // back button pressed
+        // Back button pressed
         toolbar.setNavigationOnClickListener(v -> finish());
 
-        // this takes care of the back button
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // This takes care of the back button
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         addRecipeTextView = findViewById(R.id.noRecipesYetTextView);
         addRecipeButton = findViewById(R.id.addRecipeButton);
         filterIngredientsRecyclerView = findViewById(R.id.filterIngredientsRecyclerView);
-
-        // https://blog.oziomaogbe.com/2017/10/18/android-handling-checkbox-state-in-recycler-views.html
 
         createIngredientListAndRecyclerView();
     }
@@ -74,7 +74,7 @@ public class FilterIngredientsActivity extends AppCompatActivity {
              ingredientList.add(new FilterIngredient(name));
          }
 
-         // shows the 'add recipe' button and text when there aren't any ingredients
+         // Shows the 'add recipe' button and text when there aren't any ingredients
          showAddRecipeScreen(ingredientList.isEmpty());
 
          filterIngredientsAdapter = new FilterIngredientsAdapter(this, ingredientList);
@@ -90,7 +90,6 @@ public class FilterIngredientsActivity extends AppCompatActivity {
 
     /**
      * This takes care of the 'no recipes' and 'add recipe' elements when the list is empty
-     *
      * @param shouldShow boolean, if true means there are no ingredients and it should show the 'add recipe' button
      */
     private void showAddRecipeScreen(Boolean shouldShow) {
@@ -107,7 +106,6 @@ public class FilterIngredientsActivity extends AppCompatActivity {
 
     /**
      * Goes back to the previous activity (FilterActivity)
-     *
      * @param view The button 'use filters instead'
      */
     public void goBackToFilters(View view) {
@@ -117,7 +115,6 @@ public class FilterIngredientsActivity extends AppCompatActivity {
     /**
      * Converts the selected ingredients and opens the FilteredIngredientsResultsActivity
      * Shows a toast if no ingredients were selected
-     *
      * @param view The 'Filter your cookbook' button
      */
     public void viewFilterResults(View view) {
@@ -154,7 +151,7 @@ public class FilterIngredientsActivity extends AppCompatActivity {
     }
 
     /**
-     *  opens the AddRecipeActivity
+     * Opens the AddRecipeActivity
      */
     public void addRecipe(View view) {
         Intent intent = new Intent (this, AddRecipeActivity.class);
@@ -163,7 +160,6 @@ public class FilterIngredientsActivity extends AppCompatActivity {
 
     /**
      * Inflates the menu into the toolbar
-     *
      * @param menu the menu
      * @return should return true
      */
@@ -174,10 +170,9 @@ public class FilterIngredientsActivity extends AppCompatActivity {
     }
 
     /**
-     * checks if the clicked menu item the home icon is
-     *
-     * @param item  the clicked menu item
-     * @return  should return true when item found
+     * Checks if the clicked menu item the home icon is
+     * @param item the clicked menu item
+     * @return should return true when item found
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

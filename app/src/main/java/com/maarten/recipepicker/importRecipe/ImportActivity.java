@@ -18,7 +18,6 @@ import com.maarten.recipepicker.AddIngredientFragment;
 import com.maarten.recipepicker.AddInstructionFragment;
 import com.maarten.recipepicker.AddRecipeInterface;
 import com.maarten.recipepicker.FillInRecipeFragment;
-import com.maarten.recipepicker.viewModels.FillInRecipeViewModel;
 import com.maarten.recipepicker.MainActivity;
 import com.maarten.recipepicker.R;
 import com.maarten.recipepicker.enums.CookTime;
@@ -27,6 +26,7 @@ import com.maarten.recipepicker.enums.FillInRecipeFragmentType;
 import com.maarten.recipepicker.models.Ingredient;
 import com.maarten.recipepicker.models.Instruction;
 import com.maarten.recipepicker.models.Recipe;
+import com.maarten.recipepicker.viewModels.FillInRecipeViewModel;
 
 import java.util.List;
 import java.util.Set;
@@ -63,7 +63,9 @@ public class ImportActivity extends AppCompatActivity implements AddRecipeInterf
         setSupportActionBar(toolbar);
 
         // this takes care of the back button
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         fillInRecipeFragment = new FillInRecipeFragment();
         addIngredientFragment = new AddIngredientFragment();
@@ -84,8 +86,7 @@ public class ImportActivity extends AppCompatActivity implements AddRecipeInterf
 
     /**
      * This decides what fragment to load and show; also decides which toolbar to show
-     *
-     * @param newFragmentType - defines the type of the fragment which should be shown
+     * @param newFragmentType defines the type of the fragment which should be shown
      */
     @Override
     public void toggleCurrentFragment(FillInRecipeFragmentType newFragmentType) {
@@ -147,9 +148,8 @@ public class ImportActivity extends AppCompatActivity implements AddRecipeInterf
 
     /**
      * This gets called when the user pressed the 'physical' back button.
-     *
-     * @param keyCode - the physical that was pressed
-     * @param event - the event that caused it
+     * @param keyCode the physical that was pressed
+     * @param event the event that caused it
      * @return returns true if the event was catched
      */
     @Override
@@ -174,8 +174,7 @@ public class ImportActivity extends AppCompatActivity implements AddRecipeInterf
 
     /**
      * this toggles the cancel and add recipe button on the bottom of the window
-     *
-     * @param shouldShowButtons - if true, shows the buttons
+     * @param shouldShowButtons if true, shows the buttons
      */
     @Override
     public void toggleEndButtons(boolean shouldShowButtons) {
@@ -231,7 +230,6 @@ public class ImportActivity extends AppCompatActivity implements AddRecipeInterf
 
     /**
      * Inflates the menu into the toolbar
-     *
      * @param menu the menu
      * @return should return true
      */
@@ -242,8 +240,8 @@ public class ImportActivity extends AppCompatActivity implements AddRecipeInterf
     }
 
     /**
-     * checks if the clicked menu item the home icon is
-     * @param item  the clicked menu item
+     * Checks if the clicked menu item the home icon is
+     * @param item the clicked menu item
      * @return  should return true when item found
      */
     @Override

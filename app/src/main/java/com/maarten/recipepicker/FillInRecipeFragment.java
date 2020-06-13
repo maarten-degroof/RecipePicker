@@ -111,7 +111,7 @@ public class FillInRecipeFragment extends Fragment {
         removeImageButton = view.findViewById(R.id.cancelImageButton);
         removeImageButton.setOnClickListener(view1 -> removeImage());
 
-        // there's no image yet -> hide buttons
+        // There's no image yet -> hide buttons
         differentImageButton.setVisibility(View.GONE);
         removeImageButton.setVisibility(View.GONE);
 
@@ -125,7 +125,7 @@ public class FillInRecipeFragment extends Fragment {
         chipGroupDuration = view.findViewById(R.id.durationChipGroup);
         difficultyChipGroup = view.findViewById(R.id.difficultyChipGroup);
 
-        // this makes sure that there's always one chip selected
+        // This makes sure that there's always one chip selected
         chipGroupDuration.setOnCheckedChangeListener((group, checkedId) -> {
             for (int i = 0; i < chipGroupDuration.getChildCount(); i++) {
                 Chip chip = (Chip) chipGroupDuration.getChildAt(i);
@@ -243,7 +243,7 @@ public class FillInRecipeFragment extends Fragment {
     }
 
     /**
-     * when the fragment is stopped, save all the data to the ViewModel
+     * When the fragment is stopped, save all the data to the ViewModel
      */
     @Override
     public void onStop() {
@@ -288,8 +288,7 @@ public class FillInRecipeFragment extends Fragment {
 
     /**
      * Checks which chip is checked and returns the type of that chip
-     *
-     * @return Returns the selected Difficulty type
+     * @return returns the selected Difficulty type
      */
     private Difficulty getDifficulty() {
         Difficulty difficulty;
@@ -308,8 +307,7 @@ public class FillInRecipeFragment extends Fragment {
 
     /**
      * Checks which chip is checked and returns the type of that chip
-     *
-     * @return Returns the selected CookTime type
+     * @return returns the selected CookTime type
      */
     private CookTime getCookTime() {
         CookTime cookTime;
@@ -328,8 +326,7 @@ public class FillInRecipeFragment extends Fragment {
 
     /**
      * Sets the Difficulty to the given one
-     *
-     * @param difficulty - the difficulty to set
+     * @param difficulty the difficulty to set
      */
     private void setDifficulty(Difficulty difficulty) {
         switch (difficulty) {
@@ -346,8 +343,7 @@ public class FillInRecipeFragment extends Fragment {
 
     /**
      * Sets the cookTime chip to the given one
-     *
-     * @param cookTime - the cookTime to set
+     * @param cookTime the cookTime to set
      */
     private void setCookTime(CookTime cookTime) {
         switch (cookTime) {
@@ -375,8 +371,7 @@ public class FillInRecipeFragment extends Fragment {
 
     /**
      * Creates a chip and adds it to the categoriesChipGroup
-     *
-     * @param category - the name of the category
+     * @param category the name of the category
      */
     private void addCategoryChip(String category) {
         final Chip chip = new Chip(requireActivity());
@@ -389,15 +384,15 @@ public class FillInRecipeFragment extends Fragment {
     }
 
     /**
-     * Checks if the permission has been accepted if so opens the pickFromgGllery function
-     * if not tries to request the permission again
+     * Checks if the permission has been accepted if so opens the pickFromgGllery function.
+     * If not tries to request the permission again
      */
     private void showPictureGallery() {
         removeCursorFromWidget();
         if(requireActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             pickFromGallery();
         } else {
-            // permission hasn't been granted.
+            // Permission hasn't been granted.
             if(shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 Log.d("Permissions", "Should show extra info for the permission");
                 Toast.makeText(requireActivity(), "External storage permission is needed to access your images.", Toast.LENGTH_LONG).show();
@@ -410,15 +405,14 @@ public class FillInRecipeFragment extends Fragment {
     /**
      * Function is called when a permission was granted (or denied)
      * This checks if the permission was granted for the external files, and opens the gallery if so.
-     *
-     * @param requestCode - the code for external file permission (1)
-     * @param permissions - a list of requested permissions
-     * @param grantResults - this says if the permission was granted
+     * @param requestCode the code for external file permission (1)
+     * @param permissions a list of requested permissions
+     * @param grantResults this says if the permission was granted
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if(requestCode == READ_EXTERNAL_PERMISSIONS) {
-            // check if the required permission is granted
+            // Check if the required permission is granted
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 pickFromGallery();
             } else {
@@ -437,7 +431,7 @@ public class FillInRecipeFragment extends Fragment {
         Intent intent = new Intent(Intent.ACTION_PICK);
         // Sets the type as imagePath/*. This ensures only components of type imagePath are selected
         intent.setType("image/*");
-        //We pass an extra array with the accepted mime types. This will ensure only components with these MIME types are targeted.
+        // We pass an extra array with the accepted mime types. This will ensure only components with these MIME types are targeted.
         String[] mimeTypes = {"imagePath/jpeg", "imagePath/png"};
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
         // Launching the Intent
@@ -447,16 +441,15 @@ public class FillInRecipeFragment extends Fragment {
     /**
      * When image is chosen in an image picker, returns back to the activity and to this method
      * if image was chosen, extracts the path and puts the image in the imageView
-     *
-     * @param requestCode - the code which you passed on when starting the activity, identifier
-     * @param resultCode - says if the user completed it and chose an image
-     * @param data - contains the Uri
+     * @param requestCode the code which you passed on when starting the activity, identifier
+     * @param resultCode says if the user completed it and chose an image
+     * @param data contains the Uri
      */
     public void onActivityResult(int requestCode,int resultCode,Intent data) {
         // Result code is RESULT_OK only if the user selects an Image
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == GALLERY_REQUEST_CODE) {
-                //data.getData returns the content URI for the selected Image
+                // data.getData returns the content URI for the selected Image
                 try {
                     Uri selectedImage = data.getData();
                     imagePath = getRealPathFromURI(requireActivity(), selectedImage);
@@ -474,16 +467,16 @@ public class FillInRecipeFragment extends Fragment {
 
     /**
      * Shows a given image and toggles the necessary buttons
-     * @param imagePath - the path to the image
+     * @param imagePath the path to the image
      */
     private void showImage(String imagePath) {
-        // generate a bitmap, to put in the imageView
+        // Generate a bitmap, to put in the imageView
         Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
         imageView.setImageBitmap(bitmap);
 
         imageView.setVisibility(View.VISIBLE);
 
-        // show & hide appropriate buttons
+        // Show & hide appropriate buttons
         addImageButton.setVisibility(View.GONE);
         differentImageButton.setVisibility(View.VISIBLE);
         removeImageButton.setVisibility(View.VISIBLE);
@@ -493,10 +486,9 @@ public class FillInRecipeFragment extends Fragment {
      * Gets the absolute path from a URI file
      * Code written by Kuray Ogun
      * https://freakycoder.com/android-notes-73-how-to-get-real-path-from-uri-2f78320987f5
-     *
-     * @param context - the current activity
-     * @param contentUri - the Uri to get the path from
-     * @return - returns the path as a string, or the empty string if something went wrong
+     * @param context the current activity
+     * @param contentUri the Uri to get the path from
+     * @return returns the path as a string, or the empty string if something went wrong
      */
     private String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = null;
@@ -526,7 +518,7 @@ public class FillInRecipeFragment extends Fragment {
 
         imageView.setVisibility(View.GONE);
 
-        // show & hide appropriate buttons
+        // Show & hide appropriate buttons
         addImageButton.setVisibility(View.VISIBLE);
         differentImageButton.setVisibility(View.GONE);
         removeImageButton.setVisibility(View.GONE);
@@ -539,7 +531,7 @@ public class FillInRecipeFragment extends Fragment {
         removeCursorFromWidget();
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
 
-        // get the layout
+        // Get the layout
         View dialog_layout = View.inflate(requireActivity(), R.layout.add_category_dialog, null);
 
         // Create the text field in the alert dialog.
@@ -550,7 +542,7 @@ public class FillInRecipeFragment extends Fragment {
 
         builder.setPositiveButton("Add category", (dialog, id) -> {
             String inputText = categoryEditText.getText().toString();
-            // only add if it's not empty and it doesn't exist yet
+            // Only add if it's not empty and it doesn't exist yet
             if(inputText.isEmpty()) {
                 return;
             }
@@ -563,7 +555,7 @@ public class FillInRecipeFragment extends Fragment {
         });
         builder.setNegativeButton("Cancel", (dialog, id) -> {
         });
-        // create and show the dialog
+        // Create and show the dialog
         final AlertDialog alertDialog = builder.create();
         alertDialog.setView(dialog_layout);
         alertDialog.show();

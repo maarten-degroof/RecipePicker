@@ -1,7 +1,6 @@
 package com.maarten.recipepicker.adapters;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +13,8 @@ import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.maarten.recipepicker.R;
-import com.maarten.recipepicker.models.Recipe;
 import com.maarten.recipepicker.ViewRecipeActivity;
+import com.maarten.recipepicker.models.Recipe;
 
 import java.util.List;
 
@@ -55,23 +54,14 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.CustomView
 
         holder.recipeImageView.setImageBitmap(recipe.getImage());
 
-        holder.parentView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, ViewRecipeActivity.class);
-                intent.putExtra("Recipe", recipe);
+        holder.parentView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, ViewRecipeActivity.class);
+            intent.putExtra("Recipe", recipe);
 
-//                Pair<View, String> p1 = Pair.create((View)holder.recipeTitleTextView, "recipeTitle");
-//                Pair<View, String> p2 = Pair.create((View)holder.recipeImageView, "recipeImage");
-//
-//                ActivityOptionsCompat options = ActivityOptionsCompat.
-//                        makeSceneTransitionAnimation(context, p1, p2);
+            ActivityOptionsCompat options = ActivityOptionsCompat.
+                    makeSceneTransitionAnimation(context, holder.recipeImageView, "recipeImage");
+            context.startActivity(intent, options.toBundle());
 
-                ActivityOptionsCompat options = ActivityOptionsCompat.
-                        makeSceneTransitionAnimation(context, holder.recipeImageView, "recipeImage");
-                context.startActivity(intent, options.toBundle());
-
-            }
         });
     }
 

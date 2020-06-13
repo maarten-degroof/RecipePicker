@@ -73,20 +73,21 @@ public class FilteredIngredientsResultsActivity extends AppCompatActivity {
             amountOfItems = filterIngredientsResultsAdapter.filterAndReturnAmount(filterObject.toString());
         }
         catch (Exception e) {
-            Log.e("intentError", e.getMessage());
+            Log.e("intentError", "" + e.getMessage());
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Filter Results");
         setSupportActionBar(toolbar);
 
-        // back button pressed
         toolbar.setNavigationOnClickListener(v -> finish());
 
-        // this takes care of the back button
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // This takes care of the back button
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
-        // write the text to say for which ingredients you have filtered. FromHtml is used to make the numbers bold
+        // Write the text to say for which ingredients you have filtered. FromHtml is used to make the numbers bold
         TextView filteredDescriptionTextView = findViewById(R.id.filteredDescriptionTextField);
 
         String descriptionString = "";
@@ -123,7 +124,7 @@ public class FilteredIngredientsResultsActivity extends AppCompatActivity {
             builderNotToInclude.append(ingredient);
             builderNotToInclude.append(", ");
         }
-        // remove the last ", "
+        // Remove the last ", "
         builderNotToInclude.setLength(builderNotToInclude.length() - 2);
         return builderNotToInclude.toString();
     }
@@ -167,8 +168,7 @@ public class FilteredIngredientsResultsActivity extends AppCompatActivity {
     }
 
     /**
-     * checks if the clicked menu item the home icon is
-     *
+     * Checks if the clicked menu item the home icon is
      * @param item the clicked menu item
      * @return should return true when item found
      */
@@ -192,7 +192,7 @@ public class FilteredIngredientsResultsActivity extends AppCompatActivity {
     }
 
     /**
-     *  opens the AddRecipeActivity
+     * Opens the AddRecipeActivity
      */
     public void addRecipe(View view) {
         Intent intent = new Intent (this, AddRecipeActivity.class);

@@ -58,8 +58,10 @@ public class EditRecipeActivity extends AppCompatActivity implements AddRecipeIn
         toolbar.setTitle("Edit recipe");
         setSupportActionBar(toolbar);
 
-        // this takes care of the back button
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // This takes care of the back button
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         Intent intent = getIntent();
         recipe = (Recipe) intent.getSerializableExtra("Recipe");
@@ -79,7 +81,7 @@ public class EditRecipeActivity extends AppCompatActivity implements AddRecipeIn
             viewModel.setCurrentFragmentType(MAIN);
         }
 
-        // initialise the viewModel with the recipe
+        // Initialise the viewModel with the recipe
         viewModel.setRecipe(recipe);
 
         toggleCurrentFragment(viewModel.getCurrentFragmentType());
@@ -87,8 +89,7 @@ public class EditRecipeActivity extends AppCompatActivity implements AddRecipeIn
 
     /**
      * This decides what fragment to load and show; also decides which toolbar to show
-     *
-     * @param newFragmentType - defines the type of the fragment which should be shown
+     * @param newFragmentType defines the type of the fragment which should be shown
      */
     @Override
     public void toggleCurrentFragment(FillInRecipeFragmentType newFragmentType) {
@@ -135,10 +136,9 @@ public class EditRecipeActivity extends AppCompatActivity implements AddRecipeIn
 
     /**
      * This gets called when the user pressed the 'physical' back button.
-     *
-     * @param keyCode - the physical that was pressed
-     * @param event - the event that caused it
-     * @return returns true if the event was catched
+     * @param keyCode the physical that was pressed
+     * @param event the event that caused it
+     * @return returns true if the event was handled
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)  {
@@ -157,9 +157,8 @@ public class EditRecipeActivity extends AppCompatActivity implements AddRecipeIn
     }
 
     /**
-     * this toggles the cancel and add recipe button on the bottom of the window
-     *
-     * @param shouldShowButtons - if true, shows the buttons
+     * This toggles the cancel and add recipe button on the bottom of the window
+     * @param shouldShowButtons if true, shows the buttons
      */
     @Override
     public void toggleEndButtons(boolean shouldShowButtons) {
@@ -233,7 +232,6 @@ public class EditRecipeActivity extends AppCompatActivity implements AddRecipeIn
 
     /**
      * Inflates the menu into the toolbar
-     *
      * @param menu the menu
      * @return should return true
      */
@@ -244,10 +242,9 @@ public class EditRecipeActivity extends AppCompatActivity implements AddRecipeIn
     }
 
     /**
-     * checks if the clicked menu item the home icon is
-     *
-     * @param item  the clicked menu item
-     * @return  should return true when item found
+     * Checks if the clicked menu item the home icon is
+     * @param item the clicked menu item
+     * @return should return true when item found
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -261,7 +258,7 @@ public class EditRecipeActivity extends AppCompatActivity implements AddRecipeIn
     }
 
     /**
-     * returns to the main activity and removes the backstack
+     * Returns to the main activity and removes the backstack
      * This is necessary because otherwise we would go back to an unedited recipe
      */
     private void goToMainActivity() {

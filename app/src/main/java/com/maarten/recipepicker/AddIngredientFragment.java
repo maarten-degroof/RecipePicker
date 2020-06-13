@@ -112,7 +112,6 @@ public class AddIngredientFragment extends Fragment {
 
     /**
      * Converts a string into its respective IngredientType and returns that
-     *
      * @param name a string representation of the type
      * @return the found IngredientType
      */
@@ -123,7 +122,6 @@ public class AddIngredientFragment extends Fragment {
 
     /**
      * Converts a string into its respective QuantityType and returns that
-     *
      * @param name a string representation of the type
      * @return the found IngredientType
      */
@@ -134,8 +132,7 @@ public class AddIngredientFragment extends Fragment {
 
     /**
      * Checks all the quantityType radioButtons and returns the selected type
-     *
-     * @return - the selected quantityType
+     * @return the selected quantityType
      */
     private QuantityType getSelectedQuantityType() {
         QuantityType quantityType;
@@ -151,8 +148,7 @@ public class AddIngredientFragment extends Fragment {
 
     /**
      * Sets the correct radioButton with the given quantityType
-     *
-     * @param type - the type to set the radio button with
+     * @param type the type to set the radio button with
      */
     private void setSelectedQuantityType(QuantityType type) {
         String name = changeFirstLetterToCapital(type.toString());
@@ -166,8 +162,7 @@ public class AddIngredientFragment extends Fragment {
 
     /**
      * Checks all the ingredientType chips and returns the selected type
-     *
-     * @return - the selected ingredientType; null if no ingredientType was selected
+     * @return the selected ingredientType; null if no ingredientType was selected
      */
     private IngredientType getSelectedIngredientType() {
         String ingredientTypeName = null;
@@ -189,8 +184,7 @@ public class AddIngredientFragment extends Fragment {
     /**
      * Sets a given ingredientType to the chipGroup.
      * If null is given, no chip is set.
-     *
-     * @param type - the type item to check
+     * @param type the type item to check
      */
     private void setSelectedIngredientType(IngredientType type) {
         if (type == null) {
@@ -262,9 +256,8 @@ public class AddIngredientFragment extends Fragment {
 
     /**
      * Validates if the quantity is actually a double
-     *
-     * @param quantity - value should be a Double or be null
-     * @return - returns true if the quantity is not a Double, false if it is
+     * @param quantity value should be a Double or be null
+     * @return returns true if the quantity is not a Double, false if it is
      */
     private boolean checkQuantityNotValid(String quantity) {
         if(quantity != null) {
@@ -275,7 +268,6 @@ public class AddIngredientFragment extends Fragment {
 
     /**
      * Checks if a string is a double
-     *
      * @param str the string to test
      * @return true if parsable as double, false if not
      */
@@ -298,8 +290,7 @@ public class AddIngredientFragment extends Fragment {
 
     /**
      * Creates an ingredientType chip and adds it to the chipGroup
-     *
-     * @param name - the name to give to the chip
+     * @param name the name to give to the chip
      */
     private void generateIngredientTypeChip(String name) {
         Chip chip = new Chip(requireContext());
@@ -311,8 +302,7 @@ public class AddIngredientFragment extends Fragment {
 
     /**
      * Creates a quantity radioButton and adds it to the radioGroup
-     *
-     * @param name - the name of the radioButton
+     * @param name the name of the radioButton
      */
     private void generateQuantityTypeRadioButton(String name) {
         MaterialRadioButton radioButton = new MaterialRadioButton(requireActivity());

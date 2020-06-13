@@ -64,7 +64,7 @@ public class AddInstructionFragment extends Fragment {
 
         final int enabledColor = ContextCompat.getColor(requireContext(), R.color.primaryColor);
 
-        // add eventListener to enable and disable the number pickers
+        // Add eventListener to enable and disable the number pickers
         timerEnabledSwitch = view.findViewById(R.id.timerEnabledSwitch);
         timerEnabledSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if(isChecked) {
@@ -178,11 +178,10 @@ public class AddInstructionFragment extends Fragment {
     }
 
     /**
-     * calculates the total amount of milliseconds
-     *
-     * @param minutes - the minutes given
-     * @param seconds - the seconds given
-     * @return - returns long, the total amount of seconds
+     * Calculates the total amount of milliseconds
+     * @param minutes the minutes given
+     * @param seconds the seconds given
+     * @return returns long, the total amount of seconds
      */
     private long calcMilliSeconds(int minutes, int seconds) {
         return ((minutes * 60) + seconds) * 1000;

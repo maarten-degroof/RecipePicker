@@ -1,11 +1,5 @@
 package com.maarten.recipepicker;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -16,6 +10,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
@@ -102,15 +102,17 @@ public class FilteredResultsActivity extends AppCompatActivity {
             amountOfItems = filterAdapter.filterAndReturnAmount(filterObject.toString());
 
         } catch (Exception e) {
-            Log.e("intentError", e.getMessage());
+            Log.e("intentError", "" + e.getMessage());
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Filter Results");
         setSupportActionBar(toolbar);
 
-        // this takes care of the back button
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // This takes care of the back button
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         // write the text to say for which times cooked you have filtered. FromHtml is used to make the numbers bold
         TextView filteredDescriptionTextView = findViewById(R.id.filteredDescriptionTextField);
@@ -150,7 +152,6 @@ public class FilteredResultsActivity extends AppCompatActivity {
             filteredCategoryChipGroup.setVisibility(View.GONE);
         }
 
-
         addRecipeButton = findViewById(R.id.addRecipeButton);
         noRecipesTextView = findViewById(R.id.noFoundRecipesTextView);
 
@@ -159,8 +160,7 @@ public class FilteredResultsActivity extends AppCompatActivity {
 
     /**
      * Creates a chip and adds it to the chipGroup
-     *
-     * @param name - the name of the chip
+     * @param name the name of the chip
      */
     private void createChip(String name, ChipGroup chipGroup) {
         Chip chip = new Chip(this);
@@ -197,7 +197,6 @@ public class FilteredResultsActivity extends AppCompatActivity {
 
     /**
      * Inflates the menu into the toolbar
-     *
      * @param menu the menu
      * @return should return true
      */
@@ -208,9 +207,9 @@ public class FilteredResultsActivity extends AppCompatActivity {
     }
 
     /**
-     * checks if the clicked menu item the home icon is
-     * @param item  the clicked menu item
-     * @return  should return true when item found
+     * Checks if the clicked menu item the home icon is
+     * @param item the clicked menu item
+     * @return should return true when item found
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -232,7 +231,7 @@ public class FilteredResultsActivity extends AppCompatActivity {
     }
 
     /**
-     *  opens the AddRecipeActivity
+     * opens the AddRecipeActivity
      */
     public void addRecipe(View view) {
         Intent intent = new Intent (this, AddRecipeActivity.class);
