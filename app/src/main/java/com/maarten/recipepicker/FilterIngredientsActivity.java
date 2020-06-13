@@ -17,18 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.button.MaterialButton;
 import com.maarten.recipepicker.adapters.FilterIngredientsAdapter;
 import com.maarten.recipepicker.models.FilterIngredient;
-import com.maarten.recipepicker.models.Ingredient;
-import com.maarten.recipepicker.models.Recipe;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NavigableSet;
-import java.util.TreeSet;
-
-import static com.maarten.recipepicker.RecipeUtility.changeFirstLetterToCapital;
 
 /**
  * Opens the Activity to filter on ingredients.
@@ -37,8 +31,7 @@ import static com.maarten.recipepicker.RecipeUtility.changeFirstLetterToCapital;
 
 public class FilterIngredientsActivity extends AppCompatActivity {
 
-    private NavigableSet<String> ingredientNameList;
-    private ArrayList<FilterIngredient> ingredientList;
+    private List<FilterIngredient> ingredientList;
     private FilterIngredientsAdapter filterIngredientsAdapter;
     private RecyclerView filterIngredientsRecyclerView;
 
@@ -56,12 +49,7 @@ public class FilterIngredientsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // back button pressed
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> finish());
 
         // this takes care of the back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -80,14 +68,7 @@ public class FilterIngredientsActivity extends AppCompatActivity {
      * Also takes care of the RecyclerView
      */
      private void createIngredientListAndRecyclerView() {
-         // sorts them, removes doubles and capitalises the first letter of every ingredient
-         ingredientNameList = new TreeSet<>();
-         for(Recipe recipe : MainActivity.recipeList) {
-             List<Ingredient> tempList = recipe.getIngredientList();
-             for(Ingredient ingredient : tempList) {
-                 ingredientNameList.add(changeFirstLetterToCapital(ingredient.getName()));
-             }
-         }
+         List<String> ingredientNameList = RecipeUtility.generateIngredientList();
          ingredientList = new ArrayList<>();
          for (String name : ingredientNameList) {
              ingredientList.add(new FilterIngredient(name));
@@ -167,7 +148,7 @@ public class FilterIngredientsActivity extends AppCompatActivity {
                 startActivity(intent);
 
             } catch (Exception e) {
-                Log.e("JsonError", e.getMessage());
+                Log.e("JsonError", "" + e.getMessage());
             }
         }
     }

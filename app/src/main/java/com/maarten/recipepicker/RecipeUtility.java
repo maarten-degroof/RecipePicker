@@ -2,10 +2,13 @@ package com.maarten.recipepicker;
 
 import com.maarten.recipepicker.enums.IngredientType;
 import com.maarten.recipepicker.enums.QuantityType;
+import com.maarten.recipepicker.models.Ingredient;
 import com.maarten.recipepicker.models.Recipe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NavigableSet;
+import java.util.TreeSet;
 
 public final class RecipeUtility {
 
@@ -29,6 +32,7 @@ public final class RecipeUtility {
 
     /**
      * Generates a list of categories, compiled from all the recipes
+     *
      * @return returns the generated list
      */
     public static List<String> generateCategoryList() {
@@ -45,7 +49,25 @@ public final class RecipeUtility {
     }
 
     /**
+     * Generates a list of all the unique ingredients from all of the recipes.
+     * This will sort the recipes alphabetically, and change the first letter to a capital.
+     *
+     * @return returns an ArrayList containing the names of the ingredients, sorted alphabetically.
+     */
+    public static List<String> generateIngredientList() {
+        NavigableSet<String> ingredientNameList = new TreeSet<>();
+        for(Recipe recipe : MainActivity.recipeList) {
+            List<Ingredient> tempList = recipe.getIngredientList();
+            for(Ingredient ingredient : tempList) {
+                ingredientNameList.add(changeFirstLetterToCapital(ingredient.getName()));
+            }
+        }
+        return new ArrayList<>(ingredientNameList);
+    }
+
+    /**
      * converts all the items of an enum to a better readable format (with spaces and not in full caps)
+     *
      * @param which which enum to use. Options are:
      *              - "QuantityType"
      *              - "IngredientType"

@@ -1,42 +1,48 @@
-package com.maarten.recipepicker.settings;
+package com.maarten.recipepicker;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
-import com.maarten.recipepicker.MainActivity;
-import com.maarten.recipepicker.R;
+import java.util.ArrayList;
+import java.util.List;
 
-public class SettingsActivity extends AppCompatActivity {
+public class StatisticsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.settings_activity);
+        setContentView(R.layout.activity_statistics);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Settings");
+        toolbar.setTitle("Statistics");
         setSupportActionBar(toolbar);
 
-        // takes care of the back button
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // this takes care of the back button
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         toolbar.setNavigationOnClickListener(v -> {
-            finish();
+            // back button pressed
+            supportFinishAfterTransition();
         });
 
-        PreferenceManager.setDefaultValues(this, R.xml.settings, false);
+        List<TextView> textViewList = new ArrayList<>();
 
-        // loads the PreferenceFragment which will load the settings
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.settings, new PreferenceFragment())
-                .commit();
+        TextView totalRecipesTextView = findViewById(R.id.totalRecipesTextView);
+        textViewList.add(totalRecipesTextView);
+
+        TextView totalIngredientsTextView = findViewById(R.id.totalIngredientsTextView);
+        textViewList.add(totalIngredientsTextView);
+
+        new StatisticsTask(textViewList).execute();
     }
 
     /**
@@ -53,6 +59,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     /**
      * checks if the clicked menu item the home icon is
+     *
      * @param item  the clicked menu item
      * @return  should return true when item found
      */

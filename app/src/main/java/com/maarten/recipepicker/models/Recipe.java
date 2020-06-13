@@ -183,7 +183,7 @@ public class Recipe implements Serializable {
         }
         Bitmap bitmap;
         // No image given
-        if(imagePath == null) {
+        if(imagePath == null || imagePath.equals("")) {
             bitmap = BitmapFactory.decodeResource(RecipePickerApplication.getAppContext().getResources(), R.drawable.no_image_available);
         }
         // Image is a drawable

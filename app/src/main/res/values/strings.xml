@@ -226,4 +226,10 @@
     <string name="filter_ingredients_only_not_included">Showing all recipes which don\'t have the following ingredients:  &lt;b>%1$s&lt;/b>.</string>
     <string name="welcome_screen">Welcome, this is an app to maintain and filter your own recipes. This app works completely offline, but there are a few recipes to get you started. If you have a suggestion or a problem, you can always contact me!</string>
     <string name="add_instruction">Add Instruction</string>
+    <string name="open_statistics">View the statistics</string>
+    <string name="open_statistics_description">Here are some statistics that you can view and reset</string>
+    <string name="loading">Loading…</string>
+    <string name="statistics">Statistics</string>
+    <string name="statistics_total_recipes_found">You have: &lt;b>%1$d&lt;/b> recipes.</string>
+    <string name="statistics_total_ingredients_found">Wow you have a total of &lt;b>%1$d&lt;/b> ingredients spread over your recipes.</string>
 </resources>
