@@ -14,10 +14,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Launcher">
-        <activity android:name=".StatisticsActivity" />
-        <activity android:name=".importRecipe.ImportActivity" />
-        <activity android:name=".FilteredIngredientsResultsActivity" />
-        <activity android:name=".FilterIngredientsActivity" />
+        <activity
+            android:name=".StatisticsActivity" />
+        <activity
+            android:name=".importRecipe.ImportActivity" />
+        <activity
+            android:name=".FilteredIngredientsResultsActivity" />
+        <activity
+            android:name=".FilterIngredientsActivity" />
         <activity
             android:name=".cookNow.CookNowActivity"
             android:launchMode="singleTop"

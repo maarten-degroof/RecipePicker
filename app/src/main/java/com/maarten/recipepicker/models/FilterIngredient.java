@@ -41,4 +41,12 @@ public class FilterIngredient {
         }
     }
 
+    public void setStateToInclude() {
+        this.state = 1;
+    }
+
+    public void setStateToExclude() {
+        this.state = -1;
+    }
+
 }

@@ -144,7 +144,7 @@
     <string name="comments">Comments:</string>
     <string name="comment_hint">Do you have any comments about the recipe?</string>
     <string name="filter_difficulty_description">How difficult should it be?</string>
-    <string name="filter_button">Filter your cookbook</string>
+    <string name="filter_button">FILTER YOUR COOKBOOK</string>
     <string name="difficulty_filtered_description">Here you can find more &lt;b>%1$s&lt;/b> recipes!</string>
     <string name="category_filtered_description">Here you can find more recipes that have the &lt;b>%1$s&lt;/b> category!</string>
     <string name="four">4</string>

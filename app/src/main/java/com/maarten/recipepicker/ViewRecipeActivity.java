@@ -45,7 +45,7 @@ import com.maarten.recipepicker.cookNow.CookNowActivity;
 import com.maarten.recipepicker.models.Ingredient;
 import com.maarten.recipepicker.models.Instruction;
 import com.maarten.recipepicker.models.Recipe;
-import com.maarten.recipepicker.viewModels.viewRecipeViewModel;
+import com.maarten.recipepicker.viewModels.ViewRecipeViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +66,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
     private Gson gson;
 
-    private viewRecipeViewModel viewModel;
+    private ViewRecipeViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +118,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
         // The index is used to update the favorite status
         recipeIndex = MainActivity.recipeList.indexOf(recipe);
 
-        viewModel = new ViewModelProvider(this).get(viewRecipeViewModel.class);
+        viewModel = new ViewModelProvider(this).get(ViewRecipeViewModel.class);
 
         ImageView recipeImageView = findViewById(R.id.recipeImageView);
 

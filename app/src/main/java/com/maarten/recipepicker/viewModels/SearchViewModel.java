@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class searchViewModel extends ViewModel {
+public class SearchViewModel extends ViewModel {
     private Set<String> selectedCategories = new TreeSet<>();
 
     public Set<String> getSelectedCategories() {

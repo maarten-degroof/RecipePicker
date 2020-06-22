@@ -2,7 +2,7 @@ package com.maarten.recipepicker.viewModels;
 
 import androidx.lifecycle.ViewModel;
 
-public class viewRecipeViewModel extends ViewModel {
+public class ViewRecipeViewModel extends ViewModel {
     private int amountCooked = 0;
     private int rating = 0;
 

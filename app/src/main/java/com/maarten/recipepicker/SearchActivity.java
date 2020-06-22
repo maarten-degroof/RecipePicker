@@ -21,7 +21,7 @@ import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.maarten.recipepicker.models.Recipe;
-import com.maarten.recipepicker.viewModels.searchViewModel;
+import com.maarten.recipepicker.viewModels.SearchViewModel;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -39,7 +39,7 @@ public class SearchActivity extends AppCompatActivity {
     private SwitchMaterial favoriteSearchSwitch;
     private RadioGroup categoryRadioGroup;
 
-    private searchViewModel viewModel;
+    private SearchViewModel viewModel;
 
 
     @Override
@@ -57,7 +57,7 @@ public class SearchActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        viewModel = new ViewModelProvider(this).get(searchViewModel.class);
+        viewModel = new ViewModelProvider(this).get(SearchViewModel.class);
 
         InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
 
