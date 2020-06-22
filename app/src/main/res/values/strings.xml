@@ -234,4 +234,14 @@
     <string name="statistics_total_ingredients_found">Wow you have a total of &lt;b>%1$d&lt;/b> ingredients spread over your recipes.</string>
     <string name="remove_all_times_cooked_description">Remove all the times you\'ve cooked the Recipes. Be careful</string>
     <string name="reset_times_cooked">Reset the times cooked</string>
+    <string name="include_ingredients">Include ingredients</string>
+    <string name="include_instructions">Include instructions</string>
+    <string name="include_comments">Include comments</string>
+    <string name="include_title">Include title</string>
+    <string name="search_which_categories_include">Which categories should the recipes include?</string>
+    <string name="search_where_to_search">Choose where we should search</string>
+    <string name="only_include_favorites">Only include favorites</string>
+    <string name="all_categories">All categories</string>
+    <string name="only_some_categories">Only some categories</string>
+    <string name="search_should_contain_all_or_some_categories">Should a recipe contain all selected categories or only some?</string>
 </resources>

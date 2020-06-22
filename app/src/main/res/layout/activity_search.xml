@@ -25,7 +25,10 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode ="true">
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/categoryChipGroup"
@@ -46,7 +49,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginEnd="8dp"
-                android:text="Should a recipe contain all selected categories or only some?"
+                android:text="@string/search_should_contain_all_or_some_categories"
                 android:textAlignment="center"
                 android:textColor="@color/primaryColor"
                 android:textSize="18sp"
@@ -68,13 +71,13 @@
                     android:id="@+id/someCategoriesRadioButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Only some categories" />
+                    android:text="@string/only_some_categories" />
 
                 <com.google.android.material.radiobutton.MaterialRadioButton
                     android:id="@+id/allCategoriesRadioButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="All categories" />
+                    android:text="@string/all_categories" />
             </RadioGroup>
 
             <com.google.android.material.switchmaterial.SwitchMaterial
@@ -83,12 +86,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Only include favorites"
+                android:text="@string/only_include_favorites"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/commentsCheckBox" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/searchFieldLayout"
+                android:id="@+id/searchNameLayout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -99,9 +102,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/searchField"
+                    android:id="@+id/searchNameEditText"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:ems="10"
@@ -116,13 +118,13 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
-                android:text="Choose where we should search"
+                android:text="@string/search_where_to_search"
                 android:textAlignment="center"
                 android:textColor="@color/primaryColor"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/searchFieldLayout" />
+                app:layout_constraintTop_toBottomOf="@+id/searchNameLayout" />
 
             <TextView
                 android:id="@+id/searchCategoryDescriptionTextView"
@@ -131,7 +133,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
-                android:text="Which categories should the recipes include?"
+                android:text="@string/search_which_categories_include"
                 android:textAlignment="center"
                 android:textColor="@color/primaryColor"
                 android:textSize="18sp"
@@ -146,7 +148,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:checked="true"
-                android:text="Include title"
+                android:text="@string/include_title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/searchDescriptionTextView" />
 
@@ -157,7 +159,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:checked="true"
-                android:text="Include ingredients"
+                android:text="@string/include_ingredients"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/titleCheckBox" />
 
@@ -168,7 +170,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:checked="true"
-                android:text="Include instructions"
+                android:text="@string/include_instructions"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/ingredientsCheckBox" />
 
@@ -178,16 +180,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:text="Include comments"
+                android:text="@string/include_comments"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/instructionsCheckBox" />
-
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/searchButton"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="8dp"
@@ -204,4 +204,3 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
-

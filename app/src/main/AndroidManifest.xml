@@ -14,7 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Launcher">
-        <activity android:name=".StatisticsActivity"></activity>
+        <activity android:name=".StatisticsActivity" />
         <activity android:name=".importRecipe.ImportActivity" />
         <activity android:name=".FilteredIngredientsResultsActivity" />
         <activity android:name=".FilterIngredientsActivity" />
@@ -30,7 +30,8 @@
             android:parentActivityName=".SearchActivity" />
         <activity
             android:name=".SearchActivity"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".FilteredResultsActivity"
             android:parentActivityName=".FilterActivity" />

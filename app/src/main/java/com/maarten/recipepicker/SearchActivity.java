@@ -1,16 +1,19 @@
 package com.maarten.recipepicker;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.chip.Chip;
@@ -18,6 +21,7 @@ import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.maarten.recipepicker.models.Recipe;
+import com.maarten.recipepicker.viewModels.searchViewModel;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -30,6 +34,13 @@ import static com.maarten.recipepicker.RecipeUtility.changeFirstLetterToCapital;
 public class SearchActivity extends AppCompatActivity {
 
     private ChipGroup categoryChipGroup;
+    private EditText searchEditText;
+    private MaterialCheckBox titleCheckBox, ingredientsCheckBox, instructionsCheckBox, commentsCheckBox;
+    private SwitchMaterial favoriteSearchSwitch;
+    private RadioGroup categoryRadioGroup;
+
+    private searchViewModel viewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +57,17 @@ public class SearchActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        toolbar.setNavigationOnClickListener(v -> {
-            finish();
+        viewModel = new ViewModelProvider(this).get(searchViewModel.class);
+
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+
+        searchEditText = findViewById(R.id.searchNameEditText);
+        searchEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+                }
+            }
         });
 
         categoryChipGroup = findViewById(R.id.categoryChipGroup);
@@ -60,15 +80,66 @@ public class SearchActivity extends AppCompatActivity {
             }
         }
 
+        Set<String> selectedCategories = viewModel.getSelectedCategories();
+
         for (String category : categorySet) {
             Chip chip = new Chip(this);
             ChipDrawable chipDrawable = ChipDrawable.createFromAttributes(this, null, 0, R.style.Widget_MaterialComponents_Chip_Choice);
             chip.setChipDrawable(chipDrawable);
             chip.setCheckedIconVisible(true);
             chip.setText(category);
+            // Add listener so the keyboard will hide when you press a category
+            chip.setOnCheckedChangeListener((compoundButton, b) -> searchEditText.clearFocus());
+
+            if (selectedCategories.contains(category)) {
+                chip.setChecked(true);
+            }
+
             categoryChipGroup.addView(chip);
         }
 
+        titleCheckBox = findViewById(R.id.titleCheckBox);
+        titleCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> searchEditText.clearFocus());
+
+        ingredientsCheckBox = findViewById(R.id.ingredientsCheckBox);
+        ingredientsCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> searchEditText.clearFocus());
+
+        instructionsCheckBox = findViewById(R.id.instructionsCheckBox);
+        instructionsCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> searchEditText.clearFocus());
+
+        commentsCheckBox = findViewById(R.id.commentsCheckBox);
+        commentsCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> searchEditText.clearFocus());
+
+        favoriteSearchSwitch = findViewById(R.id.favoriteSearchSwitch);
+        favoriteSearchSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> searchEditText.clearFocus());
+
+        categoryRadioGroup = findViewById(R.id.categoryRadioGroup);
+        categoryRadioGroup.setOnCheckedChangeListener((group, checkedId) -> searchEditText.clearFocus());
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        viewModel.setSelectedCategories(generateCategorySet());
+    }
+
+    /**
+     * Generates a list of all the checked categories (as strings) from the chipGroup
+     * and puts it into a treeSet so they're ordered alphabetically
+     * @return returns a treeSet of all the checked categories
+     */
+    private Set<String> generateCategorySet() {
+        Set<String> checkedCategories = new TreeSet<>();
+        if(categoryChipGroup.getChildCount() > 0) {
+            for (int i=0; i < categoryChipGroup.getChildCount(); i++) {
+                Chip chip = (Chip) categoryChipGroup.getChildAt(i);
+                if (chip.isChecked()) {
+                    checkedCategories.add(chip.getText().toString());
+                }
+            }
+        }
+        return checkedCategories;
     }
 
     /**
@@ -103,26 +174,15 @@ public class SearchActivity extends AppCompatActivity {
      * @param view the button which is pressed
      */
     public void viewSearchResults(View view) {
-        String searchString = ((EditText)findViewById(R.id.searchField)).getText().toString();
-        boolean searchTitle = ((MaterialCheckBox) findViewById(R.id.titleCheckBox)).isChecked();
-        boolean searchIngredients = ((MaterialCheckBox) findViewById(R.id.ingredientsCheckBox)).isChecked();
-        boolean searchInstructions = ((MaterialCheckBox) findViewById(R.id.instructionsCheckBox)).isChecked();
-        boolean searchComments = ((MaterialCheckBox) findViewById(R.id.commentsCheckBox)).isChecked();
-        boolean searchOnlyFavorites = ((SwitchMaterial) findViewById(R.id.favoriteSearchSwitch)).isChecked();
-
-        Set<String> checkedCategories = new TreeSet<>();
-        if(categoryChipGroup.getChildCount() > 0) {
-            for (int i=0; i < categoryChipGroup.getChildCount(); i++) {
-                Chip chip = (Chip) categoryChipGroup.getChildAt(i);
-                if (chip.isChecked()) {
-                    checkedCategories.add(chip.getText().toString());
-                }
-            }
-        }
+        String searchString = searchEditText.getText().toString();
+        boolean searchTitle = titleCheckBox.isChecked();
+        boolean searchIngredients = ingredientsCheckBox.isChecked();
+        boolean searchInstructions = instructionsCheckBox.isChecked();
+        boolean searchComments = commentsCheckBox.isChecked();
+        boolean searchOnlyFavorites = favoriteSearchSwitch.isChecked();
 
         boolean shouldFilterAllCategories = false;
-        RadioGroup categoriesRadioGroup = findViewById(R.id.categoryRadioGroup);
-        if (categoriesRadioGroup.getCheckedRadioButtonId() == R.id.allCategoriesRadioButton) {
+        if (categoryRadioGroup.getCheckedRadioButtonId() == R.id.allCategoriesRadioButton) {
             shouldFilterAllCategories = true;
         }
 
@@ -137,14 +197,14 @@ public class SearchActivity extends AppCompatActivity {
             filter.put("searchOnlyFavorites", searchOnlyFavorites);
 
             filter.put("shouldFilterAllCategories", shouldFilterAllCategories);
-            JSONArray categoriesArray = new JSONArray(checkedCategories);
+            JSONArray categoriesArray = new JSONArray(generateCategorySet());
             filter.put("categories", categoriesArray);
 
             Intent intent = new Intent(this, SearchResultsActivity.class);
             intent.putExtra("JSONObject", filter.toString());
             startActivity(intent);
         } catch (Exception e) {
-            Log.e("ERROR", "" + e.getLocalizedMessage());
+            Toast.makeText(this, "Oops, something went wrong trying to get all the search information.", Toast.LENGTH_LONG).show();
         }
 
     }
