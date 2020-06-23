@@ -487,7 +487,6 @@
                 android:layout_marginEnd="8dp"
                 app:layout_constrainedHeight="true"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHeight_default="wrap"
                 app:layout_constraintHeight_max="270dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/addInstructionButton" />
@@ -517,7 +516,6 @@
                 android:layout_marginEnd="8dp"
                 app:layout_constrainedHeight="true"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHeight_default="wrap"
                 app:layout_constraintHeight_max="228dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/addIngredientButton" />

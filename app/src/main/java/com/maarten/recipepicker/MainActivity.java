@@ -1,6 +1,5 @@
 package com.maarten.recipepicker;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +16,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,6 +35,7 @@ import com.maarten.recipepicker.models.Ingredient;
 import com.maarten.recipepicker.models.Instruction;
 import com.maarten.recipepicker.models.Recipe;
 import com.maarten.recipepicker.settings.SettingsActivity;
+import com.maarten.recipepicker.viewModels.MainViewModel;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -60,8 +60,6 @@ import java.util.TreeSet;
  * Improve manifest
  *
  * Check portrait mode everywhere
- *
- * Portrait mode bugs:  - sidebar menu
  *
  * When filtering/sorting and pressing a recipe and then going back, list blinks
  *
@@ -108,13 +106,15 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
 
     private MaterialButton orderByButton;
-    private int currentOrderBySetting;
     private AlertDialog orderByDialog;
 
     private Random random;
 
     private MaterialButton addRecipeButton;
     private TextView noRecipesYetTextView;
+
+    private SharedPreferences sharedPrefs;
+    private MainViewModel viewModel;
 
     public static DecimalFormat decimalFormat = new DecimalFormat("0.###");
 
@@ -129,7 +129,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("Home");
+        setSupportActionBar(toolbar);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().getThemedContext();
+        }
+
         RecyclerView listViewRecipes = findViewById(R.id.mainRecyclerView);
+
+        viewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         // Initialise recipeList
         recipeList = new ArrayList<>();
@@ -141,13 +151,8 @@ public class MainActivity extends AppCompatActivity {
         if(file.canRead()) {
             try (FileInputStream fileStream = new FileInputStream(file);
                  ObjectInputStream in = new ObjectInputStream(fileStream)) {
-
                 recipeList = (ArrayList<Recipe>) in.readObject();
-
-                Log.d("WRITE", "object recipeList is written: " + recipeList);
-
             } catch (IOException | ClassNotFoundException e) {
-                Log.d("WRITE", "Couldn't read file");
                 e.printStackTrace();
             }
         }
@@ -162,21 +167,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         orderByButton = findViewById(R.id.orderByButton);
-        // 0 -> Chronological
-        currentOrderBySetting = 0;
 
         adapter = new RecipeAdapter(this, recipeList);
 
         listViewRecipes.setAdapter(adapter);
         listViewRecipes.setLayoutManager(new LinearLayoutManager(this));
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Home");
-        setSupportActionBar(toolbar);
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().getThemedContext();
-        }
 
         // All the navigation drawer stuff
         drawerLayout = findViewById(R.id.dl);
@@ -190,8 +185,8 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(abdt);
         abdt.syncState();
 
-        NavigationView nav_view = findViewById(R.id.nav_view);
-        nav_view.setNavigationItemSelectedListener(menuItem -> {
+        NavigationView navigationView = findViewById(R.id.navigationView);
+        navigationView.setNavigationItemSelectedListener(menuItem -> {
             int id = menuItem.getItemId();
 
             if (id == R.id.addRecipe) {
@@ -220,14 +215,16 @@ public class MainActivity extends AppCompatActivity {
 
         controlNoRecipeElements();
 
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        // Check to show the tip. Change the preferences so it won't show again
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        // Check to show the welcome screen
         boolean shouldShowWelcomeScreen = sharedPrefs.getBoolean("welcome_screen", true);
-        if(shouldShowWelcomeScreen) {
+        if (shouldShowWelcomeScreen && viewModel.isShowingWelcomeScreen()) {
             showWelcomeScreen();
-            SharedPreferences.Editor editor = sharedPrefs.edit();
-            editor.putBoolean("welcome_screen", false);
-            editor.apply();
+        } else {
+            viewModel.setShowingWelcomeScreen(false);
+        }
+        if (viewModel.isShowingSortingDialog()) {
+            openOrderDialog(null);
         }
     }
 
@@ -237,31 +234,29 @@ public class MainActivity extends AppCompatActivity {
      */
     public void openOrderDialog(View view) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        viewModel.setShowingSortingDialog(true);
         builder.setTitle(R.string.order_by)
-                .setSingleChoiceItems(R.array.order_types_array_items, currentOrderBySetting, (dialogInterface, index) -> {
-                    currentOrderBySetting = index;
-                    setOrdering(index);
+                .setSingleChoiceItems(R.array.order_types_array_items, viewModel.getSortingType(), (dialogInterface, index) -> {
+                    viewModel.setSortingType(index);
+                    viewModel.setShowingSortingDialog(false);
+                    setOrdering();
                     orderByDialog.dismiss();
                 });
         orderByDialog = builder.create();
+        orderByDialog.setOnCancelListener(dialog -> viewModel.setShowingSortingDialog(false));
         orderByDialog.show();
     }
 
     /**
      * Takes care of the sort functions. Sorts the list based on the chosen item in the dialog.
-     * order of the dialog:
+     * Retrieves the chosen item from the viewModel.
+     * Order of the dialog:
      *      - Chronological (0)
      *      - Times cooked  (1)
      *      - Rating (2)
-     * @param orderNumber the number saying which order the user chose
      */
-    private void setOrdering(int orderNumber) {
-        switch (orderNumber) {
-            case 0:
-                Collections.sort(recipeList, new DateSorter());
-                orderByButton.setText(R.string.chronological);
-                adapter.notifyDataSetChanged();
-                return;
+    private void setOrdering() {
+        switch (viewModel.getSortingType()) {
             case 1:
                 Collections.sort(recipeList, new AmountCookedSorter());
                 orderByButton.setText(R.string.times_cooked);
@@ -270,6 +265,11 @@ public class MainActivity extends AppCompatActivity {
             case 2:
                 Collections.sort(recipeList, new RatingSorter());
                 orderByButton.setText(R.string.rating);
+                adapter.notifyDataSetChanged();
+                return;
+            default:
+                Collections.sort(recipeList, new DateSorter());
+                orderByButton.setText(R.string.chronological);
                 adapter.notifyDataSetChanged();
         }
     }
@@ -284,7 +284,12 @@ public class MainActivity extends AppCompatActivity {
         builder.setMessage(getString(R.string.welcome_screen));
 
         builder.setPositiveButton("Let's get started", (dialog, id) -> {
+            SharedPreferences.Editor editor = sharedPrefs.edit();
+            editor.putBoolean("welcome_screen", false);
+            editor.apply();
+            viewModel.setShowingWelcomeScreen(false);
         });
+        builder.setNegativeButton("Show me again on next startup", (dialog, which) -> viewModel.setShowingWelcomeScreen(false));
         // Create and show the dialog
         builder.create().show();
     }
@@ -308,16 +313,20 @@ public class MainActivity extends AppCompatActivity {
      */
     private void setFact() {
         TextView factTextView = findViewById(R.id.factTextView);
-        ArrayList<String> factList = new ArrayList<>();
-        try (Scanner scanner = new Scanner(getResources().getAssets().open("factList.txt"))) {
-            while (scanner.hasNextLine()) {
-                factList.add(scanner.nextLine());
-            }
 
-            factTextView.setText(factList.get(random.nextInt(factList.size())));
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (viewModel.getFact().equals("")) {
+            ArrayList<String> factList = new ArrayList<>();
+            try (Scanner scanner = new Scanner(getResources().getAssets().open("factList.txt"))) {
+                while (scanner.hasNextLine()) {
+                    factList.add(scanner.nextLine());
+                }
+                viewModel.setFact(factList.get(random.nextInt(factList.size())));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+        factTextView.setText(viewModel.getFact());
     }
 
     /**
@@ -430,7 +439,7 @@ public class MainActivity extends AppCompatActivity {
         controlNoRecipeElements();
         drawerLayout.closeDrawer(GravityCompat.START);
 
-        setOrdering(currentOrderBySetting);
+        setOrdering();
     }
 
     /**

@@ -244,4 +244,5 @@
     <string name="all_categories">All categories</string>
     <string name="only_some_categories">Only some categories</string>
     <string name="search_should_contain_all_or_some_categories">Should a recipe contain all selected categories or only some?</string>
+    <string name="help">Help</string>
 </resources>

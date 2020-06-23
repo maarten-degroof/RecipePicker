@@ -81,15 +81,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
         toolbar.setTitle(recipe.getTitle());
         setSupportActionBar(toolbar);
 
-        // This takes care of the back button
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-
-        toolbar.setNavigationOnClickListener(v -> {
-            // Back button pressed
-            supportFinishAfterTransition();
-        });
+        // Back button pressed
+        toolbar.setNavigationOnClickListener(v -> supportFinishAfterTransition());
 
         TextView recipeTitle = findViewById(R.id.textViewTitle);
         amountCookedField = findViewById(R.id.amountCookedField);
@@ -100,12 +93,11 @@ public class ViewRecipeActivity extends AppCompatActivity {
             case SHORT:
                 durationChip.setText(getString(R.string.duration_short));
                 break;
-            case MEDIUM:
-                durationChip.setText(getString(R.string.duration_medium));
-                break;
             case LONG:
                 durationChip.setText(getString(R.string.duration_long));
                 break;
+            default:
+                durationChip.setText(getString(R.string.duration_medium));
         }
         durationChip.setBounds(0, 0, durationChip.getIntrinsicWidth(), durationChip.getIntrinsicHeight());
 
@@ -129,7 +121,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
         MaterialButton copyWebsiteButton = findViewById(R.id.copyURLButton);
         MaterialButton browseWebsiteButton = findViewById(R.id.BrowseURLButton);
 
-        if(recipe.getURL() != null && !recipe.getURL().equals("")) {
+        if (recipe.getURL() != null && !recipe.getURL().equals("")) {
             noWebsiteTextView.setVisibility(View.INVISIBLE);
         } else {
             copyWebsiteButton.setVisibility(View.INVISIBLE);
@@ -151,7 +143,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
         }
         // Now update the values
         for (Ingredient ingredient : calculatedIngredientList) {
-            if(ingredient.getQuantity()!= null) {
+            if (ingredient.getQuantity()!= null) {
                 ingredient.setQuantity(ingredient.getQuantity() / recipe.getServes() * servesCount);
             }
         }
@@ -171,16 +163,15 @@ public class ViewRecipeActivity extends AppCompatActivity {
             case BEGINNER:
                 difficultyChip.setText(getString(R.string.beginner));
                 break;
-            case INTERMEDIATE:
-                difficultyChip.setText(getString(R.string.intermediate));
-                break;
             case EXPERT:
                 difficultyChip.setText(getString(R.string.expert));
                 break;
+            default:
+                difficultyChip.setText(getString(R.string.intermediate));
         }
 
         TextView commentTextView = findViewById(R.id.commentTextView);
-        if(recipe.getComments() != null && !recipe.getComments().equals("")) {
+        if (recipe.getComments() != null && !recipe.getComments().equals("")) {
             commentTextView.setText(recipe.getComments());
         } else {
             commentTextView.setText(getString(R.string.no_comments));
@@ -202,7 +193,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         // Check to show the tip. Change the preferences so it won't show again
         boolean shouldShowServesTip = sharedPrefs.getBoolean("tip_serves", true);
-        if(shouldShowServesTip) {
+        if (shouldShowServesTip) {
             showServeTip();
             SharedPreferences.Editor editor = sharedPrefs.edit();
             editor.putBoolean("tip_serves", false);
@@ -222,6 +213,14 @@ public class ViewRecipeActivity extends AppCompatActivity {
         }
 
         gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+
+        if (viewModel.getTempRating() > -1) {
+            createRatingDialog(null);
+        } else if (viewModel.isShowingDeleteDialog()) {
+            createDeleteDialog();
+        } else if (viewModel.isShowingResetCookedDialog()) {
+            createResetAmountCookedDialog();
+        }
     }
 
     @Override
@@ -230,7 +229,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         // If this recipe was deleted and you get here through going back,
         // make sure the user can't interact with the recipe
-        if (!MainActivity.recipeList.contains(recipe)) {
+        if (MainActivity.recipeList.isEmpty() || !MainActivity.recipeList.contains(recipe)) {
             createRecipeDeletedDialog();
         }
 
@@ -266,11 +265,16 @@ public class ViewRecipeActivity extends AppCompatActivity {
         // Get the layout
         View dialog_layout = View.inflate(this, R.layout.rating_dialog, null);
 
-        int currentRating = viewModel.getRating();
+        int currentRating = viewModel.getTempRating();
+
+        if (currentRating < 0) {
+            currentRating = viewModel.getRating();
+        }
+        viewModel.setTempRating(currentRating);
 
         final TextView currentRatingTextView = dialog_layout.findViewById(R.id.currentRatingTextView);
         currentRatingTextView.setText(String.valueOf(currentRating));
-        if(currentRating == 0) {
+        if (currentRating == 0) {
             currentRatingTextView.setText(getString(R.string.no_rating));
         }
 
@@ -282,6 +286,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
             if (rating == 0) {
                 currentRatingTextView.setText(getString(R.string.no_rating));
             }
+            viewModel.setTempRating((int)rating);
         });
 
         builder.setTitle("Choose rating");
@@ -294,6 +299,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
             setRatingChip(newRating);
             viewModel.setRating(newRating);
+            viewModel.resetTempRating();
         });
         builder.setNegativeButton("Remove rating", (dialog, id) -> {
             MainActivity.recipeList.get(recipeIndex).setRating(0);
@@ -301,10 +307,14 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
             setRatingChip(0);
             viewModel.setRating(0);
+            viewModel.resetTempRating();
         });
         // Create and show the dialog
         final AlertDialog alertDialog = builder.create();
         alertDialog.setView(dialog_layout);
+
+        // If you touch outside of the dialog, reset the temp rating
+        alertDialog.setOnCancelListener(dialog -> viewModel.resetTempRating());
         alertDialog.show();
     }
 
@@ -323,7 +333,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
         favoriteItemFull = menu.findItem(R.id.action_favorite_full);
         favoriteItemFull.setVisible(false);
 
-        if(recipe.getFavorite()) {
+        if (recipe.getFavorite()) {
             favoriteItemFull.setVisible(true);
         }
         else {
@@ -390,7 +400,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
      */
     private void createResetAmountCookedDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
+        viewModel.setShowingResetCookedDialog(true);
         builder.setTitle("Reset amount cooked");
         builder.setMessage("Are you sure you want to reset the amount of times you have cooked this recipe?");
 
@@ -399,14 +409,14 @@ public class ViewRecipeActivity extends AppCompatActivity {
             MainActivity.saveRecipes();
             viewModel.setAmountCooked(0);
             amountCookedField.setText(String.valueOf(viewModel.getAmountCooked()));
-
+            viewModel.setShowingResetCookedDialog(false);
             Toast.makeText(this, "Amount of times cooked is reset for this recipe", Toast.LENGTH_LONG).show();
         });
 
-        builder.setNegativeButton("Cancel", (dialog, id) -> {
-        });
+        builder.setNegativeButton("Cancel", (dialog, id) -> viewModel.setShowingResetCookedDialog(false));
         // Create and show the dialog
         final AlertDialog alertDialog = builder.create();
+        alertDialog.setOnCancelListener(dialog -> viewModel.setShowingResetCookedDialog(false));
         alertDialog.show();
     }
 
@@ -415,16 +425,22 @@ public class ViewRecipeActivity extends AppCompatActivity {
      */
     public void createDeleteDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        viewModel.setShowingDeleteDialog(true);
 
         builder.setTitle("Remove Recipe");
         builder.setMessage("Are you sure you want to remove this recipe?");
 
-        builder.setPositiveButton("Remove", (dialog, id) -> removeRecipe());
+        builder.setPositiveButton("Remove", (dialog, id) -> {
+            removeRecipe();
+            viewModel.setShowingDeleteDialog(false);
+        });
 
         builder.setNegativeButton("Keep", (dialog, id) -> {
+            viewModel.setShowingDeleteDialog(false);
         });
         // Create and show the dialog
         final AlertDialog alertDialog = builder.create();
+        alertDialog.setOnCancelListener(dialog -> viewModel.setShowingDeleteDialog(false));
         alertDialog.show();
     }
 
@@ -541,7 +557,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
             builder.append("- ").append(ingredient.toString()).append("\n");
         }
         // remove the last '/n'
-        if(builder.length() > 0) {
+        if (builder.length() > 0) {
             builder.setLength(builder.length() - 1);
         }
 
@@ -563,7 +579,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
      */
     public void openURL(View view) {
         String url;
-        if(recipe.getURL().startsWith("http://") || recipe.getURL().startsWith("https://")) {
+        if (recipe.getURL().startsWith("http://") || recipe.getURL().startsWith("https://")) {
             url = recipe.getURL();
         } else {
             url = "https://" + recipe.getURL();
