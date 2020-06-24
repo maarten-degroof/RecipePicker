@@ -9,6 +9,7 @@ public class ViewRecipeViewModel extends ViewModel {
     private int tempRating = -1;
     private boolean isShowingDeleteDialog = false;
     private boolean isShowingResetCookedDialog = false;
+    private boolean isShowingServesTipDialog = true;
 
     public void addOneAmountCooked() {
         amountCooked += 1;
@@ -60,5 +61,13 @@ public class ViewRecipeViewModel extends ViewModel {
 
     public void setShowingResetCookedDialog(boolean showingResetCookedDialog) {
         isShowingResetCookedDialog = showingResetCookedDialog;
+    }
+
+    public boolean isShowingServesTipDialog() {
+        return isShowingServesTipDialog;
+    }
+
+    public void setShowingServesTipDialog(boolean showingServesTipDialog) {
+        isShowingServesTipDialog = showingServesTipDialog;
     }
 }

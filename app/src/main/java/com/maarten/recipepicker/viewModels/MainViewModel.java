@@ -7,8 +7,8 @@ public class MainViewModel extends ViewModel {
     private int sortingType = 0;
 
     private boolean isShowingSortingDialog = false;
-
     private boolean isShowingWelcomeScreen = true;
+    private int currentHelpScreen = -1;
 
     public String getFact() {
         return fact;
@@ -41,4 +41,17 @@ public class MainViewModel extends ViewModel {
     public void setShowingSortingDialog(boolean showingSortingDialog) {
         isShowingSortingDialog = showingSortingDialog;
     }
+
+    public int getCurrentHelpScreen() {
+        return currentHelpScreen;
+    }
+
+    public void setCurrentHelpScreen(int currentHelpScreen) {
+        this.currentHelpScreen = currentHelpScreen;
+    }
+
+    public void resetCurrentHelpScreen() {
+        this.currentHelpScreen = -1;
+    }
+
 }

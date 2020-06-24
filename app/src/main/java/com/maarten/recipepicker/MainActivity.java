@@ -201,6 +201,8 @@ public class MainActivity extends AppCompatActivity {
                 viewSearch();
             } else if (id == R.id.random) {
                 openRandomRecipe();
+            } else if (id == R.id.help) {
+                showHelpScreen(0);
             }
             return true;
         });
@@ -225,6 +227,8 @@ public class MainActivity extends AppCompatActivity {
         }
         if (viewModel.isShowingSortingDialog()) {
             openOrderDialog(null);
+        } else if (viewModel.getCurrentHelpScreen() >= 0) {
+            showHelpScreen(viewModel.getCurrentHelpScreen());
         }
     }
 
@@ -282,6 +286,7 @@ public class MainActivity extends AppCompatActivity {
 
         builder.setTitle("Welcome!");
         builder.setMessage(getString(R.string.welcome_screen));
+        builder.setCancelable(false);
 
         builder.setPositiveButton("Let's get started", (dialog, id) -> {
             SharedPreferences.Editor editor = sharedPrefs.edit();
@@ -291,7 +296,52 @@ public class MainActivity extends AppCompatActivity {
         });
         builder.setNegativeButton("Show me again on next startup", (dialog, which) -> viewModel.setShowingWelcomeScreen(false));
         // Create and show the dialog
-        builder.create().show();
+        AlertDialog alertDialog = builder.create();
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.show();
+    }
+
+    /**
+     * Shows the help screen which is shown when pressing 'Help' in the navigation drawer.
+     * There are 4 help windows, and the given parameter (0 to 3) decide which help window is shown.
+     * @param whichWindow the index of the window to show. 0 is the first window, and 3 is the last one.
+     */
+    private void showHelpScreen(int whichWindow) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        viewModel.setCurrentHelpScreen(whichWindow);
+        switch (whichWindow) {
+            case 1:
+                builder.setTitle("Help - Part 2 of 4");
+                builder.setMessage(getString(R.string.help_main_window_1));
+                builder.setPositiveButton("Next", (dialog, id) -> {
+                    showHelpScreen(2);
+                });
+                break;
+            case 2:
+                builder.setTitle("Help - Part 3 of 4");
+                builder.setMessage(getString(R.string.help_main_window_2));
+                builder.setPositiveButton("Next", (dialog, id) -> {
+                    showHelpScreen(3);
+                });
+                break;
+            case 3:
+                builder.setTitle("Help - Part 4 of 4");
+                builder.setMessage(getString(R.string.help_main_window_3));
+                builder.setPositiveButton("Okay", (dialog, id) -> {
+                    viewModel.resetCurrentHelpScreen();
+                });
+                break;
+            default:
+                builder.setTitle("Help - Part 1 of 4");
+                builder.setMessage(getString(R.string.help_main_window_0));
+                builder.setPositiveButton("Next", (dialog, id) -> {
+                    showHelpScreen(1);
+                });
+        }
+        // Create and show the dialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.setOnCancelListener(dialog -> viewModel.resetCurrentHelpScreen());
+        alertDialog.show();
     }
 
     /**

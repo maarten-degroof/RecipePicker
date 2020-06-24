@@ -245,4 +245,8 @@
     <string name="only_some_categories">Only some categories</string>
     <string name="search_should_contain_all_or_some_categories">Should a recipe contain all selected categories or only some?</string>
     <string name="help">Help</string>
+    <string name="help_main_window_0">This is the main window where you can view all of your recipes. You can tap a recipe in this list to open the full view of the recipe. You can also order the list of recipes on creation date, the amount times you cooked it or the rating you gave it.</string>
+    <string name="help_main_window_1">On the left side of the screen is a menu, and you can press the hamburger icon in the top left corner to open it. Here you will find a way to search and filter through your list of recipes.</string>
+    <string name="help_main_window_2">This app automatically calculates the amount of ingredients needed for the given amount of people. This is the amount of serves and is default at 4. In the settings you can change the amount of serves.</string>
+    <string name="help_main_window_3">You can view this help at any time by pressing \'Help\' in the navigation on the left! If you have any questions or suggestions, you can always contact me!</string>
 </resources>

@@ -67,6 +67,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
     private Gson gson;
 
     private ViewRecipeViewModel viewModel;
+    private SharedPreferences sharedPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +132,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
         // Get the ingredientList and add it to the recyclerView
         RecyclerView ingredientListRecyclerView = findViewById(R.id.viewRecipeIngredientList);
 
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         int servesCount = Integer.parseInt(sharedPrefs.getString("serves_value", "4"));
 
@@ -193,11 +194,10 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         // Check to show the tip. Change the preferences so it won't show again
         boolean shouldShowServesTip = sharedPrefs.getBoolean("tip_serves", true);
-        if (shouldShowServesTip) {
+        if (shouldShowServesTip && viewModel.isShowingServesTipDialog()) {
             showServeTip();
-            SharedPreferences.Editor editor = sharedPrefs.edit();
-            editor.putBoolean("tip_serves", false);
-            editor.apply();
+        } else {
+            viewModel.setShowingServesTipDialog(false);
         }
 
         ratingChip = findViewById(R.id.ratingChip);
@@ -435,9 +435,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
             viewModel.setShowingDeleteDialog(false);
         });
 
-        builder.setNegativeButton("Keep", (dialog, id) -> {
-            viewModel.setShowingDeleteDialog(false);
-        });
+        builder.setNegativeButton("Keep", (dialog, id) -> viewModel.setShowingDeleteDialog(false));
         // Create and show the dialog
         final AlertDialog alertDialog = builder.create();
         alertDialog.setOnCancelListener(dialog -> viewModel.setShowingDeleteDialog(false));
@@ -486,11 +484,18 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         builder.setTitle("Tip!");
         builder.setMessage("In the settings you can change the serve amount. All the recipes will then be recalculated for that amount of serves!");
+        builder.setCancelable(false);
 
         builder.setPositiveButton("OK I understand", (dialog, id) -> {
+            SharedPreferences.Editor editor = sharedPrefs.edit();
+            editor.putBoolean("tip_serves", false);
+            editor.apply();
+            viewModel.setShowingServesTipDialog(false);
         });
+        builder.setNegativeButton("Show me again next time", (dialog, which) -> viewModel.setShowingServesTipDialog(false));
         // Create and show the dialog
         final AlertDialog alertDialog = builder.create();
+        alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.show();
     }
 
