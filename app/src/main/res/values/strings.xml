@@ -249,4 +249,8 @@
     <string name="help_main_window_1">On the left side of the screen is a menu, and you can press the hamburger icon in the top left corner to open it. Here you will find a way to search and filter through your list of recipes.</string>
     <string name="help_main_window_2">This app automatically calculates the amount of ingredients needed for the given amount of people. This is the amount of serves and is default at 4. In the settings you can change the amount of serves.</string>
     <string name="help_main_window_3">You can view this help at any time by pressing \'Help\' in the navigation on the left! If you have any questions or suggestions, you can always contact me!</string>
+    <string name="restart">Restart</string>
+    <string name="timer_already_running">This timer is already running</string>
+    <string name="restart_timer_description">There is already a timer running for step %1$d. Are you sure you want to restart it?</string>
+    <string name="canceled_timer">Canceled the timer for step %1$d.</string>
 </resources>

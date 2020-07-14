@@ -14,6 +14,7 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
@@ -21,6 +22,7 @@ import com.maarten.recipepicker.R;
 import com.maarten.recipepicker.RecipePickerApplication;
 import com.maarten.recipepicker.adapters.CookNowTabAdapter;
 import com.maarten.recipepicker.models.Recipe;
+import com.maarten.recipepicker.viewModels.CookNowViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,8 @@ public class CookNowActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
     private TabLayout tabLayout;
+
+    private CookNowViewModel viewModel;
 
     private NotificationManagerCompat notificationManager;
 
@@ -54,8 +58,7 @@ public class CookNowActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        // Back button pressed
-        toolbar.setNavigationOnClickListener(v -> finish());
+        viewModel = new ViewModelProvider(this).get(CookNowViewModel.class);
 
         Intent intent = getIntent();
         recipe = (Recipe) intent.getSerializableExtra("Recipe");
@@ -72,7 +75,11 @@ public class CookNowActivity extends AppCompatActivity {
         fragmentTransaction.disallowAddToBackStack();
         fragmentList.add(instructionFragment);
 
-        timerFragment = new CookNowTimerFragment();
+        if (viewModel.getInstructionFragment() == null) {
+            viewModel.setInstructionFragment(new CookNowTimerFragment());
+        }
+
+        timerFragment = viewModel.getInstructionFragment();
         fragmentList.add(timerFragment);
 
         fragmentTransaction.commit();
@@ -151,7 +158,9 @@ public class CookNowActivity extends AppCompatActivity {
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)
                 .setContentIntent(openThisPendingIntent);
-        notificationManager.notify(instructionNumber, builder.build());
+        if (notificationManager != null) {
+            notificationManager.notify(instructionNumber, builder.build());
+        }
     }
 
     /**
