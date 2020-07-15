@@ -16,6 +16,7 @@ import android.text.style.ImageSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.lifecycle.ViewModelProvider;
@@ -68,6 +70,9 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
     private ViewRecipeViewModel viewModel;
     private SharedPreferences sharedPrefs;
+
+    private ConstraintLayout zoomedImageConstraintLayout;
+    private ImageButton closeZoomedViewImageButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,7 +141,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         int servesCount = Integer.parseInt(sharedPrefs.getString("serves_value", "4"));
 
-        // Create a new ingredientList, and create all the ingredients again, otherwise it'd be the same object and you'd change the wrong values
+        // Create a new ingredientList, and create all the ingredients again,
+        // otherwise it'd be the same object and you'd change the wrong values
         List<Ingredient> calculatedIngredientList = new ArrayList<>();
 
         for (Ingredient ingredient : recipe.getIngredientList()) {
@@ -221,6 +227,18 @@ public class ViewRecipeActivity extends AppCompatActivity {
         } else if (viewModel.isShowingResetCookedDialog()) {
             createResetAmountCookedDialog();
         }
+
+        ImageButton openZoomedViewImageButton = findViewById(R.id.openZoomedViewImageButton);
+        zoomedImageConstraintLayout = findViewById(R.id.zoomedImageConstraintLayout);
+        closeZoomedViewImageButton = findViewById(R.id.closeZoomedViewImageButton);
+        ImageView zoomedImageView = findViewById(R.id.zoomedImageView);
+
+        zoomedImageView.setImageBitmap(recipe.getImage());
+
+        openZoomedViewImageButton.setOnClickListener(v -> toggleZoomedImageView(true));
+        closeZoomedViewImageButton.setOnClickListener(v -> toggleZoomedImageView(false));
+
+        toggleZoomedImageView(viewModel.isShowingZoomedImageView());
     }
 
     @Override
@@ -238,6 +256,19 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         viewModel.setRating(MainActivity.recipeList.get(recipeIndex).getRating());
         setRatingChip(viewModel.getRating());
+    }
+
+    /**
+     * Toggles the visibility of the the image view that shows the image with a black background.
+     * @param shouldShowImage boolean, if true it will show the overview with the image
+     */
+    private void toggleZoomedImageView(boolean shouldShowImage) {
+        viewModel.setShowingZoomedImageView(shouldShowImage);
+        if (shouldShowImage) {
+            zoomedImageConstraintLayout.setVisibility(View.VISIBLE);
+        } else {
+            zoomedImageConstraintLayout.setVisibility(View.GONE);
+        }
     }
 
     /**

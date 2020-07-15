@@ -10,6 +10,7 @@ public class ViewRecipeViewModel extends ViewModel {
     private boolean isShowingDeleteDialog = false;
     private boolean isShowingResetCookedDialog = false;
     private boolean isShowingServesTipDialog = true;
+    private boolean isShowingZoomedImageView = false;
 
     public void addOneAmountCooked() {
         amountCooked += 1;
@@ -69,5 +70,13 @@ public class ViewRecipeViewModel extends ViewModel {
 
     public void setShowingServesTipDialog(boolean showingServesTipDialog) {
         isShowingServesTipDialog = showingServesTipDialog;
+    }
+
+    public boolean isShowingZoomedImageView() {
+        return isShowingZoomedImageView;
+    }
+
+    public void setShowingZoomedImageView(boolean showingZoomedImageView) {
+        isShowingZoomedImageView = showingZoomedImageView;
     }
 }

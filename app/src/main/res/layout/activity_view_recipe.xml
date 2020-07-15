@@ -5,11 +5,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <include
             android:id="@+id/toolbar"
@@ -17,6 +17,52 @@
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="0dp" />
     </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/zoomedImageConstraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:elevation="4dp"
+        android:clickable="true"
+        android:focusable="true">
+
+        <ImageButton
+            android:id="@+id/closeZoomedViewImageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@null"
+            android:contentDescription="@string/close_image_description"
+            android:elevation="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_close_white_24dp" />
+
+        <ImageView
+            android:id="@+id/zoomedImageView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:elevation="3dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/avatars"
+            android:contentDescription="@string/image_description" />
+
+        <View
+            android:id="@+id/blackOverlayView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#E6000000"
+            android:elevation="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -29,6 +75,19 @@
             android:layout_height="wrap_content"
             android:padding="0dp">
 
+            <ImageButton
+                android:id="@+id/openZoomedViewImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:elevation="2dp"
+                android:background="@null"
+                app:layout_constraintEnd_toEndOf="@+id/recipeImageView"
+                app:layout_constraintTop_toTopOf="@+id/recipeImageView"
+                app:srcCompat="@drawable/ic_open_in_full_black_24dp"
+                android:contentDescription="@string/open_image_description" />
+
             <TextView
                 android:id="@+id/commentsTextView"
                 android:layout_width="wrap_content"
@@ -40,8 +99,6 @@
                 android:textSize="22sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/copyURLButton" />
-
-
 
             <TextView
                 android:id="@+id/textViewTitle"
@@ -130,7 +187,6 @@
                 app:layout_constraintTop_toBottomOf="@id/ingredientBarrier"
                 tools:layout_conversion_absoluteHeight="27dp"
                 tools:layout_conversion_absoluteWidth="225dp" />
-
 
             <TextView
                 android:id="@+id/amountCookedTextField"
@@ -283,7 +339,6 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
-
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/ratingChip"
