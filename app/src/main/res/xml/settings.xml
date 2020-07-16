@@ -23,12 +23,12 @@
             android:title="Import a recipe"
             app:icon="@drawable/ic_import_black_24dp" />
 
-        <Preference
-            android:id="@+id/statisticsPreference"
-            android:icon="@drawable/ic_chart_black_24dp"
-            android:key="open_statistics_button"
-            android:summary="@string/open_statistics_description"
-            android:title="@string/open_statistics" />
+<!--        <Preference-->
+<!--            android:id="@+id/statisticsPreference"-->
+<!--            android:icon="@drawable/ic_chart_black_24dp"-->
+<!--            android:key="open_statistics_button"-->
+<!--            android:summary="@string/open_statistics_description"-->
+<!--            android:title="@string/open_statistics" />-->
     </PreferenceCategory>
 
     <PreferenceCategory

@@ -154,8 +154,8 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:text="@string/needed_ingredients"
-                android:textColor="@color/primaryColor"
-                android:textSize="20sp"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/categoriesChipGroup"
@@ -166,13 +166,11 @@
                 android:id="@+id/ingredientLinearLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
                 android:clipToPadding="false"
                 android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/ninetyFivePercentVerticalGuideline"
+                app:layout_constraintStart_toStartOf="@+id/fivePercentVerticalGuideline"
                 app:layout_constraintTop_toBottomOf="@+id/neededIngredients" />
 
             <TextView
@@ -259,7 +257,7 @@
                 android:onClick="openURL"
                 android:text="@string/browse"
                 app:icon="@drawable/ic_open_in_browser_black_24dp"
-                app:layout_constraintStart_toStartOf="@+id/guidelineMiddleVertical"
+                app:layout_constraintStart_toStartOf="@+id/verticalCenteredGuideline"
                 app:layout_constraintTop_toBottomOf="@+id/websiteTextView" />
 
             <com.google.android.material.button.MaterialButton
@@ -272,7 +270,7 @@
                 android:onClick="copyURLToClipboard"
                 android:text="@android:string/copy"
                 app:icon="@drawable/ic_content_copy_black_24dp"
-                app:layout_constraintEnd_toStartOf="@+id/guidelineMiddleVertical"
+                app:layout_constraintEnd_toStartOf="@+id/verticalCenteredGuideline"
                 app:layout_constraintTop_toBottomOf="@+id/websiteTextView" />
 
             <com.google.android.material.button.MaterialButton
@@ -289,13 +287,11 @@
                 app:layout_constraintTop_toBottomOf="@+id/ingredientLinearLayout" />
 
             <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guidelineMiddleVertical"
+                android:id="@+id/verticalCenteredGuideline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintGuide_percent="0.5"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintGuide_percent="0.5" />
 
             <TextView
                 android:id="@+id/commentTextView"
@@ -393,11 +389,24 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
                 android:overScrollMode="never"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/ninetyFivePercentVerticalGuideline"
+                app:layout_constraintStart_toStartOf="@+id/fivePercentVerticalGuideline"
                 app:layout_constraintTop_toBottomOf="@+id/recipeInstructionTextView" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/fivePercentVerticalGuideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.05" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/ninetyFivePercentVerticalGuideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.95" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

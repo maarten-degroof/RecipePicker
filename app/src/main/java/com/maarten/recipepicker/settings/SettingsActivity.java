@@ -23,14 +23,10 @@ public class SettingsActivity extends AppCompatActivity {
         toolbar.setTitle("Settings");
         setSupportActionBar(toolbar);
 
-        // this takes care of the back button
+        // This takes care of the back button
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-
-        toolbar.setNavigationOnClickListener(v -> {
-            finish();
-        });
 
         PreferenceManager.setDefaultValues(this, R.xml.settings, false);
 

@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -20,6 +22,7 @@ import com.maarten.recipepicker.MainActivity;
 import com.maarten.recipepicker.R;
 import com.maarten.recipepicker.StatisticsActivity;
 import com.maarten.recipepicker.importRecipe.ImportActivity;
+import com.maarten.recipepicker.viewModels.SettingsViewModel;
 
 /**
  * This fragment is used in the settings, and this takes care of the 'delete all' button (can also be used for other settings)
@@ -27,11 +30,18 @@ import com.maarten.recipepicker.importRecipe.ImportActivity;
 public class PreferenceFragment extends PreferenceFragmentCompat {
 
     private EditTextPreference servesPreference;
+    private SharedPreferences.OnSharedPreferenceChangeListener listener;
+
+    private SettingsViewModel viewModel;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         // Indicate here the XML resource you created above that holds the preferences
         setPreferencesFromResource(R.xml.settings, rootKey);
+
+        setRetainInstance(true);
+
+        viewModel = new ViewModelProvider(requireActivity()).get(SettingsViewModel.class);
 
         Preference removeAllButtonPreference =  getPreferenceManager().findPreference("remove_all_button");
         if (removeAllButtonPreference != null) {
@@ -80,48 +90,72 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
 
         servesPreference = getPreferenceManager().findPreference("serves_value");
 
+        // Create a filter so the user can fill in a maximum of 2 characters
+        InputFilter[] filterArray = new InputFilter[1];
+        filterArray[0] = new InputFilter.LengthFilter(2);
+
         if(servesPreference != null) {
             // Takes care of inputType="Number"
-            servesPreference.setOnBindEditTextListener(
-                    editText -> editText.setInputType(InputType.TYPE_CLASS_NUMBER));
+            servesPreference.setOnBindEditTextListener(editText -> {
+                editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                editText.setFilters(filterArray);
+            });
         }
         createListener();
 
+        PreferenceManager.getDefaultSharedPreferences(requireActivity())
+                .registerOnSharedPreferenceChangeListener(listener);
+
+        if (viewModel.isShowingResetEverythingDialog()) {
+            createDeleteDialog();
+        } else if (viewModel.isShowingResetTimesCookedDialog()) {
+            createDeleteAmountCookedDialog();
+        }
     }
 
     /**
-     * Listener to make sure that when the user leaves the serves blank, it fills in '4'
+     * Listener to make sure that when the user leaves the serves blank, it fills in '4'.
+     * Also checks for a starting '0', and sets the upper boundary to '50'.
+     * If the filled in value is less than '1', fills in '1'.
      */
     private void createListener() {
-        SharedPreferences.OnSharedPreferenceChangeListener listener = (sharedPreferences, key) -> {
-
-            if(key.equals("serves_value")) {
+        listener = (sharedPreferences, key) -> {
+            if (key.equals("serves_value")) {
                 String value = sharedPreferences.getString("serves_value", "4");
-                if(value != null && value.equals("")) {
+
+                if (value.equals("")) {
                     servesPreference.setText("4");
                 }
-                // more than two characters is always longer dan 50
-                else if(value != null && value.length() > 2) {
-                    servesPreference.setText("50");
+                else if (Integer.parseInt(value) < 1) {
+                    servesPreference.setText("1");
                 }
-                else if (value != null && Integer.parseInt(value) > 50) {
+                // Remove starting '0'
+                else if (value.startsWith("0")) {
+                    value = value.substring(1);
+                    servesPreference.setText(value);
+                }
+                else if (Integer.parseInt(value) > 50) {
                     servesPreference.setText("50");
                 }
             }
         };
-        PreferenceManager.getDefaultSharedPreferences(requireContext())
-                .registerOnSharedPreferenceChangeListener(listener);
     }
 
     /**
      * Creates the confirm dialog to clear the recipeList
      */
     private void createDeleteDialog() {
+        viewModel.setShowingResetEverythingDialog(true);
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
 
         // Get the layout
         View dialog_layout = View.inflate(requireContext(), R.layout.remove_all_dialog, null);
         final MaterialCheckBox resetListCheckbox = dialog_layout.findViewById(R.id.resetListCheckBox);
+
+        resetListCheckbox.setOnCheckedChangeListener((buttonView, isChecked) ->
+                viewModel.setResetOriginalValuesResetEverythingIsTicked(isChecked));
+
+        resetListCheckbox.setChecked(viewModel.isResetOriginalValuesResetEverythingIsTicked());
 
         builder.setTitle("Remove ALL recipes");
         builder.setMessage("Are you sure you want to remove ALL recipes? Be careful, this can not be undone!");
@@ -133,12 +167,20 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
                 MainActivity.insertDummyRecipes();
                 MainActivity.saveRecipes();
             }
+            viewModel.setShowingResetEverythingDialog(false);
+            viewModel.setResetOriginalValuesResetEverythingIsTicked(false);
         });
         builder.setNegativeButton("Keep", (dialog, id) -> {
+            viewModel.setShowingResetEverythingDialog(false);
+            viewModel.setResetOriginalValuesResetEverythingIsTicked(false);
         });
         // Create and show the dialog
         final AlertDialog alertDialog = builder.create();
         alertDialog.setView(dialog_layout);
+        alertDialog.setOnCancelListener(dialog -> {
+            viewModel.setShowingResetEverythingDialog(false);
+            viewModel.setResetOriginalValuesResetEverythingIsTicked(false);
+        });
         alertDialog.show();
     }
 
@@ -146,6 +188,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
      * Creates the confirm dialog to clear the amount cooked for each recipe
      */
     private void createDeleteAmountCookedDialog() {
+        viewModel.setShowingResetTimesCookedDialog(true);
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
 
         builder.setTitle("Remove ALL times cooked");
@@ -153,11 +196,12 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
 
         builder.setPositiveButton("Reset all", (dialog, id) -> {
             removeAllTimesCooked();
+            viewModel.setShowingResetTimesCookedDialog(false);
         });
-        builder.setNegativeButton("Cancel", (dialog, id) -> {
-        });
+        builder.setNegativeButton("Cancel", (dialog, id) -> viewModel.setShowingResetTimesCookedDialog(true));
         // Create and show the dialog
         final AlertDialog alertDialog = builder.create();
+        alertDialog.setOnCancelListener(dialog -> viewModel.setShowingResetTimesCookedDialog(false));
         alertDialog.show();
     }
 
@@ -167,7 +211,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
     private void removeRecipe() {
         MainActivity.recipeList.clear();
         MainActivity.saveRecipes();
-        Toast.makeText(getActivity(), "Removed all the recipes", Toast.LENGTH_LONG).show();
+        Toast.makeText(requireActivity(), "Removed all the recipes", Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -175,7 +219,7 @@ public class PreferenceFragment extends PreferenceFragmentCompat {
      */
     private void removeAllTimesCooked() {
         MainActivity.clearAllAmountCooked();
-        Toast.makeText(getActivity(), "Reset all recipes to 0 times cooked.", Toast.LENGTH_LONG).show();
+        Toast.makeText(requireActivity(), "Reset all recipes to 0 times cooked.", Toast.LENGTH_LONG).show();
     }
 
     /**

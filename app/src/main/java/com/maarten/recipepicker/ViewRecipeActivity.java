@@ -138,8 +138,10 @@ public class ViewRecipeActivity extends AppCompatActivity {
         }
 
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-        int servesCount = Integer.parseInt(sharedPrefs.getString("serves_value", "4"));
+        int servesCount = 4;
+        if (!sharedPrefs.getString("serves_value", "4").equals("")) {
+            servesCount = Integer.parseInt(sharedPrefs.getString("serves_value", "4"));
+        }
 
         LinearLayout ingredientLinearLayout = findViewById(R.id.ingredientLinearLayout);
         List<Ingredient> filteredIngredientList, calculatedIngredientList;
