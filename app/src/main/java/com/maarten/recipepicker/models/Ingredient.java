@@ -78,12 +78,24 @@ public class Ingredient implements Serializable, Comparable<Ingredient> {
     @NonNull
     @Override
     public String toString() {
-        return (printQuantity() + " " + printType() + " " + name + " ("+ printIngredientType() + ")").trim();
+        return (printQuantity() + " " + printType() + " " + name + " (" + printIngredientType() + ")").trim();
+    }
+
+    /**
+     * Prints the ingredient quantity, the type and the ingredient name.
+     * If the IngredientType is OTHER, it also prints out the ingredient type.
+     * @return returns the formatted string containing the ingredient
+     */
+    public String printIngredient() {
+        if (ingredientType.equals(IngredientType.OTHER)) {
+            return (printQuantity() + " " + printType() + " " + name + " (" +  otherIngredientTypeName + ")").trim();
+        }
+        return (printQuantity() + " " + printType() + " " + name).trim();
     }
 
     /**
      * Makes it possible for quantity to be 'null'
-     * @return returns "" if null or the quantity if not null
+     * @return returns "" if null or the formatted quantity if not null
      */
     private String printQuantity() {
         if (quantity == null) {
@@ -103,7 +115,7 @@ public class Ingredient implements Serializable, Comparable<Ingredient> {
      * @return returns "" if null or the quantity if not null
      */
     private String printType() {
-        if (ingredientQuantityType.equals(QuantityType.OTHER) ) {
+        if (ingredientQuantityType.equals(QuantityType.OTHER)) {
             return otherIngredientTypeName;
         }
         else {
@@ -117,12 +129,12 @@ public class Ingredient implements Serializable, Comparable<Ingredient> {
      * @return returns -1, 0 or 1 depending on the other ingredient
      */
     @Override
-    public int compareTo(Ingredient o) {
+    public int compareTo(@NonNull Ingredient o) {
         // Different null checks
-        if(getQuantity()  == null && o.getQuantity() == null) {
+        if (getQuantity()  == null && o.getQuantity() == null) {
             return 0;
         }
-        if(getQuantity() == null) {
+        if (getQuantity() == null) {
             return 1;
         }
         if (o.getQuantity() == null) {

@@ -162,14 +162,15 @@
                 tools:layout_conversion_absoluteHeight="24dp"
                 tools:layout_conversion_absoluteWidth="217dp" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/viewRecipeIngredientList"
+            <LinearLayout
+                android:id="@+id/ingredientLinearLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:overScrollMode="never"
-                app:layout_constrainedHeight="false"
+                android:clipToPadding="false"
+                android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/neededIngredients" />
@@ -179,12 +180,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:text="@string/the_instructions"
                 android:textColor="@color/primaryColor"
                 android:textSize="22sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ingredientBarrier"
+                app:layout_constraintTop_toBottomOf="@+id/copyIngredientsButton"
                 tools:layout_conversion_absoluteHeight="27dp"
                 tools:layout_conversion_absoluteWidth="225dp" />
 
@@ -279,13 +280,13 @@
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:onClick="copyIngredientsToClipboard"
                 android:text="@string/copy_ingredients"
                 app:icon="@drawable/ic_content_copy_black_24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/viewRecipeIngredientList" />
+                app:layout_constraintTop_toBottomOf="@+id/ingredientLinearLayout" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guidelineMiddleVertical"
@@ -397,14 +398,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/recipeInstructionTextView" />
-
-            <androidx.constraintlayout.widget.Barrier
-                android:id="@+id/ingredientBarrier"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:barrierDirection="bottom"
-                app:constraint_referenced_ids="viewRecipeIngredientList,copyIngredientsButton"
-                tools:layout_editor_absoluteY="1319dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

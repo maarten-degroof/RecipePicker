@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -58,8 +59,6 @@ import java.util.TreeSet;
 /**
  ********* BUGS *********
  * Improve manifest
- *
- * Check portrait mode everywhere
  *
  * When filtering/sorting and pressing a recipe and then going back, list blinks
  *
@@ -313,30 +312,22 @@ public class MainActivity extends AppCompatActivity {
             case 1:
                 builder.setTitle("Help - Part 2 of 4");
                 builder.setMessage(getString(R.string.help_main_window_1));
-                builder.setPositiveButton("Next", (dialog, id) -> {
-                    showHelpScreen(2);
-                });
+                builder.setPositiveButton("Next", (dialog, id) -> showHelpScreen(2));
                 break;
             case 2:
                 builder.setTitle("Help - Part 3 of 4");
                 builder.setMessage(getString(R.string.help_main_window_2));
-                builder.setPositiveButton("Next", (dialog, id) -> {
-                    showHelpScreen(3);
-                });
+                builder.setPositiveButton("Next", (dialog, id) -> showHelpScreen(3));
                 break;
             case 3:
                 builder.setTitle("Help - Part 4 of 4");
                 builder.setMessage(getString(R.string.help_main_window_3));
-                builder.setPositiveButton("Okay", (dialog, id) -> {
-                    viewModel.resetCurrentHelpScreen();
-                });
+                builder.setPositiveButton("Okay", (dialog, id) -> viewModel.resetCurrentHelpScreen());
                 break;
             default:
                 builder.setTitle("Help - Part 1 of 4");
                 builder.setMessage(getString(R.string.help_main_window_0));
-                builder.setPositiveButton("Next", (dialog, id) -> {
-                    showHelpScreen(1);
-                });
+                builder.setPositiveButton("Next", (dialog, id) -> showHelpScreen(1));
         }
         // Create and show the dialog
         AlertDialog alertDialog = builder.create();
@@ -385,16 +376,17 @@ public class MainActivity extends AppCompatActivity {
     public static void insertDummyRecipes() {
         // Spaghetti Bolognese
         List<Ingredient> SPIngredientList = new ArrayList<>();
-        SPIngredientList.add(new Ingredient("Spaghetti",500.0, QuantityType.GRAMS, IngredientType.OTHER, ""));
-        SPIngredientList.add(new Ingredient("Minced meat",350.0, QuantityType.GRAMS, IngredientType.OTHER, ""));
-        SPIngredientList.add(new Ingredient("Tomatoes",3.0, QuantityType.OTHER, IngredientType.OTHER, ""));
-        SPIngredientList.add(new Ingredient("Paprika's",3.0, QuantityType.OTHER, IngredientType.OTHER, ""));
-        SPIngredientList.add(new Ingredient("Water",100.0, QuantityType.MILLILITRES, IngredientType.OTHER, ""));
-        SPIngredientList.add(new Ingredient("A bit of salt and pepper",null, QuantityType.OTHER, IngredientType.OTHER, ""));
+        SPIngredientList.add(new Ingredient("Spaghetti",500.0, QuantityType.GRAMS, IngredientType.PASTA, ""));
+        SPIngredientList.add(new Ingredient("Minced meat",350.0, QuantityType.GRAMS, IngredientType.MEAT, ""));
+        SPIngredientList.add(new Ingredient("Tomatoes",3.0, QuantityType.OTHER, IngredientType.VEGETABLES, ""));
+        SPIngredientList.add(new Ingredient("Paprika's",3.0, QuantityType.OTHER, IngredientType.VEGETABLES, ""));
+        SPIngredientList.add(new Ingredient("Water",100.0, QuantityType.MILLILITRES, IngredientType.OTHER, "Water"));
+        SPIngredientList.add(new Ingredient("A bit of salt and pepper",null, QuantityType.OTHER, IngredientType.HERBS, ""));
 
         String SPImage =  String.valueOf(R.drawable.spaghetti_bolognese);
         String SPURL = "https://www.jamieoliver.com/recipes/beef-recipes/spaghetti-bolognese/";
         String SPComments = "Really easy to make!\n\nOnly be sure not to cook the spaghetti too long.";
+        String SPTitle = "Spaghetti Bolognese for people who don't have a lot of time";
 
         ArrayList<Instruction> SPInstructionList = new ArrayList<>();
         SPInstructionList.add(new Instruction("Cook the spaghetti.",(long) 600000));
@@ -408,9 +400,8 @@ public class MainActivity extends AppCompatActivity {
         SPCategories.add("Main course");
         SPCategories.add("Warm meal");
 
-        recipeList.add(new Recipe("Spaghetti Bolognese for people who don't have a lot of time",
-                SPIngredientList, false, CookTime.MEDIUM, SPImage, SPURL, Difficulty.BEGINNER,
-                SPComments, SPInstructionList, 4, SPCategories));
+        recipeList.add(new Recipe(SPTitle, SPIngredientList, false, CookTime.MEDIUM, SPImage,
+                SPURL, Difficulty.BEGINNER, SPComments, SPInstructionList, 4, SPCategories));
     }
 
     /**
@@ -419,7 +410,7 @@ public class MainActivity extends AppCompatActivity {
      * @return returns a boolean
      */
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         return abdt.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 

@@ -8,6 +8,7 @@ import com.maarten.recipepicker.R;
 import com.maarten.recipepicker.RecipePickerApplication;
 import com.maarten.recipepicker.enums.CookTime;
 import com.maarten.recipepicker.enums.Difficulty;
+import com.maarten.recipepicker.enums.IngredientType;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -178,22 +179,22 @@ public class Recipe implements Serializable {
      * Returns (and creates) a bitmap to use
      */
     public Bitmap getImage() {
-        if(image != null) {
+        if (image != null) {
             return image;
         }
         Bitmap bitmap;
         // No image given
-        if(imagePath == null || imagePath.equals("")) {
+        if (imagePath == null || imagePath.equals("")) {
             bitmap = BitmapFactory.decodeResource(RecipePickerApplication.getAppContext().getResources(), R.drawable.no_image_available);
         }
         // Image is a drawable
-        else if(Character.isDigit(imagePath.charAt(0))) {
+        else if (Character.isDigit(imagePath.charAt(0))) {
             bitmap = BitmapFactory.decodeResource(RecipePickerApplication.getAppContext().getResources(), Integer.decode(imagePath));
         } else {
             bitmap = BitmapFactory.decodeFile(imagePath);
         }
         image = bitmap;
-        return bitmap;
+        return image;
     }
 
     /**
@@ -215,25 +216,38 @@ public class Recipe implements Serializable {
      * @return string of the ingredient list
      */
     public String getOrderedIngredientString() {
-        if(ingredientList == null) {
+        if (ingredientList == null) {
             return "";
         }
         List<Ingredient> tempList = new ArrayList<>(ingredientList);
-
         Collections.sort(tempList);
 
         StringBuilder builder = new StringBuilder();
-
         for (Ingredient ingredient : tempList) {
-
             builder.append(ingredient.getName());
             builder.append(", ");
         }
         // Remove the last separator ', '
         if(builder.length() >= 2) {
-            builder.delete(builder.length() - 2, builder.length() - 1) ;
+            builder.delete(builder.length() - 2, builder.length() - 1);
         }
 
         return builder.toString();
+    }
+
+    /**
+     * Generates a list of the ingredients that match the given type and returns it
+     * @param type an IngredientType that you want to filter on
+     * @return a list of ingredients
+     */
+    public List<Ingredient> getIngredientsByType(IngredientType type) {
+        List<Ingredient> filteredIngredientList = new ArrayList<>();
+
+        for (Ingredient ingredient : ingredientList) {
+            if (ingredient.getIngredientType() == type) {
+                filteredIngredientList.add(ingredient);
+            }
+        }
+        return filteredIngredientList;
     }
 }

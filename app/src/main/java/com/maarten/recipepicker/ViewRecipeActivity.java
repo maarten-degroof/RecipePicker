@@ -13,11 +13,14 @@ import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,10 +30,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
-import androidx.core.view.ViewCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -41,9 +42,9 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.maarten.recipepicker.adapters.IngredientAdapter;
 import com.maarten.recipepicker.adapters.InstructionAdapter;
 import com.maarten.recipepicker.cookNow.CookNowActivity;
+import com.maarten.recipepicker.enums.IngredientType;
 import com.maarten.recipepicker.models.Ingredient;
 import com.maarten.recipepicker.models.Instruction;
 import com.maarten.recipepicker.models.Recipe;
@@ -53,6 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY;
+import static com.maarten.recipepicker.RecipeUtility.changeFirstLetterToCapital;
 
 public class ViewRecipeActivity extends AppCompatActivity {
 
@@ -72,7 +74,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
     private SharedPreferences sharedPrefs;
 
     private ConstraintLayout zoomedImageConstraintLayout;
-    private ImageButton closeZoomedViewImageButton;
+
+    private String formattedIngredientList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,35 +137,54 @@ public class ViewRecipeActivity extends AppCompatActivity {
             browseWebsiteButton.setVisibility(View.INVISIBLE);
         }
 
-        // Get the ingredientList and add it to the recyclerView
-        RecyclerView ingredientListRecyclerView = findViewById(R.id.viewRecipeIngredientList);
-
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         int servesCount = Integer.parseInt(sharedPrefs.getString("serves_value", "4"));
 
-        // Create a new ingredientList, and create all the ingredients again,
-        // otherwise it'd be the same object and you'd change the wrong values
-        List<Ingredient> calculatedIngredientList = new ArrayList<>();
+        LinearLayout ingredientLinearLayout = findViewById(R.id.ingredientLinearLayout);
+        List<Ingredient> filteredIngredientList, calculatedIngredientList;
 
-        for (Ingredient ingredient : recipe.getIngredientList()) {
-            calculatedIngredientList.add(new Ingredient(ingredient));
-        }
-        // Now update the values
-        for (Ingredient ingredient : calculatedIngredientList) {
-            if (ingredient.getQuantity()!= null) {
-                ingredient.setQuantity(ingredient.getQuantity() / recipe.getServes() * servesCount);
+        // The builder creates the string which is used when copying the ingredients to the clipboard.
+        StringBuilder builder = new StringBuilder();
+        builder.append("Ingredients needed for ").append(servesCount).append(" persons:");
+
+        for (IngredientType type : IngredientType.values()) {
+            filteredIngredientList = recipe.getIngredientsByType(type);
+
+            if (filteredIngredientList.isEmpty()) {
+                continue;
             }
+
+            // Create a new ingredientList, and create all the ingredients again,
+            // otherwise it'd be the same object and you'd change the wrong values
+            calculatedIngredientList = new ArrayList<>();
+            for (Ingredient ingredient : filteredIngredientList) {
+                calculatedIngredientList.add(new Ingredient(ingredient));
+            }
+
+            // Now update the values
+            for (Ingredient ingredient : calculatedIngredientList) {
+                if (ingredient.getQuantity()!= null) {
+                    ingredient.setQuantity(ingredient.getQuantity() / recipe.getServes() * servesCount);
+                }
+            }
+
+            View ingredientView = LayoutInflater.from(this).inflate(R.layout.ingredient_list_item_without_remove, ingredientLinearLayout, false);
+
+            TextView ingredientTypeTextView = ingredientView.findViewById(R.id.ingredientTypeTextView);
+            String typeName = changeFirstLetterToCapital(type.name()).replace("_", " ");
+            builder.append("\n\n").append(typeName).append("\n");
+            ingredientTypeTextView.setText(typeName);
+
+            TextView ingredientListTextView = ingredientView.findViewById(R.id.ingredientListTextView);
+            String formattedIngredients = generateFormattedIngredientList(calculatedIngredientList);
+            builder.append(formattedIngredients);
+            ingredientListTextView.setText(formattedIngredients);
+
+            ingredientLinearLayout.addView(ingredientView);
         }
 
-        IngredientAdapter adapter = new IngredientAdapter(this,calculatedIngredientList);
-        ingredientListRecyclerView.setAdapter(adapter);
-        ingredientListRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        ingredientListRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        ingredientListRecyclerView.setHasFixedSize(true);
-
-        // Make the recyclerView also scrollable
-        ViewCompat.setNestedScrollingEnabled(ingredientListRecyclerView, true);
+        formattedIngredientList = builder.toString();
 
         Chip difficultyChip = findViewById(R.id.difficultyChip);
 
@@ -230,7 +252,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         ImageButton openZoomedViewImageButton = findViewById(R.id.openZoomedViewImageButton);
         zoomedImageConstraintLayout = findViewById(R.id.zoomedImageConstraintLayout);
-        closeZoomedViewImageButton = findViewById(R.id.closeZoomedViewImageButton);
+        ImageButton closeZoomedViewImageButton = findViewById(R.id.closeZoomedViewImageButton);
         ImageView zoomedImageView = findViewById(R.id.zoomedImageView);
 
         zoomedImageView.setImageBitmap(recipe.getImage());
@@ -256,6 +278,39 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
         viewModel.setRating(MainActivity.recipeList.get(recipeIndex).getRating());
         setRatingChip(viewModel.getRating());
+    }
+
+    /**
+     * This gets called when the user pressed the 'physical' back button.
+     * @param keyCode the physical that was pressed
+     * @param event the event that caused it
+     * @return returns true if the event was handled
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)  {
+        if (keyCode == KeyEvent.KEYCODE_BACK && viewModel.isShowingZoomedImageView()) {
+            toggleZoomedImageView(false);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    /**
+     * Generates a bullet list from a given list of ingredients.
+     * @param ingredientList the list of ingredients to use
+     * @return a string containing the ingredients with bullet points
+     */
+    private String generateFormattedIngredientList(List<Ingredient> ingredientList) {
+        StringBuilder builder = new StringBuilder();
+        for (Ingredient ingredient : ingredientList) {
+            builder.append("• ").append(ingredient.printIngredient()).append("\n");
+        }
+        // Remove the last '/n'
+        if (builder.length() > 0) {
+            builder.setLength(builder.length() - 1);
+        }
+
+        return builder.toString();
     }
 
     /**
@@ -588,17 +643,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
      * @param view the copy ingredients button
      */
     public void copyIngredientsToClipboard(View view) {
-        StringBuilder builder = new StringBuilder();
-        for (Ingredient ingredient : recipe.getIngredientList()) {
-            builder.append("- ").append(ingredient.toString()).append("\n");
-        }
-        // remove the last '/n'
-        if (builder.length() > 0) {
-            builder.setLength(builder.length() - 1);
-        }
-
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newPlainText("Ingredients", builder.toString());
+        ClipData clip = ClipData.newPlainText("Ingredients", formattedIngredientList);
 
         if (clipboard != null) {
             clipboard.setPrimaryClip(clip);
