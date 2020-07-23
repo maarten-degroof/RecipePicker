@@ -10,9 +10,9 @@ import java.util.Comparator;
 public class DateSorter implements Comparator<Recipe> {
     public int compare(Recipe r1, Recipe r2) {
         if (r1.getAddedDate().before(r2.getAddedDate())) {
-            return -1;
-        } else if (r1.getAddedDate().after(r2.getAddedDate())) {
             return 1;
+        } else if (r1.getAddedDate().after(r2.getAddedDate())) {
+            return -1;
         } else {
             return 0;
         }
