@@ -53,10 +53,8 @@ public class CookNowActivity extends AppCompatActivity {
         toolbar.setTitle("Cooking now");
         setSupportActionBar(toolbar);
 
-        // This takes care of the back button
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        // Back button pressed
+        toolbar.setNavigationOnClickListener(v -> finish());
 
         viewModel = new ViewModelProvider(this).get(CookNowViewModel.class);
 
