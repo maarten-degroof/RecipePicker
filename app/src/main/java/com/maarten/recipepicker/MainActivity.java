@@ -174,7 +174,26 @@ public class MainActivity extends AppCompatActivity {
 
         // All the navigation drawer stuff
         drawerLayout = findViewById(R.id.dl);
-        abdt = new ActionBarDrawerToggle(this, drawerLayout,R.string.Open, R.string.Close);
+
+        abdt = new ActionBarDrawerToggle(this, drawerLayout,R.string.Open, R.string.Close) {
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                super.onDrawerStateChanged(newState);
+
+                if (newState == DrawerLayout.STATE_SETTLING) {
+                    if (!drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                        // starts opening
+                        drawerLayout.openDrawer(GravityCompat.START);
+                        viewModel.setShowingNavigationDrawer(true);
+                    } else {
+                        // closing drawer
+                        drawerLayout.closeDrawer(GravityCompat.START);
+                        viewModel.setShowingNavigationDrawer(false);
+                    }
+                    invalidateOptionsMenu();
+                }
+            }
+        };
         abdt.setDrawerIndicatorEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -190,16 +209,22 @@ public class MainActivity extends AppCompatActivity {
 
             if (id == R.id.addRecipe) {
                 addRecipe(null);
+                viewModel.setShowingNavigationDrawer(false);
             } else if (id == R.id.favorites) {
                 viewFavorites();
+                viewModel.setShowingNavigationDrawer(false);
             } else if (id == R.id.settings) {
                 viewSettings();
+                viewModel.setShowingNavigationDrawer(false);
             } else if (id == R.id.filter) {
                 viewFilters();
+                viewModel.setShowingNavigationDrawer(false);
             } else if (id == R.id.search) {
                 viewSearch();
+                viewModel.setShowingNavigationDrawer(false);
             } else if (id == R.id.random) {
                 openRandomRecipe();
+                viewModel.setShowingNavigationDrawer(false);
             } else if (id == R.id.help) {
                 showHelpScreen(0);
             }
@@ -478,7 +503,12 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         controlNoRecipeElements();
-        drawerLayout.closeDrawer(GravityCompat.START);
+
+        if (viewModel.isShowingNavigationDrawer()) {
+            drawerLayout.openDrawer(GravityCompat.START);
+        } else {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
 
         setOrdering();
     }

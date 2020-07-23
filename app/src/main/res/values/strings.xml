@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Recipe Picker</string>
 
-    <string name="Open">navbar</string>
-    <string name="Close">navbar</string>
+    <string name="Open">Open</string>
+    <string name="Close">Close</string>
     <string name="title_activity_view_recipe">ViewRecipeActivity</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"

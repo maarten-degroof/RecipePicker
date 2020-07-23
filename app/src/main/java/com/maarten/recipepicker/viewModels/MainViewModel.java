@@ -9,6 +9,7 @@ public class MainViewModel extends ViewModel {
     private boolean isShowingSortingDialog = false;
     private boolean isShowingWelcomeScreen = true;
     private int currentHelpScreen = -1;
+    private boolean isShowingNavigationDrawer = false;
 
     public String getFact() {
         return fact;
@@ -54,4 +55,11 @@ public class MainViewModel extends ViewModel {
         this.currentHelpScreen = -1;
     }
 
+    public boolean isShowingNavigationDrawer() {
+        return isShowingNavigationDrawer;
+    }
+
+    public void setShowingNavigationDrawer(boolean showingNavigationDrawer) {
+        isShowingNavigationDrawer = showingNavigationDrawer;
+    }
 }
