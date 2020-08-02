@@ -1,16 +1,19 @@
 package com.maarten.recipepicker;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -44,14 +47,42 @@ public class AddInstructionFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_instruction, container, false);
 
+        InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+
         instructionTextEditText = view.findViewById(R.id.instructionInputEditText);
+        instructionTextEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus && imm != null) {
+                imm.hideSoftInputFromWindow(instructionTextEditText.getWindowToken(), 0);
+            }
+        });
+
+        ConstraintLayout addInstructionConstraintLayout = view.findViewById(R.id.addInstructionConstraintLayout);
+        addInstructionConstraintLayout.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus && imm != null) {
+                imm.hideSoftInputFromWindow(addInstructionConstraintLayout.getWindowToken(), 0);
+            }
+        });
+
         instructionLayout = view.findViewById(R.id.instructionFieldLayout);
 
         minuteTextView = view.findViewById(R.id.minutesTextView);
         secondTextView = view.findViewById(R.id.secondsTextView);
 
         minuteNumberPicker = view.findViewById(R.id.minuteNumberPicker);
+        minuteNumberPicker.setOnScrollListener((view1, scrollState) -> clearFocus());
+        minuteNumberPicker.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus && imm != null) {
+                imm.hideSoftInputFromWindow(minuteNumberPicker.getWindowToken(), 0);
+            }
+        });
+
         secondNumberPicker = view.findViewById(R.id.secondNumberPicker);
+        secondNumberPicker.setOnScrollListener((view1, scrollState) -> clearFocus());
+        secondNumberPicker.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus && imm != null) {
+                imm.hideSoftInputFromWindow(secondNumberPicker.getWindowToken(), 0);
+            }
+        });
 
         minuteNumberPicker.setMinValue(0);
         secondNumberPicker.setMinValue(0);
@@ -67,7 +98,8 @@ public class AddInstructionFragment extends Fragment {
         // Add eventListener to enable and disable the number pickers
         timerEnabledSwitch = view.findViewById(R.id.timerEnabledSwitch);
         timerEnabledSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if(isChecked) {
+            clearFocus();
+            if (isChecked) {
                 minuteNumberPicker.setEnabled(true);
                 secondNumberPicker.setEnabled(true);
                 minuteTextView.setEnabled(true);
@@ -124,7 +156,8 @@ public class AddInstructionFragment extends Fragment {
     }
 
     /**
-     * Removes the focus from the numberPickers otherwise a filled in number won't be registered
+     * Removes the focus from the numberPickers otherwise a filled in number won't be registered.
+     * Also causes the keyboard to hide.
      */
     private void clearFocus() {
         minuteNumberPicker.clearFocus();
@@ -163,7 +196,7 @@ public class AddInstructionFragment extends Fragment {
             return;
         }
 
-        if(timerEnabledSwitch.isChecked()) {
+        if (timerEnabledSwitch.isChecked()) {
             clearFocus();
             long totalMilliSeconds = calcMilliSeconds(minuteNumberPicker.getValue(), secondNumberPicker.getValue());
             instruction = new Instruction(instructionTextEditText.getText().toString(), totalMilliSeconds);

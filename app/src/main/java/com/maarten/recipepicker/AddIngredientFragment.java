@@ -1,9 +1,11 @@
 package com.maarten.recipepicker;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -47,12 +49,30 @@ public class AddIngredientFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_ingredient, container, false);
 
+        InputMethodManager imm = (InputMethodManager) requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+
         ingredientNameEditText = view.findViewById(R.id.ingredientNameEditText);
+        ingredientNameEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus && imm != null) {
+                imm.hideSoftInputFromWindow(ingredientNameEditText.getWindowToken(), 0);
+            }
+        });
+
         ingredientNameLayout = view.findViewById(R.id.ingredientNameLayout);
 
         ingredientQuantityEditText = view.findViewById(R.id.ingredientQuantityEditText);
+        ingredientQuantityEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus && imm != null) {
+                imm.hideSoftInputFromWindow(ingredientQuantityEditText.getWindowToken(), 0);
+            }
+        });
 
         ingredientTypeOtherEditText = view.findViewById(R.id.ingredientTypeOtherEditText);
+        ingredientTypeOtherEditText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus && imm != null) {
+                imm.hideSoftInputFromWindow(ingredientTypeOtherEditText.getWindowToken(), 0);
+            }
+        });
 
         MaterialButton cancelButton = view.findViewById(R.id.cancelButton);
         cancelButton.setOnClickListener(view2 -> goBack());
@@ -64,11 +84,13 @@ public class AddIngredientFragment extends Fragment {
         for (String type : RecipeUtility.convertEnumToStringList("IngredientType")) {
             generateIngredientTypeChip(type);
         }
+        ingredientTypeChipGroup.setOnCheckedChangeListener((group, checkedId) -> clearAllFocus());
 
         ingredientQuantityTypeRadioGroup = view.findViewById(R.id.ingredientQuantityTypeRadioGroup);
         for (String type : RecipeUtility.convertEnumToStringList("QuantityType")) {
             generateQuantityTypeRadioButton(type);
         }
+        ingredientQuantityTypeRadioGroup.setOnCheckedChangeListener((group, checkedId) -> clearAllFocus());
 
         return view;
     }
@@ -108,6 +130,15 @@ public class AddIngredientFragment extends Fragment {
             viewModel.setIngredientQuantity(Double.parseDouble(ingredientQuantity));
         }
         viewModel.setIngredientType(getSelectedIngredientType());
+    }
+
+    /**
+     * Clears the focus of all the EditTexts, this causes the keyboard to hide
+     */
+    private void clearAllFocus() {
+        ingredientNameEditText.clearFocus();
+        ingredientQuantityEditText.clearFocus();
+        ingredientTypeOtherEditText.clearFocus();
     }
 
     /**
@@ -166,7 +197,7 @@ public class AddIngredientFragment extends Fragment {
      */
     private IngredientType getSelectedIngredientType() {
         String ingredientTypeName = null;
-        if(ingredientTypeChipGroup.getChildCount() > 0) {
+        if (ingredientTypeChipGroup.getChildCount() > 0) {
             for (int i=0; i < ingredientTypeChipGroup.getChildCount(); i++) {
                 Chip chip = (Chip) ingredientTypeChipGroup.getChildAt(i);
                 if (chip.isChecked()) {
@@ -191,7 +222,7 @@ public class AddIngredientFragment extends Fragment {
             return;
         }
         String convertedType = changeFirstLetterToCapital(type.name()).replace("_", " ");
-        if(ingredientTypeChipGroup.getChildCount() > 0) {
+        if (ingredientTypeChipGroup.getChildCount() > 0) {
             for (int i=0; i < ingredientTypeChipGroup.getChildCount(); i++) {
                 Chip chip = (Chip) ingredientTypeChipGroup.getChildAt(i);
                 if (chip.getText().equals(convertedType)) {
@@ -243,7 +274,7 @@ public class AddIngredientFragment extends Fragment {
         Ingredient ingredient;
         ingredientName = changeFirstLetterToCapital(ingredientName.trim());
 
-        if(ingredientQuantity == null) {
+        if (ingredientQuantity == null) {
             ingredient = new Ingredient(ingredientName, null, quantityType, ingredientTypeName, otherIngredientTypeName);
         }
         else {
@@ -260,7 +291,7 @@ public class AddIngredientFragment extends Fragment {
      * @return returns true if the quantity is not a Double, false if it is
      */
     private boolean checkQuantityNotValid(String quantity) {
-        if(quantity != null) {
+        if (quantity != null) {
             return !isDouble(quantity);
         }
         return false;
