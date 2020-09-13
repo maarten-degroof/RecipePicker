@@ -1,15 +1,14 @@
 package com.maarten.recipepicker;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -46,10 +46,16 @@ import com.maarten.recipepicker.models.Ingredient;
 import com.maarten.recipepicker.models.Instruction;
 import com.maarten.recipepicker.viewModels.FillInRecipeViewModel;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+
+import static android.app.Activity.RESULT_OK;
 
 public class FillInRecipeFragment extends Fragment {
 
@@ -66,6 +72,7 @@ public class FillInRecipeFragment extends Fragment {
 
     private static final int READ_EXTERNAL_PERMISSIONS = 1;
     private static final int GALLERY_REQUEST_CODE = 2;
+    private static final int REQUEST_IMAGE_CAPTURE = 3;
 
     private ImageView imageView;
     private String imagePath;
@@ -79,6 +86,8 @@ public class FillInRecipeFragment extends Fragment {
 
     private FillInRecipeViewModel viewModel;
 
+    private File storageDir;
+    private AlertDialog addPhotoDialog;
 
     public FillInRecipeFragment() {
         // Required empty public constructor
@@ -102,8 +111,8 @@ public class FillInRecipeFragment extends Fragment {
         imageView = view.findViewById(R.id.imageView);
         imageView.setVisibility(View.GONE);
 
-        addImageButton = view.findViewById(R.id.openGalleryButton);
-        addImageButton.setOnClickListener(view1 -> showPictureGallery());
+        addImageButton = view.findViewById(R.id.addImageButton);
+        addImageButton.setOnClickListener(view1 -> createAddPhotoDialog());
 
         differentImageButton = view.findViewById(R.id.openGalleryAgainButton);
         differentImageButton.setOnClickListener(view1 -> showPictureGallery());
@@ -215,6 +224,100 @@ public class FillInRecipeFragment extends Fragment {
         for (String category : viewModel.getCategorySet()) {
             addCategoryChip(category);
         }
+
+        createImageFolder();
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp =
+                new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp;
+        File image = File.createTempFile(
+                imageFileName,
+                ".jpg",
+                storageDir
+        );
+
+        imagePath = image.getAbsolutePath();
+        return image;
+    }
+
+    /**
+     * Shows a dialog with the option to add a picture with the camera or to choose an image through
+     * a gallery.
+     */
+    private void createAddPhotoDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+
+        // Get the layout
+        View dialog_layout = View.inflate(requireActivity(), R.layout.add_image_dialog, null);
+
+        final MaterialButton openCameraButton = dialog_layout.findViewById(R.id.openCameraButton);
+        final MaterialButton openGalleryButton = dialog_layout.findViewById(R.id.openGalleryButton);
+
+        openCameraButton.setOnClickListener(v -> {
+            dispatchTakePictureIntent();
+            addPhotoDialog.dismiss();
+        });
+
+        openGalleryButton.setOnClickListener(v -> {
+            showPictureGallery();
+            addPhotoDialog.dismiss();
+
+        });
+        builder.setTitle("Add a photo");
+
+        builder.setNegativeButton("Cancel", (dialog, id) -> {});
+        // Create and show the dialog
+        addPhotoDialog = builder.create();
+        addPhotoDialog.setView(dialog_layout);
+
+        addPhotoDialog.show();
+    }
+
+    // if hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY) is false, hide the button bc the phone doesn't have a camera
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
+            // Create the File where the photo should go
+
+            try {
+                File image = createImageFile();
+
+                Uri photoUri = FileProvider.getUriForFile(RecipePickerApplication.getAppContext(),
+                        RecipePickerApplication.getAppContext().getPackageName() + ".provider", image);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+
+            } catch (IOException e) {
+                Log.d("currentfile", "IO ERROR NEW: " + e.getMessage());
+            }
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    // TODO:
+    //  - Update viewModel so it remembers when the addImageDialog and the categoryDialog are open
+    //  - Copy the image that is used when using the gallery and paste it to the RecipePicker image directory
+    //  - Only publish the image to the gallery when creating the recipe
+    //  - Delete the image if a different one is selected / this one is removed
+
+    /**
+     * Creates the folder 'RecipePicker' where images will be placed, if necessary.
+     */
+    private void createImageFolder() {
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                    + File.separator + "RecipePicker");
+
+            if(!storageDir.isDirectory()) {
+                storageDir.mkdirs();
+            }
+        }
+        if(!storageDir.isDirectory()) {
+            storageDir = requireActivity().getFilesDir();
+        }
     }
 
     /**
@@ -271,6 +374,10 @@ public class FillInRecipeFragment extends Fragment {
         viewModel.setCategorySet(generateCategorySet());
     }
 
+    /**
+     * Generates a Set of all the categories that are in the categoriesChipGroup
+     * @return Returns the created Set.
+     */
     private Set<String> generateCategorySet() {
         Set<String> categorySet = new TreeSet<>();
         for (int index=0; index < categoriesChipGroup.getChildCount(); index++) {
@@ -384,16 +491,16 @@ public class FillInRecipeFragment extends Fragment {
     }
 
     /**
-     * Checks if the permission has been accepted if so opens the pickFromgGllery function.
+     * Checks if the permission has been accepted if so opens the pickFromGallery function.
      * If not tries to request the permission again
      */
     private void showPictureGallery() {
         removeCursorFromWidget();
-        if(requireActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+        if (requireActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             pickFromGallery();
         } else {
             // Permission hasn't been granted.
-            if(shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 Log.d("Permissions", "Should show extra info for the permission");
                 Toast.makeText(requireActivity(), "External storage permission is needed to access your images.", Toast.LENGTH_LONG).show();
             }
@@ -411,9 +518,9 @@ public class FillInRecipeFragment extends Fragment {
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == READ_EXTERNAL_PERMISSIONS) {
+        if (requestCode == READ_EXTERNAL_PERMISSIONS) {
             // Check if the required permission is granted
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 pickFromGallery();
             } else {
                 Toast.makeText(requireActivity(), "Permission was not granted.", Toast.LENGTH_SHORT).show();
@@ -445,9 +552,10 @@ public class FillInRecipeFragment extends Fragment {
      * @param resultCode says if the user completed it and chose an image
      * @param data contains the Uri
      */
-    public void onActivityResult(int requestCode,int resultCode,Intent data) {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Result code is RESULT_OK only if the user selects an Image
-        if (resultCode == Activity.RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             if (requestCode == GALLERY_REQUEST_CODE) {
                 // data.getData returns the content URI for the selected Image
                 try {
@@ -457,12 +565,30 @@ public class FillInRecipeFragment extends Fragment {
                     showImage(imagePath);
 
                 } catch (Exception e) {
-                    Log.e("gallery error", "An exception happened when loading the image path: " + e.getMessage());
+                    Log.e("file", "An exception happened when loading the image path: " + e.getMessage());
                 }
-            } else {
+            }
+            else if (requestCode == REQUEST_IMAGE_CAPTURE) {
+                showImage(imagePath);
+                addPictureToGallery();
+            }
+
+            else {
                 super.onActivityResult(requestCode, resultCode, data);
             }
+
         }
+    }
+
+    /**
+     * This allows the gallery apps to find the taken picture
+     */
+    private void addPictureToGallery() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(imagePath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        requireActivity().sendBroadcast(mediaScanIntent);
     }
 
     /**
@@ -470,10 +596,15 @@ public class FillInRecipeFragment extends Fragment {
      * @param imagePath the path to the image
      */
     private void showImage(String imagePath) {
-        // Generate a bitmap, to put in the imageView
-        Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-        imageView.setImageBitmap(bitmap);
+        Bitmap rotatedBitmap = RecipeUtility.rotateBitmap(imagePath);
 
+        if (rotatedBitmap == null)  {
+            Toast.makeText(requireActivity(), "Ohno something went wrong trying to load the image",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        imageView.setImageBitmap(rotatedBitmap);
         imageView.setVisibility(View.VISIBLE);
 
         // Show & hide appropriate buttons
@@ -543,11 +674,11 @@ public class FillInRecipeFragment extends Fragment {
         builder.setPositiveButton("Add category", (dialog, id) -> {
             String inputText = categoryEditText.getText().toString();
             // Only add if it's not empty and it doesn't exist yet
-            if(inputText.isEmpty()) {
+            if (inputText.isEmpty()) {
                 return;
             }
             inputText = RecipeUtility.changeFirstLetterToCapital(inputText.trim());
-            if(!generateCategorySet().contains(inputText)) {
+            if (!generateCategorySet().contains(inputText)) {
                 addCategoryChip(inputText);
             } else {
                 Toast.makeText(requireActivity(), "This category already exists", Toast.LENGTH_LONG).show();

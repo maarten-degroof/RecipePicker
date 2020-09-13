@@ -159,7 +159,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/ingredientTextView" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/openGalleryButton"
+                android:id="@+id/addImageButton"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -496,7 +496,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:barrierDirection="bottom"
-                app:constraint_referenced_ids="openGalleryAgainButton,cancelImageButton,imageView,openGalleryButton"
+                app:constraint_referenced_ids="openGalleryAgainButton,cancelImageButton,imageView,addImageButton"
                 tools:layout_editor_absoluteY="2011dp" />
 
             <androidx.constraintlayout.widget.Barrier

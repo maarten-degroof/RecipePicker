@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import com.google.gson.annotations.Expose;
 import com.maarten.recipepicker.R;
 import com.maarten.recipepicker.RecipePickerApplication;
+import com.maarten.recipepicker.RecipeUtility;
 import com.maarten.recipepicker.enums.CookTime;
 import com.maarten.recipepicker.enums.Difficulty;
 import com.maarten.recipepicker.enums.IngredientType;
@@ -191,7 +192,7 @@ public class Recipe implements Serializable {
         else if (Character.isDigit(imagePath.charAt(0))) {
             bitmap = BitmapFactory.decodeResource(RecipePickerApplication.getAppContext().getResources(), Integer.decode(imagePath));
         } else {
-            bitmap = BitmapFactory.decodeFile(imagePath);
+            bitmap = RecipeUtility.rotateBitmap(imagePath);
         }
         image = bitmap;
         return image;

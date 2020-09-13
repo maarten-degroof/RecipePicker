@@ -256,4 +256,6 @@
     <string name="close_image_description">Button that closes the image and returns you to the recipe.</string>
     <string name="open_image_description">Button that opens the view that shows the image over the full screen.</string>
     <string name="type">Type</string>
+    <string name="open_camera">Open camera</string>
+    <string name="open_gallery">Open gallery</string>
 </resources>
