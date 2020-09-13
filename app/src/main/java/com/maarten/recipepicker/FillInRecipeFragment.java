@@ -10,6 +10,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -88,6 +91,7 @@ public class FillInRecipeFragment extends Fragment {
 
     private File storageDir;
     private AlertDialog addPhotoDialog;
+    private AlertDialog categoryDialog;
 
     public FillInRecipeFragment() {
         // Required empty public constructor
@@ -226,6 +230,12 @@ public class FillInRecipeFragment extends Fragment {
         }
 
         createImageFolder();
+
+        if (viewModel.isShowingAddPhotoDialog()) {
+            createAddPhotoDialog();
+        } else if (viewModel.isShowingCategoryDialog()) {
+            createCategoryDialog();
+        }
     }
 
     private File createImageFile() throws IOException {
@@ -249,7 +259,7 @@ public class FillInRecipeFragment extends Fragment {
      */
     private void createAddPhotoDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-
+        viewModel.setShowingAddPhotoDialog(true);
         // Get the layout
         View dialog_layout = View.inflate(requireActivity(), R.layout.add_image_dialog, null);
 
@@ -259,20 +269,22 @@ public class FillInRecipeFragment extends Fragment {
         openCameraButton.setOnClickListener(v -> {
             dispatchTakePictureIntent();
             addPhotoDialog.dismiss();
+            viewModel.setShowingAddPhotoDialog(false);
         });
 
         openGalleryButton.setOnClickListener(v -> {
             showPictureGallery();
             addPhotoDialog.dismiss();
+            viewModel.setShowingAddPhotoDialog(false);
 
         });
         builder.setTitle("Add a photo");
 
-        builder.setNegativeButton("Cancel", (dialog, id) -> {});
+        builder.setNegativeButton("Cancel", (dialog, id) -> viewModel.setShowingAddPhotoDialog(false));
         // Create and show the dialog
         addPhotoDialog = builder.create();
         addPhotoDialog.setView(dialog_layout);
-
+        addPhotoDialog.setOnCancelListener(dialog -> viewModel.setShowingAddPhotoDialog(false));
         addPhotoDialog.show();
     }
 
@@ -298,7 +310,6 @@ public class FillInRecipeFragment extends Fragment {
     }
 
     // TODO:
-    //  - Update viewModel so it remembers when the addImageDialog and the categoryDialog are open
     //  - Copy the image that is used when using the gallery and paste it to the RecipePicker image directory
     //  - Only publish the image to the gallery when creating the recipe
     //  - Delete the image if a different one is selected / this one is removed
@@ -350,6 +361,12 @@ public class FillInRecipeFragment extends Fragment {
      */
     @Override
     public void onStop() {
+        if (addPhotoDialog != null && addPhotoDialog.isShowing()) {
+            addPhotoDialog.dismiss();
+        } else if (categoryDialog != null && categoryDialog.isShowing()) {
+            categoryDialog.dismiss();
+        }
+
         super.onStop();
 
         saveToViewModel();
@@ -661,17 +678,35 @@ public class FillInRecipeFragment extends Fragment {
     private void createCategoryDialog() {
         removeCursorFromWidget();
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-
+        viewModel.setShowingCategoryDialog(true);
         // Get the layout
         View dialog_layout = View.inflate(requireActivity(), R.layout.add_category_dialog, null);
 
         // Create the text field in the alert dialog.
         final EditText categoryEditText = dialog_layout.findViewById(R.id.categoryEditText);
 
+        categoryEditText.setText(viewModel.getTempCategory());
+
+        categoryEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                viewModel.setTempCategory(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
         builder.setTitle("Add category");
         builder.setMessage("Add a category here. A category can be 'Pasta' or 'Main course' for example.");
 
         builder.setPositiveButton("Add category", (dialog, id) -> {
+            viewModel.setShowingCategoryDialog(false);
             String inputText = categoryEditText.getText().toString();
             // Only add if it's not empty and it doesn't exist yet
             if (inputText.isEmpty()) {
@@ -684,12 +719,12 @@ public class FillInRecipeFragment extends Fragment {
                 Toast.makeText(requireActivity(), "This category already exists", Toast.LENGTH_LONG).show();
             }
         });
-        builder.setNegativeButton("Cancel", (dialog, id) -> {
-        });
+        builder.setNegativeButton("Cancel", (dialog, id) -> viewModel.setShowingCategoryDialog(false));
         // Create and show the dialog
-        final AlertDialog alertDialog = builder.create();
-        alertDialog.setView(dialog_layout);
-        alertDialog.show();
+        categoryDialog = builder.create();
+        categoryDialog.setView(dialog_layout);
+        categoryDialog.setOnCancelListener(dialog -> viewModel.setShowingCategoryDialog(false));
+        categoryDialog.show();
     }
 
 }

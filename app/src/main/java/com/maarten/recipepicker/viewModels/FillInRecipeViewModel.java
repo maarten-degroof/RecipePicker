@@ -52,6 +52,10 @@ public class FillInRecipeViewModel extends ViewModel {
 
     private String inputJson = "";
 
+    private boolean isShowingAddPhotoDialog = false;
+    private boolean isShowingCategoryDialog = false;
+    private String tempCategory = "";
+
     /**
      * With a given recipe, fills in all the fields of the recipe
      * as good as possible, while checking on null values
@@ -366,6 +370,37 @@ public class FillInRecipeViewModel extends ViewModel {
 
     public void setInputJson(String inputJson) {
         this.inputJson = inputJson;
+    }
+
+    public boolean isShowingAddPhotoDialog() {
+        return isShowingAddPhotoDialog;
+    }
+
+    public void setShowingAddPhotoDialog(boolean showingAddPhotoDialog) {
+        isShowingAddPhotoDialog = showingAddPhotoDialog;
+    }
+
+    public boolean isShowingCategoryDialog() {
+        return isShowingCategoryDialog;
+    }
+
+    public void setShowingCategoryDialog(boolean showingCategoryDialog) {
+        isShowingCategoryDialog = showingCategoryDialog;
+        if (!showingCategoryDialog) {
+            resetTempCategory();
+        }
+    }
+
+    public String getTempCategory() {
+        return tempCategory;
+    }
+
+    public void setTempCategory(String tempCategory) {
+        this.tempCategory = tempCategory;
+    }
+
+    public void resetTempCategory() {
+        tempCategory = "";
     }
 
     /**
