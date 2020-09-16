@@ -1,10 +1,8 @@
 package com.maarten.recipepicker;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,7 +10,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -27,7 +24,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -50,11 +46,14 @@ import com.maarten.recipepicker.models.Instruction;
 import com.maarten.recipepicker.viewModels.FillInRecipeViewModel;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -73,13 +72,15 @@ public class FillInRecipeFragment extends Fragment {
 
     private SwitchMaterial favoriteSwitch;
 
-    private static final int READ_EXTERNAL_PERMISSIONS = 1;
+    private static final int WRITE_EXTERNAL_STORAGE_PERMISSION = 1;
     private static final int GALLERY_REQUEST_CODE = 2;
-    private static final int REQUEST_IMAGE_CAPTURE = 3;
+    private static final int CAMERA_REQUEST_CODE = 3;
+
+    private boolean shouldLoadCameraScreen;
 
     private ImageView imageView;
     private String imagePath;
-    private Button removeImageButton, differentImageButton, addImageButton;
+    private Button removeImageButton, changeImageButton, addImageButton;
 
     private NumberPicker servesNumberPicker;
 
@@ -118,14 +119,14 @@ public class FillInRecipeFragment extends Fragment {
         addImageButton = view.findViewById(R.id.addImageButton);
         addImageButton.setOnClickListener(view1 -> createAddPhotoDialog());
 
-        differentImageButton = view.findViewById(R.id.openGalleryAgainButton);
-        differentImageButton.setOnClickListener(view1 -> showPictureGallery());
+        changeImageButton = view.findViewById(R.id.changeImageButton);
+        changeImageButton.setOnClickListener(view1 -> createAddPhotoDialog());
 
         removeImageButton = view.findViewById(R.id.cancelImageButton);
         removeImageButton.setOnClickListener(view1 -> removeImage());
 
         // There's no image yet -> hide buttons
-        differentImageButton.setVisibility(View.GONE);
+        changeImageButton.setVisibility(View.GONE);
         removeImageButton.setVisibility(View.GONE);
 
         ingredientRecyclerView = view.findViewById(R.id.ingredientRecyclerView);
@@ -229,6 +230,8 @@ public class FillInRecipeFragment extends Fragment {
             addCategoryChip(category);
         }
 
+        shouldLoadCameraScreen = false;
+
         createImageFolder();
 
         if (viewModel.isShowingAddPhotoDialog()) {
@@ -238,10 +241,15 @@ public class FillInRecipeFragment extends Fragment {
         }
     }
 
+    /**
+     * Creates an empty image file, and updates the imagePath variable to have the path to that file
+     * The name of the file is the current date and time, with an added unique identifier.
+     * @return returns the File that was created
+     * @throws IOException If no file could be created, an IOException is thrown
+     */
     private File createImageFile() throws IOException {
-        // Create an image file name
         String timeStamp =
-                new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                new SimpleDateFormat("yyyyMMdd_HH:mm:ss_", Locale.getDefault()).format(new Date());
         String imageFileName = "JPEG_" + timeStamp;
         File image = File.createTempFile(
                 imageFileName,
@@ -267,17 +275,25 @@ public class FillInRecipeFragment extends Fragment {
         final MaterialButton openGalleryButton = dialog_layout.findViewById(R.id.openGalleryButton);
 
         openCameraButton.setOnClickListener(v -> {
-            dispatchTakePictureIntent();
+            shouldLoadCameraScreen = true;
+            checkStoragePermission();
             addPhotoDialog.dismiss();
             viewModel.setShowingAddPhotoDialog(false);
         });
 
         openGalleryButton.setOnClickListener(v -> {
-            showPictureGallery();
+            shouldLoadCameraScreen = false;
+            checkStoragePermission();
             addPhotoDialog.dismiss();
             viewModel.setShowingAddPhotoDialog(false);
 
         });
+
+        // If it's a device without any cameras, remove the option
+        if (!requireContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+            openCameraButton.setVisibility(View.GONE);
+        }
+
         builder.setTitle("Add a photo");
 
         builder.setNegativeButton("Cancel", (dialog, id) -> viewModel.setShowingAddPhotoDialog(false));
@@ -288,31 +304,29 @@ public class FillInRecipeFragment extends Fragment {
         addPhotoDialog.show();
     }
 
-    // if hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY) is false, hide the button bc the phone doesn't have a camera
-    private void dispatchTakePictureIntent() {
+    /**
+     * Starts an intent with the created imagePath to open the camera to take a picture. The
+     * camera will then use the imagePath to put the created picture on that location.
+     */
+    private void startCameraWindow() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
             // Create the File where the photo should go
-
             try {
                 File image = createImageFile();
 
                 Uri photoUri = FileProvider.getUriForFile(RecipePickerApplication.getAppContext(),
                         RecipePickerApplication.getAppContext().getPackageName() + ".provider", image);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-
             } catch (IOException e) {
-                Log.d("currentfile", "IO ERROR NEW: " + e.getMessage());
+                Toast.makeText(requireActivity(), "Something went wrong trying to start the camera, please try again.", Toast.LENGTH_LONG).show();
             }
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
+        } else {
+            Toast.makeText(requireActivity(), "Sorry there's no camera to use.", Toast.LENGTH_LONG).show();
         }
     }
-
-    // TODO:
-    //  - Copy the image that is used when using the gallery and paste it to the RecipePicker image directory
-    //  - Only publish the image to the gallery when creating the recipe
-    //  - Delete the image if a different one is selected / this one is removed
 
     /**
      * Creates the folder 'RecipePicker' where images will be placed, if necessary.
@@ -508,39 +522,52 @@ public class FillInRecipeFragment extends Fragment {
     }
 
     /**
-     * Checks if the permission has been accepted if so opens the pickFromGallery function.
+     * Checks if the permission has been accepted if so starts the gallery opening function or
+     * the camera function (depending on shouldLoadCameraScreen).
      * If not tries to request the permission again
      */
-    private void showPictureGallery() {
+    private void checkStoragePermission() {
         removeCursorFromWidget();
-        if (requireActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            pickFromGallery();
+        if (requireActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            if (shouldLoadCameraScreen) {
+                startCameraWindow();
+            } else {
+                pickFromGallery();
+            }
         } else {
             // Permission hasn't been granted.
-            if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 Log.d("Permissions", "Should show extra info for the permission");
-                Toast.makeText(requireActivity(), "External storage permission is needed to access your images.", Toast.LENGTH_LONG).show();
+                String message;
+                if (shouldLoadCameraScreen) {
+                    message = "This permission is needed to be able to access the camera";
+                } else {
+                    message = "External storage permission is needed to access your images.";
+                }
+                Toast.makeText(requireActivity(), message, Toast.LENGTH_LONG).show();
             }
-
-            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_PERMISSIONS);
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXTERNAL_STORAGE_PERMISSION);
         }
     }
 
     /**
      * Function is called when a permission was granted (or denied)
-     * This checks if the permission was granted for the external files, and opens the gallery if so.
+     * This checks if the permission was granted for the external files, and opens the gallery/camera if so.
      * @param requestCode the code for external file permission (1)
      * @param permissions a list of requested permissions
      * @param grantResults this says if the permission was granted
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == READ_EXTERNAL_PERMISSIONS) {
-            // Check if the required permission is granted
+        if (requestCode == WRITE_EXTERNAL_STORAGE_PERMISSION) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                pickFromGallery();
+                if (shouldLoadCameraScreen){
+                    startCameraWindow();
+                } else {
+                    pickFromGallery();
+                }
             } else {
-                Toast.makeText(requireActivity(), "Permission was not granted.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireActivity(), "Permission was not granted.", Toast.LENGTH_SHORT).show();
             }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -551,20 +578,20 @@ public class FillInRecipeFragment extends Fragment {
      * Creates intent with the parameters to open an image picker
      */
     private void pickFromGallery(){
-        //Create an Intent with action as ACTION_PICK
         Intent intent = new Intent(Intent.ACTION_PICK);
-        // Sets the type as imagePath/*. This ensures only components of type imagePath are selected
         intent.setType("image/*");
         // We pass an extra array with the accepted mime types. This will ensure only components with these MIME types are targeted.
         String[] mimeTypes = {"imagePath/jpeg", "imagePath/png"};
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
-        // Launching the Intent
+
         startActivityForResult(intent, GALLERY_REQUEST_CODE);
     }
 
     /**
      * When image is chosen in an image picker, returns back to the activity and to this method
-     * if image was chosen, extracts the path and puts the image in the imageView
+     * if image was chosen, copies it into the RecipePicker image folder and shows it.
+     * If a picture was made through the camera, the image path has already been given to it and all
+     * that needs to be done is to show it.
      * @param requestCode the code which you passed on when starting the activity, identifier
      * @param resultCode says if the user completed it and chose an image
      * @param data contains the Uri
@@ -577,7 +604,32 @@ public class FillInRecipeFragment extends Fragment {
                 // data.getData returns the content URI for the selected Image
                 try {
                     Uri selectedImage = data.getData();
-                    imagePath = getRealPathFromURI(requireActivity(), selectedImage);
+
+                    if(selectedImage == null || selectedImage.getPath() == null) {
+                        throw new IOException("Something went wrong!");
+                    }
+                    // Remove the old image first
+                    removeImage();
+
+                    File newFile = createImageFile();
+
+                    // Copy the old file to the new location in the RecipePicker folder
+                    try(InputStream inputStream = requireActivity().getContentResolver()
+                            .openInputStream(selectedImage);
+                        FileOutputStream fileOutputStream = new FileOutputStream(
+                                newFile)) {
+                        if(inputStream == null) {
+                            throw new IOException("There was no image found.");
+                        }
+                        byte[] buffer = new byte[1024];
+                        int bytesRead;
+                        while ((bytesRead = inputStream.read(buffer)) != -1) {
+                            fileOutputStream.write(buffer, 0, bytesRead);
+                        }
+                    }
+
+                    // change the creation date of the file so it's shown as created now
+                    newFile.setLastModified(System.currentTimeMillis());
 
                     showImage(imagePath);
 
@@ -585,27 +637,14 @@ public class FillInRecipeFragment extends Fragment {
                     Log.e("file", "An exception happened when loading the image path: " + e.getMessage());
                 }
             }
-            else if (requestCode == REQUEST_IMAGE_CAPTURE) {
+            else if (requestCode == CAMERA_REQUEST_CODE) {
                 showImage(imagePath);
-                addPictureToGallery();
             }
-
             else {
                 super.onActivityResult(requestCode, resultCode, data);
             }
 
         }
-    }
-
-    /**
-     * This allows the gallery apps to find the taken picture
-     */
-    private void addPictureToGallery() {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(imagePath);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        requireActivity().sendBroadcast(mediaScanIntent);
     }
 
     /**
@@ -626,49 +665,30 @@ public class FillInRecipeFragment extends Fragment {
 
         // Show & hide appropriate buttons
         addImageButton.setVisibility(View.GONE);
-        differentImageButton.setVisibility(View.VISIBLE);
+        changeImageButton.setVisibility(View.VISIBLE);
         removeImageButton.setVisibility(View.VISIBLE);
     }
 
     /**
-     * Gets the absolute path from a URI file
-     * Code written by Kuray Ogun
-     * https://freakycoder.com/android-notes-73-how-to-get-real-path-from-uri-2f78320987f5
-     * @param context the current activity
-     * @param contentUri the Uri to get the path from
-     * @return returns the path as a string, or the empty string if something went wrong
-     */
-    private String getRealPathFromURI(Context context, Uri contentUri) {
-        Cursor cursor = null;
-        try {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } catch (NullPointerException e) {
-            Log.e("TAG", "getRealPathFromURI Exception : " + e.toString());
-            return "";
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-    }
-
-    /**
-     * Happens when a user presses the 'remove image' button
+     * Removes the current image and hides the appropriate buttons
      */
     private void removeImage() {
         removeCursorFromWidget();
         imageView.setImageBitmap(null);
+
+        // Remove the actual image
+        File image = new File(imagePath);
+        if (image.exists()) {
+            image.delete();
+        }
+
         imagePath = null;
 
         imageView.setVisibility(View.GONE);
 
         // Show & hide appropriate buttons
         addImageButton.setVisibility(View.VISIBLE);
-        differentImageButton.setVisibility(View.GONE);
+        changeImageButton.setVisibility(View.GONE);
         removeImageButton.setVisibility(View.GONE);
     }
 

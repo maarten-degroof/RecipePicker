@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:focusableInTouchMode="true"
             android:clickable="true"
-            android:focusable="true" >
+            android:focusable="true">
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/categoriesChipGroup"
@@ -170,7 +170,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/imageTextView" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/openGalleryAgainButton"
+                android:id="@+id/changeImageButton"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -496,7 +496,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:barrierDirection="bottom"
-                app:constraint_referenced_ids="openGalleryAgainButton,cancelImageButton,imageView,addImageButton"
+                app:constraint_referenced_ids="changeImageButton,cancelImageButton,imageView,addImageButton"
                 tools:layout_editor_absoluteY="2011dp" />
 
             <androidx.constraintlayout.widget.Barrier

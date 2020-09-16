@@ -1,6 +1,7 @@
 package com.maarten.recipepicker;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -23,6 +24,7 @@ import com.maarten.recipepicker.models.Instruction;
 import com.maarten.recipepicker.models.Recipe;
 import com.maarten.recipepicker.viewModels.FillInRecipeViewModel;
 
+import java.io.File;
 import java.util.List;
 import java.util.Set;
 
@@ -208,6 +210,17 @@ public class AddRecipeActivity extends AppCompatActivity implements AddRecipeInt
     }
 
     /**
+     * This allows the gallery apps to find the taken picture
+     */
+    private void addPictureToGallery(String imagePath) {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(imagePath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
+    }
+
+    /**
      * Retrieves the data from the viewModel; checks if the necessary items are filled in,
      * and inserts the recipe into the recipeList
      */
@@ -232,7 +245,6 @@ public class AddRecipeActivity extends AppCompatActivity implements AddRecipeInt
 
         String url = viewModel.getRecipeURL();
         String comments = viewModel.getRecipeComments();
-        String imagePath = viewModel.getRecipeImagePath();
         Set<String> categorySet = viewModel.getCategorySet();
 
         Boolean favorite = viewModel.isRecipeFavorite();
@@ -240,6 +252,11 @@ public class AddRecipeActivity extends AppCompatActivity implements AddRecipeInt
 
         Difficulty difficulty = viewModel.getRecipeDifficulty();
         CookTime cookTime = viewModel.getRecipeCookTime();
+
+        String imagePath = viewModel.getRecipeImagePath();
+        if (!imagePath.isEmpty()) {
+            addPictureToGallery(imagePath);
+        }
 
         Recipe recipe = new Recipe(title, ingredientList, favorite, cookTime, imagePath, url, difficulty, comments, instructionList, serves, categorySet);
         recipeList.add(recipe);
