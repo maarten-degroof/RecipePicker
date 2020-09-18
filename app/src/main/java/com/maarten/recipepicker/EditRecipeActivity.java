@@ -254,7 +254,7 @@ public class EditRecipeActivity extends AppCompatActivity implements AddRecipeIn
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_home, menu);
+        getMenuInflater().inflate(R.menu.menu_with_home, menu);
         return true;
     }
 
