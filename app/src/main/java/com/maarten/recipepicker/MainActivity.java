@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
@@ -55,47 +57,6 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeSet;
 
-
-/**
- ********* BUGS *********
- * Improve manifest
- *
- * When filtering/sorting and pressing a recipe and then going back, list blinks
- *
- ********* THINGS TO MAKE *********
- * create licence + credit used technologies:
- *      Some Icons made by "https://www.flaticon.com/authors/freepik" Freepik from href="https://www.flaticon.com/"
- *
- * archiving an item (by swiping the listitem)
- * reordering a list (by dragging)
- * Tags
- * Splitting the ingredients into categories
- ********* WORKING *********
- * adding recipe
- * saving/loading
- * showing a recipe + ingredients
- * favorites
- * remove
- * material design
- * remove an ingredient
- * updating recipe
- * Settings:
- *      - remove all recipes
- * times cooked + able to reset counter
- * reordering by times cooked & by date
- * snackBar when adding a cooked time, so it can be undone
- * filtering:
- *      - a slider to choose how many times you have to have cooked it minimum&maximum
- *      - add cooking time with 'chips' so you can filter them
- *      - on ingredients
- * search on title and ingredients
- * add home button in all screens
- * images
- * servings
- * share + import
- **/
-
-
 public class MainActivity extends AppCompatActivity {
 
     public static List<Recipe> recipeList;
@@ -114,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPrefs;
     private MainViewModel viewModel;
+
+    private RecyclerView recipeRecyclerView;
 
     public static DecimalFormat decimalFormat = new DecimalFormat("0.###");
 
@@ -136,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().getThemedContext();
         }
 
-        RecyclerView listViewRecipes = findViewById(R.id.mainRecyclerView);
+        recipeRecyclerView = findViewById(R.id.mainRecyclerView);
 
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
@@ -169,8 +132,8 @@ public class MainActivity extends AppCompatActivity {
 
         adapter = new RecipeAdapter(this, recipeList);
 
-        listViewRecipes.setAdapter(adapter);
-        listViewRecipes.setLayoutManager(new LinearLayoutManager(this));
+        recipeRecyclerView.setAdapter(adapter);
+        recipeRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // All the navigation drawer stuff
         drawerLayout = findViewById(R.id.dl);
@@ -198,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Make the recyclerView also scrollable
-        ViewCompat.setNestedScrollingEnabled(listViewRecipes, true);
+        ViewCompat.setNestedScrollingEnabled(recipeRecyclerView, true);
 
         drawerLayout.addDrawerListener(abdt);
         abdt.syncState();
@@ -545,4 +508,40 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
         saveRecipes();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_with_search, menu);
+
+        MenuItem menuItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) menuItem.getActionView();
+        searchView.setQueryHint(getString(R.string.search_hint));
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.isEmpty()) {
+                    resetAdapter();
+                }
+                adapter.getFilter().filter(newText);
+                return true;
+            }
+        });
+
+        return true;
+    }
+
+    /**
+     * Resets the recipe adapter of the recyclerView so it uses all the recipes again
+     */
+    private void resetAdapter() {
+        adapter = new RecipeAdapter(this, recipeList);
+        recipeRecyclerView.setAdapter(adapter);
+    }
+
 }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,10 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.maarten.recipepicker.MainActivity;
 import com.maarten.recipepicker.R;
 import com.maarten.recipepicker.ViewRecipeActivity;
 import com.maarten.recipepicker.models.Recipe;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.CustomViewHolder> {
@@ -91,5 +94,42 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.CustomView
             this.recipeIngredientsTextView = itemView.findViewById(R.id.recipeIngredientsTextView);
             this.recipeRatingTextView = itemView.findViewById(R.id.recipeRatingTextView);
         }
+    }
+
+    public Filter getFilter() {
+        return new Filter() {
+
+            @SuppressWarnings("unchecked")
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                recipeList = (List<Recipe>) results.values;
+                notifyDataSetChanged();
+            }
+
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                String searchString = constraint.toString().toLowerCase();
+
+                FilterResults results = new FilterResults();
+                List<Recipe> filteredList = new ArrayList<>();
+
+                if (searchString.isEmpty()) {
+                    filteredList = recipeList;
+                }
+                else {
+                    for (Recipe recipe : MainActivity.recipeList) {
+                        if (recipe.getTitle().toLowerCase().contains(searchString)) {
+                            filteredList.add(recipe);
+                        } else if (recipe.getIngredientList().stream().anyMatch(ingredient -> ingredient.getName().toLowerCase().contains(searchString))) {
+                            filteredList.add(recipe);
+                        }
+                    }
+                }
+                results.count = filteredList.size();
+                results.values = filteredList;
+
+                return results;
+            }
+        };
     }
 }

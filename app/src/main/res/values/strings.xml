@@ -258,4 +258,5 @@
     <string name="type">Type</string>
     <string name="open_camera">Open camera</string>
     <string name="open_gallery">Open gallery</string>
+    <string name="search_hint">Search recipes</string>
 </resources>
