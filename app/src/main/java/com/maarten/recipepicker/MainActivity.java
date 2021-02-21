@@ -24,6 +24,7 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
 import com.maarten.recipepicker.adapters.RecipeAdapter;
@@ -77,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
     private MainViewModel viewModel;
 
     private RecyclerView recipeRecyclerView;
+
+    private BottomSheetDialog helpBottomSheetDialog;
 
     public static DecimalFormat decimalFormat = new DecimalFormat("0.###");
 
@@ -204,6 +207,8 @@ public class MainActivity extends AppCompatActivity {
 
         controlNoRecipeElements();
 
+        helpBottomSheetDialog = new BottomSheetDialog(this);
+
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         // Check to show the welcome screen
         boolean shouldShowWelcomeScreen = sharedPrefs.getBoolean("welcome_screen", true);
@@ -249,17 +254,17 @@ public class MainActivity extends AppCompatActivity {
     private void setOrdering() {
         switch (viewModel.getSortingType()) {
             case 1:
-                Collections.sort(recipeList, new AmountCookedSorter());
+                recipeList.sort(new AmountCookedSorter());
                 orderByButton.setText(R.string.times_cooked);
                 adapter.notifyDataSetChanged();
                 return;
             case 2:
-                Collections.sort(recipeList, new RatingSorter());
+                recipeList.sort(new RatingSorter());
                 orderByButton.setText(R.string.rating);
                 adapter.notifyDataSetChanged();
                 return;
             default:
-                Collections.sort(recipeList, new DateSorter());
+                recipeList.sort(new DateSorter());
                 orderByButton.setText(R.string.chronological);
                 adapter.notifyDataSetChanged();
         }
@@ -275,13 +280,13 @@ public class MainActivity extends AppCompatActivity {
         builder.setMessage(getString(R.string.welcome_screen));
         builder.setCancelable(false);
 
-        builder.setPositiveButton("Let's get started", (dialog, id) -> {
+        builder.setPositiveButton(R.string.got_it, (dialog, id) -> {
             SharedPreferences.Editor editor = sharedPrefs.edit();
             editor.putBoolean("welcome_screen", false);
             editor.apply();
             viewModel.setShowingWelcomeScreen(false);
         });
-        builder.setNegativeButton("Show me again on next startup", (dialog, which) -> viewModel.setShowingWelcomeScreen(false));
+        builder.setNegativeButton(R.string.show_again, (dialog, which) -> viewModel.setShowingWelcomeScreen(false));
         // Create and show the dialog
         AlertDialog alertDialog = builder.create();
         alertDialog.setCanceledOnTouchOutside(false);
@@ -289,38 +294,62 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Shows the help screen which is shown when pressing 'Help' in the navigation drawer.
+     * Shows the help screen (a bottom Sheet) which is shown when pressing 'Help' in the navigation drawer.
      * There are 4 help windows, and the given parameter (0 to 3) decide which help window is shown.
      * @param whichWindow the index of the window to show. 0 is the first window, and 3 is the last one.
      */
     private void showHelpScreen(int whichWindow) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View dialogView = View.inflate(this, R.layout.help_bottom_sheet, null);
+        TextView titleHelpText = dialogView.findViewById(R.id.help_text_title);
+        TextView helpText = dialogView.findViewById(R.id.help_text);
+        MaterialButton nextHelpButton = dialogView.findViewById(R.id.next_help_button);
+        MaterialButton previousHelpButton = dialogView.findViewById(R.id.previous_help_button);
+
         viewModel.setCurrentHelpScreen(whichWindow);
         switch (whichWindow) {
             case 1:
-                builder.setTitle("Help - Part 2 of 4");
-                builder.setMessage(getString(R.string.help_main_window_1));
-                builder.setPositiveButton("Next", (dialog, id) -> showHelpScreen(2));
+                titleHelpText.setText(R.string.help_title_1);
+                helpText.setText(R.string.help_main_window_1);
+                nextHelpButton.setOnClickListener(view -> showHelpScreen(2));
+                previousHelpButton.setOnClickListener(view -> showHelpScreen(0));
                 break;
             case 2:
-                builder.setTitle("Help - Part 3 of 4");
-                builder.setMessage(getString(R.string.help_main_window_2));
-                builder.setPositiveButton("Next", (dialog, id) -> showHelpScreen(3));
+                titleHelpText.setText(R.string.help_title_2);
+                helpText.setText(R.string.help_main_window_2);
+                nextHelpButton.setOnClickListener(view -> showHelpScreen(3));
+                previousHelpButton.setOnClickListener(view -> showHelpScreen(1));
                 break;
             case 3:
-                builder.setTitle("Help - Part 4 of 4");
-                builder.setMessage(getString(R.string.help_main_window_3));
-                builder.setPositiveButton("Okay", (dialog, id) -> viewModel.resetCurrentHelpScreen());
+                titleHelpText.setText(R.string.help_title_3);
+                helpText.setText(R.string.help_main_window_3);
+                nextHelpButton.setOnClickListener(view -> helpBottomSheetDialog.cancel());
+                previousHelpButton.setOnClickListener(view -> showHelpScreen(2));
                 break;
             default:
-                builder.setTitle("Help - Part 1 of 4");
-                builder.setMessage(getString(R.string.help_main_window_0));
-                builder.setPositiveButton("Next", (dialog, id) -> showHelpScreen(1));
+                titleHelpText.setText(R.string.help_title_0);
+                helpText.setText(R.string.help_main_window_0);
+                nextHelpButton.setOnClickListener(view -> showHelpScreen(1));
+                previousHelpButton.setOnClickListener(null);
         }
-        // Create and show the dialog
-        AlertDialog alertDialog = builder.create();
-        alertDialog.setOnCancelListener(dialog -> viewModel.resetCurrentHelpScreen());
-        alertDialog.show();
+
+        if (whichWindow == 3) {
+            nextHelpButton.setText(R.string.finish);
+        } else {
+            nextHelpButton.setText(R.string.next);
+        }
+
+        if (whichWindow == 0) {
+            previousHelpButton.setVisibility(View.GONE);
+        } else {
+            previousHelpButton.setVisibility(View.VISIBLE);
+        }
+
+        helpBottomSheetDialog.setContentView(dialogView);
+        helpBottomSheetDialog.setOnCancelListener(dialogInterface -> viewModel.resetCurrentHelpScreen());
+
+        if (!helpBottomSheetDialog.isShowing()) {
+            helpBottomSheetDialog.show();
+        }
     }
 
     /**

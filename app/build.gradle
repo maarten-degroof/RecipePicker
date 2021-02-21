@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     defaultConfig {
         applicationId "com.maarten.recipepicker"
         minSdkVersion 24
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 1
         versionName "0.8.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -26,13 +26,13 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.preference:preference:1.1.1'
-    implementation 'androidx.exifinterface:exifinterface:1.1.0'
+    implementation 'androidx.exifinterface:exifinterface:1.3.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.3.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
-    implementation 'com.google.android.material:material:1.3.0-alpha02'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.code.gson:gson:2.8.6'
@@ -40,10 +40,10 @@ dependencies {
     implementation 'com.appyvet:materialrangebar:1.4.6'
     implementation 'me.zhanghai.android.materialratingbar:library:1.3.3'
 
-    implementation "androidx.lifecycle:lifecycle-viewmodel:2.2.0"
-    implementation "androidx.lifecycle:lifecycle-livedata:2.2.0"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:2.3.0"
+    implementation "androidx.lifecycle:lifecycle-livedata:2.3.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:2.3.0"
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    implementation "androidx.lifecycle:lifecycle-common-java8:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-common-java8:2.3.0"
 
 }

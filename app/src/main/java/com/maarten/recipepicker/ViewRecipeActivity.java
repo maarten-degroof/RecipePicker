@@ -574,13 +574,13 @@ public class ViewRecipeActivity extends AppCompatActivity {
         builder.setMessage("In the settings you can change the serve amount. All the recipes will then be recalculated for that amount of serves!");
         builder.setCancelable(false);
 
-        builder.setPositiveButton("OK I understand", (dialog, id) -> {
+        builder.setPositiveButton(R.string.got_it, (dialog, id) -> {
             SharedPreferences.Editor editor = sharedPrefs.edit();
             editor.putBoolean("tip_serves", false);
             editor.apply();
             viewModel.setShowingServesTipDialog(false);
         });
-        builder.setNegativeButton("Show me again next time", (dialog, which) -> viewModel.setShowingServesTipDialog(false));
+        builder.setNegativeButton(R.string.show_again, (dialog, which) -> viewModel.setShowingServesTipDialog(false));
         // Create and show the dialog
         final AlertDialog alertDialog = builder.create();
         alertDialog.setCanceledOnTouchOutside(false);

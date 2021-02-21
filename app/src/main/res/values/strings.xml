@@ -259,4 +259,11 @@
     <string name="open_camera">Open camera</string>
     <string name="open_gallery">Open gallery</string>
     <string name="search_hint">Search recipes</string>
+    <string name="add_new_recipe_button">Add new recipe button</string>
+    <string name="help_title_0">Help - Part 1 of 4</string>
+    <string name="help_title_1">Help - Part 2 of 4</string>
+    <string name="help_title_2">Help - Part 3 of 4</string>
+    <string name="help_title_3">Help - Part 4 of 4</string>
+    <string name="show_again">Show again</string>
+    <string name="got_it">Got it</string>
 </resources>
